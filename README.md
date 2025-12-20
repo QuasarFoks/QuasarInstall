@@ -10,7 +10,7 @@
 ![Static Badge](https://img.shields.io/badge/Версия-2.0-blue)
 ![Static Badge](https://img.shields.io/badge/Архитектура-x86__64-orange)
 
-![Скриншот](https://github.com/b-e-n-z1342/QuasarDEV-XLAM/blob/main/photo_2025-09-15_17-12-56.jpg)
+
 
 </div>
 
