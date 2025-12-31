@@ -1,6 +1,0 @@
-#!/bin/bash
-set -euo pipefail
-sudo rm -rf /tpm/*
-sudo pacman -Scc --noconfirm
-sudo rm -rf /var/tmp/*
-sudo rm -rf /install || true
