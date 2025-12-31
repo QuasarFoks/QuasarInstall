@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+pipe() {
+    ./audio_install pipewire
+}
+
+pulse() {
+    ./audio_install pulseaudio
+}
+
+jack() {
+    ./audio_install jack
+}
+
+if [ "$LENG_MODE" = "ru" ]; then
+    audio=$(dialog --title "Меню" --menu "Выберите звуковой сервер: " 15 70 5 \
+        1 "pipewire  (рекомендуется)" \
+        2 "pulseaudio" \
+        3 "Jack2 с pipewire" \
+        3>&1 1>&2 2>&3 3>&-)
+elif [ "$LENG_MODE" = "eu" ]; then
+    audio=$(dialog --title "Меню" --menu ": " 15 70 5 \
+        1 "pipewire  (рекомендуется)" \
+        2 "pulseaudio" \
+        3 "Jack2 с pipewire" \
+        3>&1 1>&2 2>&3 3>&-)
+fi
+
+case $? in
+    0)
+        clear
+        case $audio in
+            2) pipe ;;
+            1) pulse ;;
+            3) jack ;;
+            *) echo "Неверный выбор" ;;
+        esac
+        ;;
+    *)
+        clear
+        echo "Ничего не выбрано или отмена."
+        ;;
+esac

@@ -1,0 +1,87 @@
+#!/bin/bash
+set -euo pipefail
+setfont ter-v16n || echo "ter-v16n не установлен"
+chmod +x network
+sudo ./network
+main_menu() {
+    full_post() {
+        ./post1_install
+        ./post2_install
+        ./audio_config
+        ./wine_install
+        /regions/region_settings
+        ./browser_install
+        ./clean_full
+        read -p "Перезагрузить систему? (y/N): " reboot_choice
+        if [[ $reboot_choice == "y" || $reboot_choice == "Y" ]]; then
+            sudo reboot
+        fi
+    }
+
+    post_one() {
+        ./post1_install
+    }
+    region_settings() {
+        /regions/region_settings
+    }
+
+    post_two() {
+        ./post2_install
+    }
+
+    android_install() {
+        ./android_install # временно не будет работать :(
+    }
+
+    wine_install() {
+       ./wine_install
+    }
+
+    audio_config() {
+        ./audio_config
+    }
+
+    browser_install() {
+        ./browser_install
+    }
+
+    clean_system() {
+        ./clean_full
+    }
+
+    choice=$(dialog --title "quasar-post-install" --menu "Выберите пункт: " 15 70 8 \
+        1 "Экспресс-установка (все этапы)" \
+        2 "1 этап (базовые пакеты)" \
+        3 "2 этап (DE/WM)" \
+        4 "Wine" \
+        5 "Аудио-система" \
+        6 "Браузеры" \
+        7 "Настройка регионна" \
+        8 "чистка системы" \
+        3>&1 1>&2 2>&3 3>&-)
+
+    case $? in
+        0)
+            case $choice in
+                1) full_post ;;
+                2) post_one ;;
+                3) post_two ;;
+                4) wine_install ;;
+                5) audio_config ;;
+                6) browser_install ;;
+                7) region_settings ;;
+                8) clean_system ;;
+            esac
+            ;;
+        *)
+            clear
+            echo "Выход из программы."
+            exit 0
+            ;;
+    esac
+    
+    # Возврат в меню после выполнения
+    read -p "Нажмите Enter для возврата в меню..."
+    main_menu
+}
+main_menu

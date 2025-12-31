@@ -1,0 +1,199 @@
+##########################################
+##/         Language-Pack              \##
+##/            tr_TR                   \##
+##########################################
+### KERNEL
+export KERNEL_INFO_ZEN="Linux-zen (Performans)"
+export KERNEL_INFO_LTS="Linux-lts (Kararlılık)"
+export KERNEL_INFO_VANILA="Linux (Standart)"
+
+### Selected
+export CAND_TEXT="Seçim iptal edildi"
+export ERROR="Hata: "
+
+### basepack
+export INFO_INSTALL="
+╔════════════════════════════════════════════════╗
+║      Temel sistem kurulumu                     ║
+╚════════════════════════════════════════════════╝
+"
+export INFO_SETTING="
+╔════════════════════════════════════════════════╗
+║      Servisler yapılandırılıyor                ║
+╚════════════════════════════════════════════════╝
+"
+export SERVICE_ADD_AUTOBOOT_INFO=" otomatik başlatmaya başarıyla eklendi"
+export REINSTALL="Hata, kuruluyor "
+export WARRING="Uyarı: "
+export RECOVERY_INSTALL="Kurtarma sistemi kuruluyor..."
+export MOUNT_RECOVERY="Kurtarma bölümü bağlandı, devam ediliyor..."
+export FOUD_RECOVERY="recovery.tar.xz bulundu, /mnt/recovery'ye çıkarılıyor..."
+export INSTALL_RECOVERY_GOOD="Kurtarma sistemi başarıyla kuruldu!"
+export RECOVERY_ON_FSTAB="Kurtarma girişi fstab'a eklendi"
+export RECOVERY_UNPACK_ERROR="Kurtarma sistemi açılırken hata!"
+export PATCH_RECOVERY_TEXT="yolunda bulunamadı"
+export ALT_PATCH_RECOVERY_TEXT="Alternatif yollar kontrol ediliyor..."
+export FOUND_PATCH_RECOVERY="/installer/recovery.tar.xz bulundu, çıkarılıyor..."
+export RECOVERY_NOT_FOUND_SKIP="Kurtarma arşivi bulunamadı. Kurtarma sistemi kurulumu atlanıyor."
+export WAR_RECOVERY="Uyarı: Kurtarma bölümü bağlanmadı. Kurtarma kurulumu atlanıyor."
+export HASH_CHECK="Hash eşleşti, çıkarılıyor..."
+export DOWNLOADS_ERROR="İndirilemedi"
+export HASH_CHECK_ERROR="Hash eşleşmedi!"
+export EXPECTED="Beklenen"
+export GOT="Alınan"
+export SELECTED_PACK="Gerekli paketleri seçin:"
+export SELECT_OPTION="Profil seçin"
+
+### bootloader
+export DISK_MOUNT_INFO="/mnt'in bulunduğu disk:"
+export UEFI_GRUB_SETUP="UEFI için GRUB kuruluyor..."
+export BIOS_GRUB_SETUP="BIOS için GRUB kuruluyor..."
+export GRUB_DISTRIBUTOR_NAME="Quasar"
+export GRUB_DISTRIBUTOR_NAME_BIOS="Quasar Linux"
+export GRUB_INSTALLED_UEFI="GRUB UEFI için kuruldu"
+export GRUB_INSTALLED_BIOS="GRUB BIOS için kuruldu"
+export EFISTUB_SETUP="EFISTUB kuruluyor..."
+export EFISTUB_CONFIGURED="EFISTUB yapılandırıldı"
+export REFIND_SETUP="rEFInd kuruluyor..."
+export REFIND_INSTALLED="rEFInd kuruldu"
+export KERNEL_SEARCH_ERROR="Hata: hiçbir çekirdek bulunamadı (linux, linux-zen, linux-lts)"
+export SYSLINUX_SETUP="Syslinux kuruluyor..."
+export SYSLINUX_INSTALLED="Syslinux kuruldu"
+export BOOTLOADER_INSTALL_COMPLETE="Önyükleyici kurulumu tamamlandı!"
+
+### bootloader dialogs
+export UEFI_BOOTLOADER_CHOICE_TITLE="UEFI Önyükleyici Seçimi"
+export UEFI_BOOTLOADER_CHOICE_MENU="Bir önyükleyici seçin:"
+export UEFI_BOOTLOADER_OPTION_1="GRUB (kararlı)"
+export UEFI_BOOTLOADER_OPTION_2="EFISTUB (direkt önyükleme)"
+export UEFI_BOOTLOADER_OPTION_3="rEFInd (gelişmiş)"
+export UEFI_BOOTLOADER_OK_LABEL="Seç"
+export BIOS_BOOTLOADER_CHOICE_TITLE="BIOS Önyükleyici Seçimi"
+export BIOS_BOOTLOADER_CHOICE_MENU="Bir önyükleyici seçin:"
+export BIOS_BOOTLOADER_OPTION_1="GRUB (kararlı)"
+export BIOS_BOOTLOADER_OPTION_2="Syslinux (hafif)"
+export BIOS_BOOTLOADER_OK_LABEL="Seç"
+
+### main menu
+export MENU_SELECT_OPTION="Bir seçenek seçin:"
+export EXPRESS_SETUP="Hızlı kurulum"
+export PARTITIONING="Bölümleme"
+export INSTALL_BASE="Temel sistem kur"
+export INSTALL_PACKAGES="Paketleri kur"
+export USER_SETUP="Kullanıcı ayarları"
+export INSTALL_BOOTLOADER="Önyükleyici kur"
+export EXIT="Çıkış"
+
+### partitioning
+export SELECT_DISK="Bir disk seçin"
+export ENTER_DISK_NAME="Disk adını girin (örn. sda/nvme0n1): "
+export DISK_ERROR="Hata: %s diski mevcut değil!"
+export AUTO_PARTITION_TITLE="=== OTOMATİK DİSK BÖLÜMLEME ==="
+export DISK_SIZE="Disk boyutu: %sGB"
+export DISK_TOO_SMALL="Hata: Disk çok küçük! En az 10GB gerekli"
+export CLEAN_PARTITION_TABLE="Bölüm tablosu temizleniyor..."
+export CREATE_GPT="GPT bölüm tablosu oluşturuluyor (UEFI)..."
+export CREATE_MBR="MBR bölüm tablosu oluşturuluyor (BIOS)..."
+export CREATING_PARTITIONS="Bölümler oluşturuluyor..."
+export CREATED_PARTITIONS_TITLE="=== OLUŞTURULAN BÖLÜMLER ==="
+export FORMATTING_TITLE="=== BÖLÜMLER FORMATLANIYOR ==="
+export FORMATTING_EFI="EFI bölümü formatlanıyor (FAT32)..."
+export FORMATTING_BOOT="Boot bölümü formatlanıyor (ext2)..."
+export FORMATTING_ROOT="Kök bölümü formatlanıyor (ext4)..."
+export FORMATTING_RECOVERY="Kurtarma bölümü formatlanıyor (ext2)..."
+export CREATING_SWAP="Takas alanı oluşturuluyor..."
+export FORMATTING_COMPLETE="Formatlama tamamlandı!"
+export MOUNTING_TITLE="=== BÖLÜMLER BAĞLANIYOR ==="
+export MOUNTING_COMPLETE="Bölümler bağlandı!"
+export SELECT_PARTITIONING_MODE="=== BÖLÜMLEME MODU SEÇİN ==="
+export SELECT_MODE_TITLE="Quasar-install"
+export SELECT_MODE_MENU="Bölümleme modunu seçin:"
+export AUTO_MODE="Otomatik bölümleme"
+export MANUAL_MODE="Manuel bölümleme"
+export EXIT_MODE="Çıkış"
+export AUTO_SELECTED="Otomatik bölümleme seçildi"
+export MANUAL_SELECTED="Manuel bölümleme seçildi"
+export EXITING="Çıkılıyor..."
+export ENTER_ROOT_PARTITION="ROOT bölümünü girin (örn. sda2): "
+export PARTITION_ERROR="Hata: %s mevcut değil!"
+export LUKS_TITLE="
+╔══════════════════════════════════════╗
+║   LUKS şifreleme için şifreyi girin  ║
+╚══════════════════════════════════════╝"
+export ENCRYPT_ROOT_TITLE="Quasar-install"
+export ENCRYPT_ROOT_MENU="Kök bölümü şifrelensin mi?  "
+export YES="Evet"
+export NO="Hayır"
+export FILESYSTEM_TITLE="Quasar-install"
+export FILESYSTEM_MENU="Dosya sistemi seçin: "
+export EXT4="ext4"
+export BTRFS="btrfs"
+export XFS="xfs"
+export SKIPPING="atlanıyor"
+export ENTER_EFI_PARTITION="EFI bölümünü girin (örn. sda1): "
+export ENTER_BOOT_PARTITION="BOOT bölümünü girin (örn. sda1): "
+export CREATE_RECOVERY_QUESTION="Kurtarma bölümü oluşturulsun mu? (e/h): "
+export ENTER_RECOVERY_PARTITION="Kurtarma bölümünü girin (örn. sda4): "
+export CREATE_SWAP_QUESTION="Takas bölümü oluşturulsun mu? (e/h): "
+export ENTER_SWAP_PARTITION="Takas bölümünü girin (örn. sda3): "
+export FINAL_LAYOUT_TITLE="=== SON BÖLÜM DÜZENİ ==="
+export PARTITIONING_COMPLETE="Bölümleme başarıyla tamamlandı!"
+export UNKNOWN_CHOICE="Bilinmeyen seçim"
+
+
+
+### USER SETUP
+export USER_SETUP_TITLE="Kullanıcı Kurulumu"
+export ENTER_USERNAME="Kullanıcı adını girin: "
+export USERNAME_EMPTY="Kullanıcı adı boş olamaz"
+export USERNAME_ROOT="Kullanıcı adı root olamaz"
+export CREATE_GROUP="Grup %s oluşturuluyor..."
+export CREATE_USER="Kullanıcı %s oluşturuluyor..."
+export SET_PASSWORD="%s için şifre belirleyin:"
+export ADD_TO_SUDO="Kullanıcı %s sudoers'a ekleniyor..."
+export USER_ADDED_TO_SUDO=" * Kullanıcı %s sudo'ya eklendi"
+export SET_ROOT_PASSWORD="Root için şifre belirleyin:"
+export ENABLE_SUDO_GROUP="Sudo'da wheel grubu etkinleştiriliyor..."
+export USER_CREATED_SUCCESS="Kullanıcı %s başarıyla oluşturuldu ve sudo'ya eklendi!"
+export ERROR_MOUNT="Bağlama hatası: %s"
+export ERROR_CREATE_USER="Kullanıcı oluşturulamadı: %s"
+export ERROR_SET_PASSWORD="Şifre belirlenemedi: %s"
+export ERROR_SUDO="Sudoers dosyası oluşturma hatası: %s"
+export ERROR_PERMISSIONS="İzinler belirlenirken hata: %s"
+export WARNING_WHEEL="Uyarı: wheel grubu etkinleştirilemedi: %s"
+
+### PASSWORD DIALOGS
+export PASSWORD_EMPTY="Şifre boş olamaz!"
+export PASSWORD_MISMATCH="Şifreler eşleşmiyor! Lütfen tekrar deneyin."
+export CONFIRM_PASSWORD="Şifreyi onaylayın:"
+export CONFIRM_ROOT_PASSWORD="Root şifresini onaylayın:"
+
+### SUCCESS MESSAGE
+export SETUP_COMPLETE_TITLE="Tamamlandı"
+export SETUP_COMPLETE_MSG="Kullanıcı %s başarıyla oluşturuldu ve sudo'ya eklendi!\n\nKullanıcı: %s\nRoot şifresi belirlendi"
+
+##########################################
+##/         Language-Pack              \##
+##/            GPU Detection           \##
+##########################################
+
+### GPU DETECTION
+export GPU_DETECT_AMD="AMD ekran kartı tespit edildi"
+export GPU_DETECT_INTEL="Intel ekran kartı tespit edildi"
+export GPU_DETECT_NVIDIA="NVIDIA ekran kartı tespit edildi"
+export GPU_NVIDIA_WARNING="!!! NVIDIA sürücüleri kararsız olabilir ve Wayland ile sorun yaşayabilir !!!"
+export GPU_DETECT_QXL="QXL sanal ekran kartı tespit edildi (QEMU)"
+export GPU_DETECT_VIRTIO="Virtio sanal ekran kartı tespit edildi (QEMU/KVM)"
+export GPU_DETECT_VMWARE="VMware sanal ekran kartı tespit edildi"
+export GPU_NOT_DETECTED="Ekran kartı tespit edilemedi — yalnızca yedek kullanılıyor (vesa/fbdev)"
+export GPU_LOW_PERFORMANCE="Performans düşük olacak!"
+
+### INSTALLATION STATUS
+export INSTALL_COMPLETED="Kurulum tamamlandı."
+export INSTALLING_BASE_GRAPHICS="Temel grafik alt sistemi kuruluyor (mesa, vesa, fbdev)..."
+
+
+export OS_CHANGE_TITLE="Eski OS Yedekleme"
+export BEST_COMPRESS_SPEED="En iyi sıkıştırma ve hız"
+export BALANCE="İyi denge"
+export FAST_WEAKER_COMPRESSION="Hızlı, zayıf sıkıştırma"

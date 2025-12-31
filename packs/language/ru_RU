@@ -1,0 +1,200 @@
+##########################################
+##/         Language-Pack              \##
+##/            ru_RU                   \##
+##########################################
+### KERNEL
+export KERNEL_INFO_ZEN="Linux-zen (Скорость)"
+export KERNEL_INFO_LTS="Linux-lts (Стабильность)"
+export KERNEL_INFO_VANILA="Linux (Стандарт)"
+
+### Selected
+export CAND_TEXT="Выбор отменен"
+export ERROR="Ошибка: "
+
+### basepack
+export INFO_INSTALL="
+╔════════════════════════════════════════════════╗
+║          Установка базовой системы             ║
+╚════════════════════════════════════════════════╝
+"
+export INFO_SETTING="
+╔════════════════════════════════════════════════╗
+║              Настройка сервисов                ║
+╚════════════════════════════════════════════════╝
+"
+export SERVICE_ADD_AUTOBOOT_INFO=" успешно добавлен в автозагрузку"
+export REINSTALL="Ошибка, устанавливаем "
+export WARRING="Предупреждение: "
+export RECOVERY_INSTALL="Установка recovery системы..."
+export MOUNT_RECOVERY="Recovery раздел смонтирован, продолжаем..."
+export FOUD_RECOVERY="Найден recovery.tar.xz, распаковываю в /mnt/recovery..."
+export INSTALL_RECOVERY_GOOD="Recovery система успешно установлена!"
+export RECOVERY_ON_FSTAB="Запись для recovery добавлена в fstab"
+export RECOVERY_UNPACK_ERROR="Ошибка при распаковке recovery системы!"
+export PATCH_RECOVERY_TEXT="не найден по пути"
+export ALT_PATCH_RECOVERY_TEXT="Проверяем альтернативные пути..."
+export FOUND_PATCH_RECOVERY="Найден /installer/recovery.tar.xz, распаковываю..."
+export RECOVERY_NOT_FOUND_SKIP="Recovery архив не найден. Пропускаем установку recovery системы."
+export WAR_RECOVERY="Предупреждение: Recovery раздел не смонтирован. Пропускаем установку recovery."
+export HASH_CHECK="Хеш совпал, распаковываю..."
+export DOWNLOADS_ERROR="Не скачалось"
+export HASH_CHECK_ERROR="Хеш не совпал!"
+export EXPECTED="Ожидалось"
+export GOT="Получено"
+export SELECTED_PACK="Выберите нужные пакеты:"
+export SELECT_OPTION="Выберите профиль"
+
+### bootloader
+export DISK_MOUNT_INFO="Диск, на котором лежит /mnt:"
+export UEFI_GRUB_SETUP="Установка GRUB для UEFI..."
+export BIOS_GRUB_SETUP="Установка GRUB для BIOS..."
+export GRUB_DISTRIBUTOR_NAME="Quasar"
+export GRUB_DISTRIBUTOR_NAME_BIOS="Quasar Linux"
+export GRUB_INSTALLED_UEFI="GRUB установлен для UEFI"
+export GRUB_INSTALLED_BIOS="GRUB установлен для BIOS"
+export EFISTUB_SETUP="Установка EFISTUB..."
+export EFISTUB_CONFIGURED="EFISTUB настроен"
+export REFIND_SETUP="Установка rEFInd..."
+export REFIND_INSTALLED="rEFInd установлен"
+export KERNEL_SEARCH_ERROR="Ошибка: не найдено ни одно ядро (linux, linux-zen, linux-lts)"
+export SYSLINUX_SETUP="Установка Syslinux..."
+export SYSLINUX_INSTALLED="Syslinux установлен"
+export BOOTLOADER_INSTALL_COMPLETE="Установка загрузчика завершена!"
+
+### bootloader dialogs
+export UEFI_BOOTLOADER_CHOICE_TITLE="Выбор загрузчика UEFI"
+export UEFI_BOOTLOADER_CHOICE_MENU="Выберите загрузчик:"
+export UEFI_BOOTLOADER_OPTION_1="GRUB (стабильный)"
+export UEFI_BOOTLOADER_OPTION_2="EFISTUB (прямая загрузка)"
+export UEFI_BOOTLOADER_OPTION_3="rEFInd (продвинутый)"
+export UEFI_BOOTLOADER_OK_LABEL="Выбрать"
+export BIOS_BOOTLOADER_CHOICE_TITLE="Выбор загрузчика BIOS"
+export BIOS_BOOTLOADER_CHOICE_MENU="Выберите загрузчик:"
+export BIOS_BOOTLOADER_OPTION_1="GRUB (стабильный)"
+export BIOS_BOOTLOADER_OPTION_2="Syslinux (легкий)"
+export BIOS_BOOTLOADER_OK_LABEL="Выбрать"
+
+### main menu
+export MENU_SELECT_OPTION="Выберите пункт:"
+export EXPRESS_SETUP="Экспресс"
+export PARTITIONING="Разметка"
+export INSTALL_BASE="Установка базы"
+export INSTALL_PACKAGES="Установка пакетов"
+export USER_SETUP="Настройка пользователей"
+export INSTALL_BOOTLOADER="Установка загрузчика"
+export EXIT="Выход"
+
+### partitioning
+export SELECT_DISK="Выберите диск"
+export ENTER_DISK_NAME="Введите имя диска (например, sda/nvme0n1): "
+export DISK_ERROR="Ошибка: диск %s не существует!"
+export AUTO_PARTITION_TITLE="=== АВТОРАЗМЕТКА ДИСКА ==="
+export DISK_SIZE="Размер диска: %sGB"
+export DISK_TOO_SMALL="Ошибка: Слишком маленький диск! Нужно минимум 10GB"
+export CLEAN_PARTITION_TABLE="Очистка таблицы разделов..."
+export CREATE_GPT="Создание GPT таблицы разделов (UEFI)..."
+export CREATE_MBR="Создание MBR таблицы разделов (BIOS)..."
+export CREATING_PARTITIONS="Создание разделов..."
+export CREATED_PARTITIONS_TITLE="=== СОЗДАННЫЕ РАЗДЕЛЫ ==="
+export FORMATTING_TITLE="=== ФОРМАТИРОВАНИЕ РАЗДЕЛОВ ==="
+export FORMATTING_EFI="Форматирование EFI раздела (FAT32)..."
+export FORMATTING_BOOT="Форматирование Boot раздела (ext2)..."
+export FORMATTING_ROOT="Форматирование корневого раздела (ext4)..."
+export FORMATTING_RECOVERY="Форматирование recovery раздела (ext2)..."
+export CREATING_SWAP="Создание swap..."
+export FORMATTING_COMPLETE="Форматирование завершено!"
+export MOUNTING_TITLE="=== МОНТИРОВАНИЕ РАЗДЕЛОВ ==="
+export MOUNTING_COMPLETE="Монтирование завершено!"
+export SELECT_PARTITIONING_MODE="=== ВЫБОР РЕЖИМА РАЗМЕТКИ ==="
+export SELECT_MODE_TITLE="Quasar-install"
+export SELECT_MODE_MENU="Выберите режим разметки:"
+export AUTO_MODE="Автоматическая разметка"
+export MANUAL_MODE="Ручная разметка"
+export EXIT_MODE="Выход"
+export AUTO_SELECTED="Выбрана автоматическая разметка"
+export MANUAL_SELECTED="Выбрана ручная разметка"
+export EXITING="Выход..."
+export ENTER_ROOT_PARTITION="Введите раздел для ROOT (например, sda2): "
+export PARTITION_ERROR="Ошибка: %s не существует!"
+export LUKS_TITLE="
+╔══════════════════════════════════════╗
+║   Введите пароль для LUKS шифрования ║
+╚══════════════════════════════════════╝"
+export ENCRYPT_ROOT_TITLE="Quasar-install"
+export ENCRYPT_ROOT_MENU="Зашифровать корневой раздел?  "
+export YES="Да"
+export NO="Нет"
+export FILESYSTEM_TITLE="Quasar-install"
+export FILESYSTEM_MENU="Выберите файловую систему: "
+export EXT4="ext4"
+export BTRFS="btrfs"
+export XFS="xfs"
+export SKIPPING="пропускаем"
+export ENTER_EFI_PARTITION="Введите раздел для EFI (например, sda1): "
+export ENTER_BOOT_PARTITION="Введите раздел для BOOT (например, sda1): "
+export CREATE_RECOVERY_QUESTION="Создать recovery раздел? (y/n): "
+export ENTER_RECOVERY_PARTITION="Введите раздел для RECOVERY (например, sda4): "
+export CREATE_SWAP_QUESTION="Создать swap раздел? (y/n): "
+export ENTER_SWAP_PARTITION="Введите раздел для SWAP (например, sda3): "
+export FINAL_LAYOUT_TITLE="=== ИТОГОВАЯ РАЗМЕТКА ==="
+export PARTITIONING_COMPLETE="Разметка завершена успешно!"
+export UNKNOWN_CHOICE="Неизвестный выбор"
+
+## USER
+
+### USER SETUP
+export USER_SETUP_TITLE="Настройка пользователей"
+export ENTER_USERNAME="Введите имя пользователя: "
+export USERNAME_EMPTY="Имя пользователя не может быть пустым"
+export USERNAME_ROOT="Имя пользователя не может быть root"
+export CREATE_GROUP="Создаём группу %s..."
+export CREATE_USER="Создаём пользователя %s..."
+export SET_PASSWORD="Установите пароль для %s:"
+export ADD_TO_SUDO="Добавляем пользователя %s в sudoers..."
+export USER_ADDED_TO_SUDO=" * Пользователь %s добавлен в sudo"
+export SET_ROOT_PASSWORD="Установите пароль для root:"
+export ENABLE_SUDO_GROUP="Активируем группу wheel в sudo..."
+export USER_CREATED_SUCCESS="Пользователь %s успешно создан и добавлен в sudo!"
+export ERROR_MOUNT="Ошибка монтирования: %s"
+export ERROR_CREATE_USER="Не удалось создать пользователя: %s"
+export ERROR_SET_PASSWORD="Не удалось установить пароль: %s"
+export ERROR_SUDO="Ошибка создания sudoers файла: %s"
+export ERROR_PERMISSIONS="Ошибка установки прав: %s"
+export WARNING_WHEEL="Предупреждение: не удалось активировать группу wheel: %s"
+
+### PASSWORD DIALOGS
+export PASSWORD_EMPTY="Пароль не может быть пустым!"
+export PASSWORD_MISMATCH="Пароли не совпадают! Попробуйте снова."
+export CONFIRM_PASSWORD="Подтвердите пароль:"
+export CONFIRM_ROOT_PASSWORD="Подтвердите пароль для root:"
+
+### SUCCESS MESSAGE
+export SETUP_COMPLETE_TITLE="Готово"
+export SETUP_COMPLETE_MSG="Пользователь %s успешно создан и добавлен в sudo!\n\nПользователь: %s\nПароль root установлен"
+
+
+
+##########################################
+##/         Language-Pack              \##
+##/            GPU Detection           \##
+##########################################
+
+### GPU DETECTION
+export GPU_DETECT_AMD="Обнаружена видеокарта AMD"
+export GPU_DETECT_INTEL="Обнаружена видеокарта Intel"
+export GPU_DETECT_NVIDIA="Обнаружена видеокарта NVIDIA"
+export GPU_NVIDIA_WARNING="!!! NVIDIA драйвера могут быть нестабильны и иметь проблемы с Wayland !!!"
+export GPU_DETECT_QXL="Обнаружена виртуальная видеокарта QXL (QEMU)"
+export GPU_DETECT_VIRTIO="Обнаружена виртуальная видеокарта Virtio (QEMU/KVM)"
+export GPU_DETECT_VMWARE="Обнаружена виртуальная видеокарта VMware"
+export GPU_NOT_DETECTED="Видеокарта не определена — используется только fallback (vesa/fbdev)"
+export GPU_LOW_PERFORMANCE="Производительность будет низкой!"
+
+### INSTALLATION STATUS
+export INSTALL_COMPLETED="Установка завершена."
+export INSTALLING_BASE_GRAPHICS="Устанавливаю базовую графическую подсистему (mesa, vesa, fbdev)..."
+
+export OS_CHANGE_TITLE="Резервная копия старой ОС"
+export BEST_COMPRESS_SPEED="Лучшее сжатие и скорость"
+export BALANCE="Хороший баланс"
+export FAST_WEAKER_COMPRESSION="Быстро, слабое сжатие"

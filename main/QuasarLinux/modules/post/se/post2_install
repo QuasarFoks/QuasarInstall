@@ -1,0 +1,28 @@
+#!/bin/bash 
+
+de_wm=$(dialog --title "Меню" --menu "Выберите DE/WM: " 15 70 8 \
+    1 "Hyprland" \
+    2 "KDE Plasma" \
+    3 "Xfce4" \
+    4 "lxqt" \
+    3>&1 1>&2 2>&3 3>&-)
+
+case $? in
+    0)
+        case $de_wm in
+            1) ./wm_install hyprland ;;
+            2) ./de_install plasma ;;
+            3) ./de_install xfce ;;
+#            5) ./de_install lxde ;;
+            4) ./de_install lxqt ;;
+#            6) ./wm_install i3wm ;;
+#            11) ./wm_install sway ;;
+#            10) ./de_install gnome ;;
+        esac
+        ;;
+    *)
+        clear
+        echo "Выбор DE/WM отменен."
+        ;;
+esac
+### ohhh...... Gnome is not working, Sway postponed. Only in the QuasarLinux-Debug/Stable

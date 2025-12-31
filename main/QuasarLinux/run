@@ -1,0 +1,95 @@
+#!/bin/bash
+clear
+
+# Предварительные настройки
+echo "Подготовка к установке QuasarLinux REV-1..."
+sleep 1
+
+# Проверка и установка зависимостей
+install_deps() {
+    echo "Установка необходимых пакетов..."
+    pacman -Sy --noconfirm
+    which dialog >/dev/null 2>&1 || pacman -S --noconfirm dialog
+    which curl >/dev/null 2>&1 || pacman -S --noconfirm curl
+    which git >/dev/null 2>&1 || pacman -S --noconfirm git
+    which mkfs.fat >/dev/null 2>&1 || pacman -S --noconfirm dosfstools
+    which lsblk >/dev/null 2>&1 || pacman -S --noconfirm util-linux
+    setfont ter-v16n 2>/dev/null || {
+        pacman -S --noconfirm terminus-font
+        setfont ter-v16n
+    }
+}
+
+# Инициализация ключей
+init_keys() {
+    echo "Инициализация ключей..."
+    pacman-key --init
+    pacman-key --populate artix
+    pacman-key --populate archlinux 2>/dev/null || true
+}
+
+# Установка основного установщика
+install_main() {
+    echo "Запуск основного установщика..."
+
+    # Права на исполнение
+    chmod +x arch/network
+    chmod +x modules/*
+    chmod +x modules/post/*
+
+    # Сначала запускаем базовую установку
+    ./arch/install
+
+    # Проверяем успешность
+    if [ $? -eq 0 ]; then
+        echo "Базовая установка завершена успешно"
+    else
+        echo "Ошибка базовой установки!"
+        exit 1
+    fi
+}
+
+# Основной процесс установки
+main() {
+    echo "========================================"
+    echo "  Установка QuasarLinux REV-1"
+    echo "========================================"
+
+    # 1. Установка зависимостей
+    install_deps
+
+    # 2. Инициализация ключей
+    init_keys
+
+    # 3. Показываем доступные модули
+    echo "Доступные модули:"
+    ls modules/
+    echo ""
+
+    # 4. Запуск основного установщика
+    install_main
+
+    # 5. Запуск дополнительных модулей
+    echo "Запуск дополнительных модулей..."
+    if [ -f "modules/install" ]; then
+        bash modules/install
+    else
+        echo "Основной модуль установки не найден!"
+        exit 1
+    fi
+
+    echo ""
+    echo "========================================"
+    echo "  Установка завершена!"
+    echo "========================================"
+}
+
+# Обработка ошибок
+error_handler() {
+    echo "Произошла ошибка на шаге: $1"
+    exit 1
+}
+
+# Запуск с обработкой ошибок
+trap 'error_handler "Неизвестная ошибка"' ERR
+main

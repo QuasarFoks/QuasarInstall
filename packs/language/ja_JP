@@ -1,0 +1,200 @@
+##########################################
+##/         Language-Pack              \##
+##/            ja_JP                   \##
+##########################################
+### KERNEL
+export KERNEL_INFO_ZEN="Linux-zen (パフォーマンス)"
+export KERNEL_INFO_LTS="Linux-lts (安定性)"
+export KERNEL_INFO_VANILA="Linux (標準)"
+
+### Selected
+export CAND_TEXT="選択がキャンセルされました"
+export ERROR="エラー："
+
+### basepack
+export INFO_INSTALL="
+╔════════════════════════════════════════════════╗
+║           ベースシステムのインストール              ║
+╚════════════════════════════════════════════════╝
+"
+export INFO_SETTING="
+╔════════════════════════════════════════════════╗
+║        サービスの設定                            ║
+╚════════════════════════════════════════════════╝
+"
+export SERVICE_ADD_AUTOBOOT_INFO=" が自動起動に正常に追加されました"
+export REINSTALL="エラー、インストール中 "
+export WARRING="警告："
+export RECOVERY_INSTALL="リカバリシステムをインストール中..."
+export MOUNT_RECOVERY="リカバリパーティションがマウントされました、続行中..."
+export FOUD_RECOVERY="recovery.tar.xz が見つかりました、/mnt/recovery に展開中..."
+export INSTALL_RECOVERY_GOOD="リカバリシステムが正常にインストールされました！"
+export RECOVERY_ON_FSTAB="リカバリエントリが fstab に追加されました"
+export RECOVERY_UNPACK_ERROR="リカバリシステムの解凍中にエラーが発生しました！"
+export PATCH_RECOVERY_TEXT="パスに見つかりません"
+export ALT_PATCH_RECOVERY_TEXT="代替パスを確認中..."
+export FOUND_PATCH_RECOVERY="/installer/recovery.tar.xz が見つかりました、展開中..."
+export RECOVERY_NOT_FOUND_SKIP="リカバリアーカイブが見つかりません。リカバリシステムのインストールをスキップします。"
+export WAR_RECOVERY="警告：リカバリパーティションがマウントされていません。リカバリインストールをスキップします。"
+export HASH_CHECK="ハッシュが一致しました、展開中..."
+export DOWNLOADS_ERROR="ダウンロードに失敗しました"
+export HASH_CHECK_ERROR="ハッシュが一致しません！"
+export EXPECTED="期待値"
+export GOT="取得値"
+export SELECTED_PACK="必要なパッケージを選択してください："
+export SELECT_OPTION="プロファイルを選択"
+
+### bootloader
+export DISK_MOUNT_INFO="/mnt があるディスク："
+export UEFI_GRUB_SETUP="UEFI 用 GRUB をインストール中..."
+export BIOS_GRUB_SETUP="BIOS 用 GRUB をインストール中..."
+export GRUB_DISTRIBUTOR_NAME="Quasar"
+export GRUB_DISTRIBUTOR_NAME_BIOS="Quasar Linux"
+export GRUB_INSTALLED_UEFI="GRUB が UEFI 用にインストールされました"
+export GRUB_INSTALLED_BIOS="GRUB が BIOS 用にインストールされました"
+export EFISTUB_SETUP="EFISTUB をインストール中..."
+export EFISTUB_CONFIGURED="EFISTUB が設定されました"
+export REFIND_SETUP="rEFInd をインストール中..."
+export REFIND_INSTALLED="rEFInd がインストールされました"
+export KERNEL_SEARCH_ERROR="エラー：カーネルが見つかりません (linux, linux-zen, linux-lts)"
+export SYSLINUX_SETUP="Syslinux をインストール中..."
+export SYSLINUX_INSTALLED="Syslinux がインストールされました"
+export BOOTLOADER_INSTALL_COMPLETE="ブートローダーのインストールが完了しました！"
+
+### bootloader dialogs
+export UEFI_BOOTLOADER_CHOICE_TITLE="UEFI ブートローダー選択"
+export UEFI_BOOTLOADER_CHOICE_MENU="ブートローダーを選択してください："
+export UEFI_BOOTLOADER_OPTION_1="GRUB (安定版)"
+export UEFI_BOOTLOADER_OPTION_2="EFISTUB (直接ブート)"
+export UEFI_BOOTLOADER_OPTION_3="rEFInd (高度)"
+export UEFI_BOOTLOADER_OK_LABEL="選択"
+export BIOS_BOOTLOADER_CHOICE_TITLE="BIOS ブートローダー選択"
+export BIOS_BOOTLOADER_CHOICE_MENU="ブートローダーを選択してください："
+export BIOS_BOOTLOADER_OPTION_1="GRUB (安定版)"
+export BIOS_BOOTLOADER_OPTION_2="Syslinux (軽量)"
+export BIOS_BOOTLOADER_OK_LABEL="選択"
+
+### main menu
+export MENU_SELECT_OPTION="オプションを選択してください："
+export EXPRESS_SETUP="エクスプレスセットアップ"
+export PARTITIONING="パーティショニング"
+export INSTALL_BASE="ベースシステムをインストール"
+export INSTALL_PACKAGES="パッケージをインストール"
+export USER_SETUP="ユーザー設定"
+export INSTALL_BOOTLOADER="ブートローダーをインストール"
+export EXIT="終了"
+
+### partitioning
+export SELECT_DISK="ディスクを選択してください"
+export ENTER_DISK_NAME="ディスク名を入力してください（例：sda/nvme0n1）："
+export DISK_ERROR="エラー：ディスク %s が存在しません！"
+export AUTO_PARTITION_TITLE="=== 自動ディスクパーティショニング ==="
+export DISK_SIZE="ディスクサイズ：%sGB"
+export DISK_TOO_SMALL="エラー：ディスクが小さすぎます！最低10GB必要です"
+export CLEAN_PARTITION_TABLE="パーティションテーブルをクリーンアップ中..."
+export CREATE_GPT="GPTパーティションテーブルを作成中 (UEFI)..."
+export CREATE_MBR="MBRパーティションテーブルを作成中 (BIOS)..."
+export CREATING_PARTITIONS="パーティションを作成中..."
+export CREATED_PARTITIONS_TITLE="=== 作成されたパーティション ==="
+export FORMATTING_TITLE="=== パーティションをフォーマット中 ==="
+export FORMATTING_EFI="EFIパーティションをフォーマット中 (FAT32)..."
+export FORMATTING_BOOT="Bootパーティションをフォーマット中 (ext2)..."
+export FORMATTING_ROOT="ルートパーティションをフォーマット中 (ext4)..."
+export FORMATTING_RECOVERY="リカバリパーティションをフォーマット中 (ext2)..."
+export CREATING_SWAP="スワップを作成中..."
+export FORMATTING_COMPLETE="フォーマットが完了しました！"
+export MOUNTING_TITLE="=== パーティションをマウント中 ==="
+export MOUNTING_COMPLETE="パーティションがマウントされました！"
+export SELECT_PARTITIONING_MODE="=== パーティショニングモードを選択 ==="
+export SELECT_MODE_TITLE="Quasar-install"
+export SELECT_MODE_MENU="パーティショニングモードを選択してください："
+export AUTO_MODE="自動パーティショニング"
+export MANUAL_MODE="手動パーティショニング"
+export EXIT_MODE="終了"
+export AUTO_SELECTED="自動パーティショニングが選択されました"
+export MANUAL_SELECTED="手動パーティショニングが選択されました"
+export EXITING="終了中..."
+export ENTER_ROOT_PARTITION="ROOTパーティションを入力してください（例：sda2）："
+export PARTITION_ERROR="エラー：%s が存在しません！"
+export LUKS_TITLE="
+╔══════════════════════════════════════╗
+║  LUKS暗号化のパスワードを入力してください  ║
+╚══════════════════════════════════════╝"
+export ENCRYPT_ROOT_TITLE="Quasar-install"
+export ENCRYPT_ROOT_MENU="ルートパーティションを暗号化しますか？"
+export YES="はい"
+export NO="いいえ"
+export FILESYSTEM_TITLE="Quasar-install"
+export FILESYSTEM_MENU="ファイルシステムを選択してください："
+export EXT4="ext4"
+export BTRFS="btrfs"
+export XFS="xfs"
+export SKIPPING="スキップ中"
+export ENTER_EFI_PARTITION="EFIパーティションを入力してください（例：sda1）："
+export ENTER_BOOT_PARTITION="BOOTパーティションを入力してください（例：sda1）："
+export CREATE_RECOVERY_QUESTION="リカバリパーティションを作成しますか？(y/n)："
+export ENTER_RECOVERY_PARTITION="RECOVERYパーティションを入力してください（例：sda4）："
+export CREATE_SWAP_QUESTION="スワップパーティションを作成しますか？(y/n)："
+export ENTER_SWAP_PARTITION="SWAPパーティションを入力してください（例：sda3）："
+export FINAL_LAYOUT_TITLE="=== 最終パーティションレイアウト ==="
+export PARTITIONING_COMPLETE="パーティショニングが正常に完了しました！"
+export UNKNOWN_CHOICE="不明な選択"
+
+
+
+### USER SETUP
+export USER_SETUP_TITLE="ユーザー設定"
+export ENTER_USERNAME="ユーザー名を入力してください: "
+export USERNAME_EMPTY="ユーザー名は空にできません"
+export USERNAME_ROOT="ユーザー名はrootにできません"
+export CREATE_GROUP="グループ%sを作成しています..."
+export CREATE_USER="ユーザー%sを作成しています..."
+export SET_PASSWORD="%sのパスワードを設定:"
+export ADD_TO_SUDO="ユーザー%sをsudoersに追加しています..."
+export USER_ADDED_TO_SUDO=" * ユーザー%sをsudoに追加しました"
+export SET_ROOT_PASSWORD="rootのパスワードを設定:"
+export ENABLE_SUDO_GROUP="sudoでwheelグループを有効化しています..."
+export USER_CREATED_SUCCESS="ユーザー%sが正常に作成され、sudoに追加されました!"
+export ERROR_MOUNT="マウントエラー: %s"
+export ERROR_CREATE_USER="ユーザー作成に失敗しました: %s"
+export ERROR_SET_PASSWORD="パスワード設定に失敗しました: %s"
+export ERROR_SUDO="sudoersファイル作成エラー: %s"
+export ERROR_PERMISSIONS="権限設定エラー: %s"
+export WARNING_WHEEL="警告: wheelグループの有効化に失敗しました: %s"
+
+### PASSWORD DIALOGS
+export PASSWORD_EMPTY="パスワードは空にできません!"
+export PASSWORD_MISMATCH="パスワードが一致しません! もう一度お試しください。"
+export CONFIRM_PASSWORD="パスワードを確認:"
+export CONFIRM_ROOT_PASSWORD="rootのパスワードを確認:"
+
+### SUCCESS MESSAGE
+export SETUP_COMPLETE_TITLE="完了"
+export SETUP_COMPLETE_MSG="ユーザー%sが正常に作成され、sudoに追加されました!\n\nユーザー: %s\nrootパスワードが設定されました"
+
+
+##########################################
+##/         Language-Pack              \##
+##/            GPU Detection           \##
+##########################################
+
+### GPU DETECTION
+export GPU_DETECT_AMD="AMDグラフィックスカードを検出しました"
+export GPU_DETECT_INTEL="Intelグラフィックスカードを検出しました"
+export GPU_DETECT_NVIDIA="NVIDIAグラフィックスカードを検出しました"
+export GPU_NVIDIA_WARNING="!!! NVIDIAドライバは不安定で、Waylandに問題がある可能性があります !!!"
+export GPU_DETECT_QXL="QXL仮想グラフィックスカードを検出しました (QEMU)"
+export GPU_DETECT_VIRTIO="Virtio仮想グラフィックスカードを検出しました (QEMU/KVM)"
+export GPU_DETECT_VMWARE="VMware仮想グラフィックスカードを検出しました"
+export GPU_NOT_DETECTED="グラフィックスカードが検出されませんでした — フォールバックのみ使用します (vesa/fbdev)"
+export GPU_LOW_PERFORMANCE="パフォーマンスは低下します！"
+
+### INSTALLATION STATUS
+export INSTALL_COMPLETED="インストールが完了しました。"
+export INSTALLING_BASE_GRAPHICS="基本的なグラフィックスサブシステムをインストールしています (mesa, vesa, fbdev)..."
+
+
+export OS_CHANGE_TITLE="旧OSのバックアップ"
+export BEST_COMPRESS_SPEED="最高の圧縮と速度"
+export BALANCE="良いバランス"
+export FAST_WEAKER_COMPRESSION="高速、圧縮率低"

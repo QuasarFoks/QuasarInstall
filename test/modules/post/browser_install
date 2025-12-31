@@ -1,0 +1,63 @@
+#!/bin/bash
+set -euo pipefail
+function option1() {
+    flatpak install flathub org.mozilla.firefox -y
+}
+
+function option2() {
+    flatpak install flathub org.chromium.Chromium -y
+}
+
+function option3() {
+    flatpak install flathub com.brave.Browser -y 
+}
+
+function option4() {
+    flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
+}
+
+function option5() {
+    flatpak install flathub io.gitlab.librewolf-community -y 
+}
+
+function option6() {
+    flatpak install flathub com.github.micahflee.torbrowser-launcher -y
+}
+
+function option7() {
+    flatpak install flathub ru.yandex.Browser -y
+}
+
+function option8() {
+    flatpak install flathub org.kde.falkon -y
+}
+
+web=$(dialog --title "quasar-post-install" --menu "Выберите браузер: " 15 70 8 \
+    1 "Firefox" \
+    2 "Chromium" \
+    3 "Brave" \
+    4 "ungoogle-chromium" \
+    5 "Librewolf" \
+    6 "Tor" \
+    7 "Yandex" \
+    8 "falkon" \
+    3>&1 1>&2 2>&3 3>&-)
+
+clear
+
+if [ -z "$web" ]; then
+    echo "пропускаем"
+    exit 0
+fi
+
+case $web in
+    1) option1 ;;
+    2) option2 ;;
+    3) option3 ;;
+    4) option4 ;;
+    5) option5 ;;
+    6) option6 ;;
+    7) option7 ;;
+    8) option8 ;;
+    *) echo "Неверный выбор" ;;
+esac

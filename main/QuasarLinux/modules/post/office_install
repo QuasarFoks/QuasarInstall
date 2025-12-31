@@ -1,0 +1,47 @@
+#!/bin/bash
+set -euo pipefail
+function option1() {
+    flatpak install flathub org.onlyoffice.desktopeditors -y
+}
+
+function option2() {
+    flatpak install flathub com.wps.Office -y
+}
+
+function option3() {
+    flatpak install flathub com.serveftp.officefactoring -y
+}
+
+function option4() {
+    flatpak install flathub org.libreoffice.LibreOffice -y
+}
+
+function option5() {
+    flatpak install flathub de.allotropia.ZetaOffice -y
+}
+
+
+
+office=$(dialog --title "quasar-post-install" --menu "Выберите браузер: " 15 70 8 \
+    1 "OnlyOffice" \
+    2 "WPS Office" \
+    3 "OfficeFactoring" \
+    4 "LibreOffice" \
+    5 "ZetaOffice" \
+    3>&1 1>&2 2>&3 3>&-)
+
+clear
+
+if [ -z "$office" ]; then
+    echo "пропускаем"
+    exit 0
+fi
+
+case $office in
+    1) option1 ;;
+    2) option2 ;;
+    3) option3 ;;
+    4) option4 ;;
+    5) option5 ;;
+    *) echo "Неверный выбор" ;;
+esac

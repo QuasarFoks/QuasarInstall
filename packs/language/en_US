@@ -1,0 +1,202 @@
+##########################################
+##/         Language-Pack              \##
+##/            en_US                   \##
+##########################################
+### KERNEL
+export KERNEL_INFO_ZEN="Linux-zen (Performance)"
+export KERNEL_INFO_LTS="Linux-lts (Stability)"
+export KERNEL_INFO_VANILA="Linux (Standard)"
+
+### Selected
+export CAND_TEXT="Selection canceled"
+export ERROR="Error: "
+
+### basepack
+export INFO_INSTALL="
+╔════════════════════════════════════════════════╗
+║        Installing base system                  ║
+╚════════════════════════════════════════════════╝
+"
+export INFO_SETTING="
+╔════════════════════════════════════════════════╗
+║            Configuring services                ║
+╚════════════════════════════════════════════════╝
+"
+export SERVICE_ADD_AUTOBOOT_INFO=" successfully added to autoboot"
+export REINSTALL="Error, installing "
+export WARRING="Warning: "
+export RECOVERY_INSTALL="Installing recovery system..."
+export MOUNT_RECOVERY="Recovery partition mounted, continuing..."
+export FOUD_RECOVERY="Found recovery.tar.xz, extracting to /mnt/recovery..."
+export INSTALL_RECOVERY_GOOD="Recovery system successfully installed!"
+export RECOVERY_ON_FSTAB="Recovery entry added to fstab"
+export RECOVERY_UNPACK_ERROR="Error unpacking recovery system!"
+export PATCH_RECOVERY_TEXT="not found at path"
+export ALT_PATCH_RECOVERY_TEXT="Checking alternative paths..."
+export FOUND_PATCH_RECOVERY="Found /installer/recovery.tar.xz, extracting..."
+export RECOVERY_NOT_FOUND_SKIP="Recovery archive not found. Skipping recovery system installation."
+export WAR_RECOVERY="Warning: Recovery partition not mounted. Skipping recovery installation."
+export HASH_CHECK="Hash matches, extracting..."
+export DOWNLOADS_ERROR="Failed to download"
+export HASH_CHECK_ERROR="Hash mismatch!"
+export EXPECTED="Expected"
+export GOT="Got"
+export SELECTED_PACK="Select required packages:"
+export SELECT_OPTION="Select profile"
+
+### bootloader
+export DISK_MOUNT_INFO="Disk where /mnt is located:"
+export UEFI_GRUB_SETUP="Installing GRUB for UEFI..."
+export BIOS_GRUB_SETUP="Installing GRUB for BIOS..."
+export GRUB_DISTRIBUTOR_NAME="Quasar"
+export GRUB_DISTRIBUTOR_NAME_BIOS="Quasar Linux"
+export GRUB_INSTALLED_UEFI="GRUB installed for UEFI"
+export GRUB_INSTALLED_BIOS="GRUB installed for BIOS"
+export EFISTUB_SETUP="Installing EFISTUB..."
+export EFISTUB_CONFIGURED="EFISTUB configured"
+export REFIND_SETUP="Installing rEFInd..."
+export REFIND_INSTALLED="rEFInd installed"
+export KERNEL_SEARCH_ERROR="Error: no kernel found (linux, linux-zen, linux-lts)"
+export SYSLINUX_SETUP="Installing Syslinux..."
+export SYSLINUX_INSTALLED="Syslinux installed"
+export BOOTLOADER_INSTALL_COMPLETE="Bootloader installation completed!"
+
+### bootloader dialogs
+export UEFI_BOOTLOADER_CHOICE_TITLE="UEFI Bootloader Selection"
+export UEFI_BOOTLOADER_CHOICE_MENU="Select bootloader:"
+export UEFI_BOOTLOADER_OPTION_1="GRUB (stable)"
+export UEFI_BOOTLOADER_OPTION_2="EFISTUB (direct boot)"
+export UEFI_BOOTLOADER_OPTION_3="rEFInd (advanced)"
+export UEFI_BOOTLOADER_OK_LABEL="Select"
+export BIOS_BOOTLOADER_CHOICE_TITLE="BIOS Bootloader Selection"
+export BIOS_BOOTLOADER_CHOICE_MENU="Select bootloader:"
+export BIOS_BOOTLOADER_OPTION_1="GRUB (stable)"
+export BIOS_BOOTLOADER_OPTION_2="Syslinux (lightweight)"
+export BIOS_BOOTLOADER_OK_LABEL="Select"
+
+### main menu
+export MENU_SELECT_OPTION="Select option:"
+export EXPRESS_SETUP="Express setup"
+export PARTITIONING="Partitioning"
+export INSTALL_BASE="Install base system"
+export INSTALL_PACKAGES="Install packages"
+export USER_SETUP="User setup"
+export INSTALL_BOOTLOADER="Install bootloader"
+export EXIT="Exit"
+
+### partitioning
+export SELECT_DISK="Select disk"
+export ENTER_DISK_NAME="Enter disk name (e.g., sda/nvme0n1): "
+export DISK_ERROR="Error: disk %s does not exist!"
+export AUTO_PARTITION_TITLE="=== AUTOMATIC DISK PARTITIONING ==="
+export DISK_SIZE="Disk size: %sGB"
+export DISK_TOO_SMALL="Error: Disk is too small! Minimum 10GB required"
+export CLEAN_PARTITION_TABLE="Cleaning partition table..."
+export CREATE_GPT="Creating GPT partition table (UEFI)..."
+export CREATE_MBR="Creating MBR partition table (BIOS)..."
+export CREATING_PARTITIONS="Creating partitions..."
+export CREATED_PARTITIONS_TITLE="=== CREATED PARTITIONS ==="
+export FORMATTING_TITLE="=== FORMATTING PARTITIONS ==="
+export FORMATTING_EFI="Formatting EFI partition (FAT32)..."
+export FORMATTING_BOOT="Formatting Boot partition (ext2)..."
+export FORMATTING_ROOT="Formatting root partition (ext4)..."
+export FORMATTING_RECOVERY="Formatting recovery partition (ext2)..."
+export CREATING_SWAP="Creating swap..."
+export FORMATTING_COMPLETE="Formatting completed!"
+export MOUNTING_TITLE="=== MOUNTING PARTITIONS ==="
+export MOUNTING_COMPLETE="Mounting completed!"
+export SELECT_PARTITIONING_MODE="=== SELECT PARTITIONING MODE ==="
+export SELECT_MODE_TITLE="Quasar-install"
+export SELECT_MODE_MENU="Select partitioning mode:"
+export AUTO_MODE="Automatic partitioning"
+export MANUAL_MODE="Manual partitioning"
+export EXIT_MODE="Exit"
+export AUTO_SELECTED="Automatic partitioning selected"
+export MANUAL_SELECTED="Manual partitioning selected"
+export EXITING="Exiting..."
+export ENTER_ROOT_PARTITION="Enter ROOT partition (e.g., sda2): "
+export PARTITION_ERROR="Error: %s does not exist!"
+export LUKS_TITLE="
+╔══════════════════════════════════════╗
+║   Enter password for LUKS encryption ║
+╚══════════════════════════════════════╝"
+export ENCRYPT_ROOT_TITLE="Quasar-install"
+export ENCRYPT_ROOT_MENU="Encrypt root partition?  "
+export YES="Yes"
+export NO="No"
+export FILESYSTEM_TITLE="Quasar-install"
+export FILESYSTEM_MENU="Select filesystem: "
+export EXT4="ext4"
+export BTRFS="btrfs"
+export XFS="xfs"
+export SKIPPING="skipping"
+export ENTER_EFI_PARTITION="Enter EFI partition (e.g., sda1): "
+export ENTER_BOOT_PARTITION="Enter BOOT partition (e.g., sda1): "
+export CREATE_RECOVERY_QUESTION="Create recovery partition? (y/n): "
+export ENTER_RECOVERY_PARTITION="Enter RECOVERY partition (e.g., sda4): "
+export CREATE_SWAP_QUESTION="Create swap partition? (y/n): "
+export ENTER_SWAP_PARTITION="Enter SWAP partition (e.g., sda3): "
+export FINAL_LAYOUT_TITLE="=== FINAL PARTITION LAYOUT ==="
+export PARTITIONING_COMPLETE="Partitioning completed successfully!"
+export UNKNOWN_CHOICE="Unknown choice"
+
+
+
+
+### USER SETUP
+export USER_SETUP_TITLE="User Setup"
+export ENTER_USERNAME="Enter username: "
+export USERNAME_EMPTY="Username cannot be empty"
+export USERNAME_ROOT="Username cannot be root"
+export CREATE_GROUP="Creating group %s..."
+export CREATE_USER="Creating user %s..."
+export SET_PASSWORD="Set password for %s:"
+export ADD_TO_SUDO="Adding user %s to sudoers..."
+export USER_ADDED_TO_SUDO=" * User %s added to sudo"
+export SET_ROOT_PASSWORD="Set password for root:"
+export ENABLE_SUDO_GROUP="Activating wheel group in sudo..."
+export USER_CREATED_SUCCESS="User %s successfully created and added to sudo!"
+export ERROR_MOUNT="Mount error: %s"
+export ERROR_CREATE_USER="Failed to create user: %s"
+export ERROR_SET_PASSWORD="Failed to set password: %s"
+export ERROR_SUDO="Error creating sudoers file: %s"
+export ERROR_PERMISSIONS="Error setting permissions: %s"
+export WARNING_WHEEL="Warning: failed to activate wheel group: %s"
+
+### PASSWORD DIALOGS
+export PASSWORD_EMPTY="Password cannot be empty!"
+export PASSWORD_MISMATCH="Passwords do not match! Please try again."
+export CONFIRM_PASSWORD="Confirm password:"
+export CONFIRM_ROOT_PASSWORD="Confirm password for root:"
+
+### SUCCESS MESSAGE
+export SETUP_COMPLETE_TITLE="Done"
+export SETUP_COMPLETE_MSG="User %s successfully created and added to sudo!\n\nUser: %s\nRoot password set"
+
+
+
+
+##########################################
+##/         Language-Pack              \##
+##/            GPU Detection           \##
+##########################################
+
+### GPU DETECTION
+export GPU_DETECT_AMD="AMD graphics card detected"
+export GPU_DETECT_INTEL="Intel graphics card detected"
+export GPU_DETECT_NVIDIA="NVIDIA graphics card detected"
+export GPU_NVIDIA_WARNING="!!! NVIDIA drivers may be unstable and have issues with Wayland !!!"
+export GPU_DETECT_QXL="QXL virtual graphics card detected (QEMU)"
+export GPU_DETECT_VIRTIO="Virtio virtual graphics card detected (QEMU/KVM)"
+export GPU_DETECT_VMWARE="VMware virtual graphics card detected"
+export GPU_NOT_DETECTED="Graphics card not detected — using only fallback (vesa/fbdev)"
+export GPU_LOW_PERFORMANCE="Performance will be low!"
+
+### INSTALLATION STATUS
+export INSTALL_COMPLETED="Installation completed."
+export INSTALLING_BASE_GRAPHICS="Installing basic graphics subsystem (mesa, vesa, fbdev)..."
+
+export OS_CHANGE_TITLE="OS Backup"
+export BEST_COMPRESS_SPEED="Best compression & speed"
+export BALANCE="Good balance"
+export FAST_WEAKER_COMPRESSION="Fast, weaker compression"

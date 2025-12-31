@@ -1,0 +1,145 @@
+#!/bin/bash
+set -euo pipefail
+
+# Обновление репозиториев
+sudo pacman -Sy --noconfirm
+
+packages=(
+    "qt5"               "off"
+    "qt6"               "on"
+    "ffmpeg"            "off"
+    "gamemode"          "off"
+    "polkit"            "off"
+    "x264"              "on"
+    "x265"              "on"
+    "openh264"          "on"
+    "qemu-full"         "off"
+    "qemu-base"         "off"
+    "grub-customizer"   "off"
+    "wayland"           "on"
+    "xorg"              "on"
+    "gtk2"              "off"
+    "gtk3"              "off"
+    "gtk4"              "off"
+    "qbittorrent"       "off"
+    "qbittorrent-openrc" "off"
+    "vlc"               "off"
+    "gwenview"          "off"
+    "krita"             "off"
+    "jdk-openjdk"       "off"
+    "jre8-openjdk"      "off"
+    "jre-openjdk"       "off"
+    "openjdk-src"       "off"
+    "kdeconnect"        "off"
+    "virt-manager"      "off"
+    "libvirt"           "off"
+    "libvirt-openrc"    "off"
+    "docker"            "off"
+    "docker-openrc"     "off"
+    "nmap"              "off"
+    "wireshark-cli"     "off"
+    "wireshark-qt"      "off"
+    "cups"              "off"
+    "cups-openrc"       "off"
+    "lib32-libcups"     "off"
+    "apcupsd"		"off"
+    "apcupsd-openrc"	"off"
+    "bluez-cups"	"off"
+    "libcups"		"off"
+    "libcupsfilters"	"off"
+    "system-config-printer" "off"
+    "bluedevil"		"off"
+    "bluez"		"off"
+    "bluez-libs"	"off"
+    "bluez-qt5"		"off"
+    "bluez-openrc"	"off"
+    "gnome-bluetooth-3.0" "off"
+    "bluez-utils"	"off"
+)
+
+# Проверка наличия dialog
+if ! command -v dialog &> /dev/null; then
+    echo "Установка dialog..."
+    sudo pacman -S --noconfirm dialog
+fi
+
+# Формируем аргументы для dialog в правильном формате
+dialog_args=()
+for ((i = 0; i < ${#packages[@]}; i += 2)); do
+    pkg="${packages[i]}"
+    state="${packages[i+1]}"
+    dialog_args+=("$pkg" "" "$state")
+done
+
+# Запуск диалога выбора
+selected=$(dialog --stdout --checklist "Выберите нужные пакеты для установки:" 0 0 0 "${dialog_args[@]}")
+
+dialog_exit_code=$?
+
+case $dialog_exit_code in
+    0)
+        clear
+        if [ -n "$selected" ]; then
+            echo "Устанавливаем пакеты: $selected"
+            # Убираем кавычки из вывода dialog
+            install_list=$(echo "$selected" | tr -d '"')
+            sudo pacman -S --noconfirm $install_list go
+        else
+            echo "Не выбрано ни одного пакета."
+        fi
+        ;;
+    1)
+        clear
+        echo "Выбор пакетов отменен."
+        exit 0
+        ;;
+    255)
+        clear
+        echo "Диалог был прерван (ESC)."
+        exit 1
+        ;;
+esac
+
+clear
+#echo "Подготовка и установка QuasarLinux-REV-1 -- Image"
+
+# Создаем временную директорию и работаем в ней
+#temp_dir=$(mktemp -d)
+#cd "$temp_dir"
+
+#wget -O QuasarLinux-REV-1.tar.xz "https://github.com/b-e-n-z1342/QuasarLinux/releases/download/Image_update/quasarlinux-img.tar.xz" || { echo "Не скачалось"; exit 1; }
+
+#downloaded_hash=$(sha256sum QuasarLinux-REV-1.tar.xz | cut -d' ' -f1)
+#expected_hash="d0fe71da08d057c7bd46f29c4c12ce6ee19f6cef16bd9f23141d016b7c4eeabd"
+#if [ "$downloaded_hash" = "$expected_hash" ]; then
+#    echo "Хеш совпал, распаковываю..."
+#    sudo tar -xf QuasarLinux-REV-1.tar.xz -C /
+#else
+#    echo "Хеш не совпал! Ожидалось: $expected_hash"
+#    echo "Получено: $downloaded_hash"
+#    exit 1
+#fi
+
+
+# Очистка временных файлов
+#cd /
+#sudo rm -rf "$temp_dir"
+#wget https://raw.githubusercontent.com/b-e-n-z1342/quasarlinux-repo/main/packages/openrc/openrc-0.62.6-1-x86_64-quasar.pkg.tar.zst
+#pacman -U openrc-0.62.6-1-x86_64-quasar.pkg.tar.zst --noconfirm
+# Установка Systemd-rc
+git clone https://github.com/b-e-n-z1342/Systemd-rc.git
+cd Systemd-rc && chmod +x install
+sudo ./install
+
+git clone https://github.com/b-e-n-z1342/neofetch.git
+cd neofetch
+sudo make install
+# Настройка локалей
+sudo sed -i 's/^#\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+sudo sed -i 's/^#\(ru_RU.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+sudo locale-gen
+echo "LANG=ru_RU.UTF-8" | sudo tee /etc/locale.conf
+
+# Запуск установки
+
+cd

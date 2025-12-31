@@ -1,0 +1,49 @@
+#!/bin/bash
+set -euo pipefail
+de="$1"
+
+plasma() {
+    sudo pacman -S plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark --noconfirm
+    sleep 1
+    sudo pacman -Rns discover --noconfirm 2>/dev/null || true
+    
+    echo "Настройка SDDM..."
+    sudo groupadd -f sddm
+    sudo useradd -r -g sddm -s /usr/bin/nologin -d /var/lib/sddm sddm 2>/dev/null || true
+    sudo mkdir -p /var/lib/sddm /var/run/sddm
+    sudo chown sddm:sddm /var/lib/sddm /var/run/sddm
+    sudo chmod 0755 /var/lib/sddm /var/run/sddm
+    sudo usermod -aG seat,video,input sddm || echo "Error 1"
+    sudo usermod -aG video,input sddm || echo "Error 2"
+    sudo rc-update add sddm default
+}
+
+xfce() {
+    sudo pacman -S --needed xfce4 thunar xorg lightdm lightdm-openrc lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
+    sudo rc-update add lightdm default
+}
+
+lxqt() {
+    sudo pacman -S lxqt sddm dolphin kate sddm-openrc --noconfirm
+    sudo rc-update add sddm default
+}
+
+lxde() {
+    sudo pacman -S lxde lxdm dolphin kate lxdm-openrc --noconfirm
+    sudo rc-update add lxdm default
+}
+
+gnome() {
+    sudo pacman -S --needed --noconfirm gnome-shell gnome nautilus gnome-control-center gnome-terminal wayland seatd
+    sudo pacman -S --needed gdm gdm-openrc --noconfirm
+    sudo rc-update add gdm default
+}
+
+case "$de" in
+    plasma) plasma ;;
+    lxde) lxde ;;
+    lxqt) lxqt ;;
+    xfce4|xfce) xfce ;;
+    gnome) gnome ;;
+    *) echo "Неизвестная среда рабочего стола: $de" ;;
+esac
