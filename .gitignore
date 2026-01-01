@@ -1,0 +1,10 @@
+build/*
+packs/QuasarTools/*
+packs/QuasarTools/fast-chroot/fchroot
+packs/QuasarTools/Systemd-rc/systemctl
+*.kate-swp
+*.swap
+*.iso
+
+*.img
+releases/

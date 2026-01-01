@@ -1,0 +1,7 @@
+[submodule "Systemd-rc"]
+    path = packs/QuasarTools/Systemd-rc
+    url = https://github.com/QuasarFoks/Systemd-rc.git
+    
+[submodule "fast-chroot"]
+    path = packs/QuasarTools/fast-chroot  
+    url = https://github.com/QuasarFoks/fast-chroot.git
