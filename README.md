@@ -4,10 +4,10 @@
 
 <div align="center">
 
-# Quasar-install 2.0
+# Quasar-install 3.0
 
 ![Static Badge](https://img.shields.io/badge/Статус-Активная_разработка-brightgreen)
-![Static Badge](https://img.shields.io/badge/Версия-2.0-blue)
+![Static Badge](https://img.shields.io/badge/Версия-3.0-blue)
 ![Static Badge](https://img.shields.io/badge/Архитектура-x86__64-orange)
 
 
@@ -21,7 +21,7 @@
 
 ## О проекте
 
-**Quasar-install 2.0** - новый модульный установщик для QuasarLinux, где каждый компонент независим и настраивается под ваши нужды.
+**Quasar-install 3.0** - новый модульный установщик для QuasarLinux, где каждый компонент независим и настраивается под ваши нужды.
 
 ### Философия
 **Модульность + Независимость = Гибкость**  
@@ -78,12 +78,17 @@
 ### Быстрый запуск
 ```
 # Клонируйте репозиторий
-git clone https://github.com/b-e-n-z1342/QuasarLinux-install
+git clone https://github.com/QuasarFoks/QuasarInstall.git
 
 # Перейдите в директорию
-cd QuasarLinux-install
+cd QuasarInstall
 
 # Дайте права на выполнение и запустите
-chmod +x run
-./run
+chmod +x make && ./make
+#
+# Выбираете нужный дистребутив 
+# и в build/ будет готовый установщик 
+
+# Запуск установщика
+build/run
 ```

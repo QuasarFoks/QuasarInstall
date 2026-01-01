@@ -5,3 +5,7 @@
 [submodule "fast-chroot"]
     path = packs/QuasarTools/fast-chroot  
     url = https://github.com/QuasarFoks/fast-chroot.git
+[submodule "qbox"]
+    path = packs/QuasarTools/qbox
+    url = https://github.com/b-e-n-z1342/qbox.git
+
