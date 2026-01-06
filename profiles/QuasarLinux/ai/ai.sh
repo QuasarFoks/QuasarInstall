@@ -18,7 +18,7 @@ if [ "${LANG_MODE:-}" = "ru" ]; then
 elif [ "${LANG_MODE:-}" = "eu" ]; then
     echo "Installing basic graphics subsystem (mesa, vesa, fbdev)..."
 fi
-fast-chroot /mnt pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
+chroot /mnt pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
 
 # Определяем и устанавливаем специфичные драйверы
 if echo "$gpu_info" | grep -qi "AMD"; then
@@ -27,7 +27,7 @@ if echo "$gpu_info" | grep -qi "AMD"; then
     elif [ "${LANG_MODE:-}" = "eu" ]; then
         echo "AMD graphics card detected"
     fi
-    fast-chroot /mnt pacman -S --noconfirm xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver mesa-vdpau rocm-hip-sdk rocm-opencl-sdk rocm-ml-sdk
+    chroot /mnt pacman -S --noconfirm xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver mesa-vdpau rocm-hip-sdk rocm-opencl-sdk rocm-ml-sdk
 
 elif echo "$gpu_info" | grep -qi "Intel"; then
     if [ "${LANG_MODE:-}" = "ru" ]; then
@@ -35,7 +35,7 @@ elif echo "$gpu_info" | grep -qi "Intel"; then
     elif [ "${LANG_MODE:-}" = "eu" ]; then
         echo "Intel graphics card detected"
     fi
-    fast-chroot /mnt pacman -S --noconfirm xf86-video-intel vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver intel-compute-runtime
+    chroot /mnt pacman -S --noconfirm xf86-video-intel vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver intel-compute-runtime
 
 elif echo "$gpu_info" | grep -qi "NVIDIA"; then
     if [ "${LANG_MODE:-}" = "ru" ]; then
@@ -46,7 +46,7 @@ elif echo "$gpu_info" | grep -qi "NVIDIA"; then
         echo "!!! NVIDIA drivers may be unstable and have issues with Wayland !!!"
     fi
     sleep 5
-    fchroot /mnt pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings cuda cudnn python-pytorch-cuda tensorflow-cuda
+    chroot /mnt pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings cuda cudnn python-pytorch-cuda tensorflow-cuda
 
 elif echo "$gpu_info" | grep -qi "QXL"; then
     if [ "${LANG_MODE:-}" = "ru" ]; then
@@ -89,4 +89,4 @@ elif [ "${LANG_MODE:-}" = "eu" ]; then
     echo "Installation completed."
 fi
 
-fchroot /mnt pacman -S python python-pip python-virtualenv python-numpy python-scipy python-matplotlib python-pandas cmake ninja openblas lapack fftw --noconfirm --needed
+chroot /mnt pacman -S python python-pip python-virtualenv python-numpy python-scipy python-matplotlib python-pandas cmake ninja openblas lapack fftw --noconfirm --needed

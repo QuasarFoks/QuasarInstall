@@ -7,7 +7,7 @@
 # Quasar-install 3.0
 
 ![Static Badge](https://img.shields.io/badge/Статус-Активная_разработка-brightgreen)
-![Static Badge](https://img.shields.io/badge/Версия-3.0-blue)
+![Static Badge](https://img.shields.io/badge/version-3.0-blue)
 ![Static Badge](https://img.shields.io/badge/Архитектура-x86__64-orange)
 
 

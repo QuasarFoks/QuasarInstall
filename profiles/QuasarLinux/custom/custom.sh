@@ -95,10 +95,10 @@ amd_drivers() {
     4 "ML/AI ROMc"
     3>&1 1>&2 2>&3 3>&-)
     case $driver in
-        1) fchroot /mnt pacman -S ---needed --noconfirm amdvlk lib32-amdvlk  ;;
-        2) fchroot /mnt pacman -S ---needed --noconfirm vulkan-radeon  lib32-vulkan-radeon libva-mesa-driver mesa-vdpau mesa ;;
-        3) fchroot /mnt pacman -S ---needed --noconfirm xf86-video-amdgpu ;;
-        4) fchroot /mnt pacman -S ---needed --noconfirm rocm-opencl-runtime clinfo rocm-opencl-runtime rocm-hip-sdk ;;
+        1) chroot /mnt pacman -S ---needed --noconfirm amdvlk lib32-amdvlk  ;;
+        2) chroot /mnt pacman -S ---needed --noconfirm vulkan-radeon  lib32-vulkan-radeon libva-mesa-driver mesa-vdpau mesa ;;
+        3) chroot /mnt pacman -S ---needed --noconfirm xf86-video-amdgpu ;;
+        4) chroot /mnt pacman -S ---needed --noconfirm rocm-opencl-runtime clinfo rocm-opencl-runtime rocm-hip-sdk ;;
         *) exit 0 ;;
     esac
 
@@ -109,7 +109,7 @@ video_drivers() {
 
     echo "install (mesa, vesa, fbdev)..."
 
-    fchroot /mnt pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
+    chroot /mnt pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
 
 
     if echo "$gpu_info" | grep -qi "AMD"; then
@@ -118,28 +118,28 @@ video_drivers() {
 
     elif echo "$gpu_info" | grep -qi "Intel"; then
         echo "$GPU_DETECT_INTEL"
-        fast-chroot /mnt pacman -S --noconfirm xf86-video-intel vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver
+        chroot /mnt pacman -S --noconfirm xf86-video-intel vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver
 
     elif echo "$gpu_info" | grep -qi "NVIDIA"; then
         echo "$GPU_DETECT_NVIDIA"
         echo "$GPU_NVIDIA_WARNING"
         sleep 5
-        fast-chroot /mnt pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings
+        chroot /mnt pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings
 
     elif echo "$gpu_info" | grep -qi "QXL"; then
         echo "$GPU_DETECT_QXL"
-        fast-chroot /mnt pacman -S --noconfirm xf86-video-qxl qemu-guest-agent qemu-guest-agent-openrc
-        fast-chroot /mnt rc-update add qemu-guest-agent default
+        chroot /mnt pacman -S --noconfirm xf86-video-qxl qemu-guest-agent qemu-guest-agent-openrc
+        chroot /mnt rc-update add qemu-guest-agent default
 
     elif echo "$gpu_info" | grep -qi "Virtio"; then
         echo "$GPU_DETECT_VIRTIO"
         # Virtio-GPU использует стандартные mesa/vulkan, но может использовать Venus
-        fast-chroot /mnt pacman -S --noconfirm vulkan-virtio lib32-vulkan-virtio qemu-guest-agent qemu-guest-agent-openrc
-        fast-chroot /mnt rc-update add qemu-guest-agent default
+        chroot /mnt pacman -S --noconfirm vulkan-virtio lib32-vulkan-virtio qemu-guest-agent qemu-guest-agent-openrc
+        chroot /mnt rc-update add qemu-guest-agent default
 
     elif echo "$gpu_info" | grep -qi "VMware"; then
         echo "$GPU_DETECT_VMWARE"
-        fast-chroot /mnt pacman -S --noconfirm xf86-video-vmware xlibre-xf86-video-vmware xlibre-xf86-input-vmmouse xf86-input-vmmouse
+        chroot /mnt pacman -S --noconfirm xf86-video-vmware xlibre-xf86-video-vmware xlibre-xf86-input-vmmouse xf86-input-vmmouse
     else
         echo "$GPU_NOT_DETECTED"
         echo "$GPU_LOW_PERFORMANCE"
@@ -167,12 +167,53 @@ custom_install() {
 
     # Устанавливаем выбранные пакеты + NetworkManager и его OpenRC-интеграцию
     if [ ${#install_list[@]} -gt 0 ]; then
-        fast-chroot /mnt pacman -S --noconfirm "${install_list[@]}" networkmanager networkmanager-openrc
+        chroot /mnt pacman -S --noconfirm "${install_list[@]}" networkmanager networkmanager-openrc
     else
-        fast-chroot /mnt pacman -S --noconfirm networkmanager networkmanager-openrc
+        chroot /mnt pacman -S --noconfirm networkmanager networkmanager-openrc
     fi
 
-    fast-chroot /mnt rc-update add NetworkManager default
+    chroot /mnt rc-update add NetworkManager default
+
+    # Обработка OpenRC сервисов для выбранных пакетов
+    for pkg in "${install_list[@]}"; do
+        case $pkg in
+            "qbittorrent-openrc")
+                chroot /mnt rc-update add qbittorrent default && \
+                    echo "qbittorrent успешно добавлен в автозагрузку" || \
+                    echo "пропускаем qbittorrent..."
+                ;;
+            "libvirt-openrc")
+                chroot /mnt rc-update add libvirtd default && \
+                    echo "libvirtd успешно добавлен в автозагрузку" || \
+                    echo "пропускаем libvirtd..."
+                ;;
+            "docker-openrc")
+                chroot /mnt rc-update add docker default && \
+                    echo "docker успешно добавлен в автозагрузку" || \
+                    echo "пропускаем docker..."
+                ;;
+            "cups-openrc")
+                chroot /mnt rc-update add cupsd default && \
+                    echo "cupsd успешно добавлен в автозагрузку" || \
+                    echo "пропускаем cupsd..."
+                ;;
+            "apcupsd-openrc")
+                chroot /mnt rc-update add apcupsd default && \
+                    echo "apcupsd успешно добавлен в автозагрузку" || \
+                    echo "пропускаем apcupsd..."
+                ;;
+            "bluez-openrc")
+                chroot /mnt rc-update add bluetooth default && \
+                    echo "bluetooth успешно добавлен в автозагрузку" || \
+                    echo "пропускаем bluetooth..."
+                ;;
+            "polkit")
+                chroot /mnt rc-update add polkit default && \
+                    echo "polkit успешно добавлен в автозагрузку" || \
+                    echo "пропускаем polkit..."
+                ;;
+        esac
+    done
 }
 main() {
 

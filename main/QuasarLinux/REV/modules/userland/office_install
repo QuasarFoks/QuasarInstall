@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+
+option1() {
+    chroot /mnt flatpak install flathub org.onlyoffice.desktopeditors -y
+}
+
+option2() {
+    chroot /mnt flatpak install flathub com.wps.Office -y
+}
+
+option3() {
+    chroot /mnt flatpak install flathub com.serveftp.officefactoring -y
+}
+
+option4() {
+    chroot /mnt flatpak install flathub org.libreoffice.LibreOffice -y
+}
+
+option5() {
+    chroot /mnt flatpak install flathub de.allotropia.ZetaOffice -y
+}
+
+
+
+main() {
+    local office="$1"
+    if [ -z "$office" ]; then
+        echo "пропускаем"
+        exit 0
+    fi
+
+    case "$office" in
+        onlyoffice) option1 ;;
+        wps) option2 ;;
+        officefactoring) option3 ;;
+        libreoffice) option4 ;;
+        zetaoffice) option5 ;;
+        *) echo "Неверный выбор" ;;
+    esac
+}
+main

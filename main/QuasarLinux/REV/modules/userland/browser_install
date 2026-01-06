@@ -1,0 +1,53 @@
+#!/bin/bash
+set -euo pipefail
+function option1() {
+    flatpak install flathub org.mozilla.firefox -y
+}
+
+function option2() {
+    flatpak install flathub org.chromium.Chromium -y
+}
+
+function option3() {
+    flatpak install flathub com.brave.Browser -y 
+}
+
+function option4() {
+    flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
+}
+
+function option5() {
+    flatpak install flathub io.gitlab.librewolf-community -y 
+}
+
+function option6() {
+    flatpak install flathub com.github.micahflee.torbrowser-launcher -y
+}
+
+function option7() {
+    flatpak install flathub ru.yandex.Browser -y
+}
+
+function option8() {
+    flatpak install flathub org.kde.falkon -y
+}
+
+main() {
+    local web="$1"
+    if [ -z "$web" ]; then
+        echo "пропускаем"
+        exit 0
+    fi
+
+    case "$web" in
+        firefox) option1 ;;
+        chromium) option2 ;;
+        brave) option3 ;;
+        ungoogled_chromium) option4 ;;
+        librewolf) option5 ;;
+        torbrowser) option6 ;;
+        yandex) option7 ;;
+        falkon) option8 ;;
+        *) echo "Неверный выбор" ;;
+    esac
+}

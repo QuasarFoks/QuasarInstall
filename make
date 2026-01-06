@@ -5,17 +5,38 @@ export BUILD_DIR="$SCRIPT_DIR"/build
 list_os() {
   echo "
   -- please select OS --
-    Операционная система           тип             версия
+    Операционная система           тип             версия установщика
   1) QuasarLinux                стабильный          3.0
   2) QuasarXOS                  Скоро...            --
   3) BlazarLinux                В разработке        --
   4) QuasarOS                   Скоро...            --
   "
 }
+edition_quasarlinux() {
+    echo "
+  -- please select OS --
+    Операционная система           тип              версия дистрибутива
+------------------------------------------------------------
+  1) Second Edition               Скоро               0.1
+  2) REVision                   Стабильная            1.1
+  3) PRO                          Скоро               -.-
+------------------------------------------------------------
+  "
+  read -p ">>> " CHOISE_EDITION
+  case "$CHOISE_EDITION" in
+    1) quasarlinux_se_installer ;;
+    2) quasarlinux_rev_installer ;;
+    3) quasarlinux_pro_installer ;;
+    *) echo "Не вереный выбор"
+  esac
+
+}
+
+
 
 build_tools() {
     cd packs/QuasarTools
-    mkdir build
+    mkdir build || true
 
     # Fast-chroot
     cd fast-chroot
@@ -31,30 +52,39 @@ build_tools() {
     cp build/*  "$BUILD_DIR"/quasartools
 }
 
-quasarlinux_tui_installer() {
-    local QUASARLINUX_INSTALLER=main/QuasarLinux
-    local QUASARLINUX_INSTALL_MODULES=main/QuasarLinux/modules
-    local QUASARLINUX_INSTALL_PROFILES=profiles/QuasarLinux
+
+
+
+
+
+quasarlinux_rev_installer() {
+    rm -rf "$BUILD_DIR"/*
+    local QUASARLINUX_INSTALLER="main/QuasarLinux/REV"
+    local QUASARLINUX_INSTALL_MODULES="$QUASARLINUX_INSTALLER/modules"
+    local QUASARLINUX_INSTALL_MODULES_USERLAND="$QUASARLINUX_INSTALLER/userland"
+    local QUASARLINUX_INSTALL_PROFILES="profiles/QuasarLinux"
     local profiles="$(ls -x --width=1 $QUASARLINUX_INSTALL_PROFILES)"
 
     # Создание нужных каталогов
     mkdir "$BUILD_DIR"/modules || true
+    mkdir "$BUILD_DIR"/tools || true
     mkdir "$BUILD_DIR"/packages || true
     mkdir "$BUILD_DIR"/profiles || true
     mkdir "$BUILD_DIR"/quasartools || true
-    rm "$BUILD_DIR"/README.md || true
 
     local MODULES="$BUILD_DIR/modules"
+    cp -r "$SCRIPT_DIR"/packs/language "$BUILD_DIR"
 
     cp "$QUASARLINUX_INSTALL_MODULES"/bootloader "$MODULES"
+    cp "$QUASARLINUX_INSTALL_MODULES"/basepack "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/install  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/inst_pack  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/mirrorconfig.sh  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/network  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/parted  "$MODULES"
-#    cp "$QUASARLINUX_INSTALL_MODULES"/post  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/region.sh  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/users.sh  "$MODULES"
+    cp -r "$QUASARLINUX_INSTALL_MODULES"/userland  "$MODULES"
 
     go build -o region_settings  "$QUASARLINUX_INSTALL_MODULES"/region_settings.go
     cp region_settings "$MODULES"
@@ -65,22 +95,20 @@ quasarlinux_tui_installer() {
         echo "Не удалось скопировать профили"
     }
     build_tools
+    local RUNFILE="$SCRIPT_DIR/main/QuasarLinux/REV/run"
+    chmod +x "$RUNFILE"
+    cp "$RUNFILE" "$BUILD_DIR"
 
+    chmod +x "$MODULES"/*
+    chmod +x "$MODULES"/userland/*
 
 }
 main() {
-  echo "
-  \\\\\\\\\\\\\\\\\\\\\\\\\\\
-  \\    Выберите вариант   \\
-  \\ 1) QuasarLinux        \\
-  \\ 2) QuasarXOS          \\
-  \\ 3) BlazarLinux        \\
-  \\ 4) QuasarOS           \\
-  \\\\\\\\\\\\\\\\\\\\\\\\\\\
-  "
+  list_os
+
   read -p ">>> " CHOISE
   case "$CHOISE" in
-    1) quasarlinux_tui_installer ;;
+    1) edition_quasarlinux ;;
     2) quasarxos_installer ;;
     3) blazarlinux_tui_installer ;;
     4) quasaros_installer ;;

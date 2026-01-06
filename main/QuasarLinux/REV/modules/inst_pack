@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SRC="/installer"
+clear
+main() {
+    prefix=$(dialog --title "Quasar-install" --menu "$SELECT_OPTION" 15 70 7 \
+                1 "Custom" \
+                2 "AI prefix" \
+                3 "Gaming prefix" \
+                4 "default prefix" \
+                3>&1 1>&2 2>&3 3>&-)
+    case $prefix in
+        1) "$SRC"/profiles/custom/custom_install ;;
+        2) "$SRC"/profiles/ai/ai.sh ;;
+        3) "$SRC"/profiles/gaming/gaming.sh ;;
+        4) "$SRC"/profiles/default/default.sh ;;
+    esac
+}
+main

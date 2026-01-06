@@ -1,0 +1,347 @@
+#!/bin/bash
+
+
+base_system() {
+    echo "$INFO_INSTALL"
+    basestrap /mnt terminus-font iptables-nft base base-devel mkinitcpio openrc dbus dbus-openrc elogind-openrc linux-firmware dialog \
+        acpid flatpak acpid-openrc chrony-openrc dash chrony linux-api-headers \
+        rsync lib32-udev networkmanager networkmanager-openrc
+    fast-chroot /mnt flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+}
+
+linux_zen_base() {
+    base_system
+    basestrap /mnt linux-zen linux-zen-headers
+}
+linux_lts_base() {
+    base_system
+    basestrap /mnt linux-lts linux-lts-headers
+}
+linux_base() {
+    base_system
+    basestrap /mnt linux linux-headers
+}
+
+
+base_system_kernel=$(dialog --title "Select kernel" --menu "Kernel" 12 50 5 \
+    1 "$KERNEL_INFO_ZEN" \
+    2 "$KERNEL_INFO_LTS" \
+    3 "$KERNEL_INFO_VANILA" \
+    3>&1 1>&2 2>&3 3>&-)
+
+case $? in
+    0)
+        case $base_system_kernel in
+            1) linux_zen_base ;;
+            2) linux_lts_base ;;
+            3) linux_base ;;
+            *)
+                echo "${ERROR}${UNKNOWN_CHOICE}"
+                exit 1
+                ;;
+        esac
+        ;;
+    *)
+        echo "$CAND_TEXT"
+        exit 1
+        ;;
+esac
+unset base_system_kernel
+
+################################################################################
+# Создание файлов OS release
+config_system() {
+    cat > /mnt/usr/lib/os-release << 'OS_EOF'
+NAME="Quasar Linux REV-1.1"
+PRETTY_NAME="Quasar Linux"
+ID=quasar
+BUILD_ID=rolling
+ANSI_COLOR="38;2;23;147;209"
+HOME_URL="https://quasarfoks.github.io/QuasarLinux"
+DOCUMENTATION_URL="https://github.com/b-e-n-z1342/QuasarLinux/wiki"
+SUPPORT_URL="#"
+BUG_REPORT_URL="https://github.com/QuasarFoks/QuasarLinux/issues"
+PRIVACY_POLICY_URL="https://quasarfoks.github.io/policy"
+LOGO=quasarlogo
+OS_EOF
+
+    cat > /mnt/etc/lsb-release << 'LSB_EOF'
+DISTRIB_ID=Quasar
+DISTRIB_RELEASE=1.1
+DISTRIB_DESCRIPTION="Quasar Linux"
+DISTRIB_CODENAME=rolling
+LSB_EOF
+
+    cat > /mnt/etc/rc.conf << 'EOF'
+# =============================================
+# OpenRC Configuration - Parallel Boot Optimized
+# =============================================
+
+# ПАРАЛЛЕЛЬНАЯ ЗАГРУЗКА
+rc_parallel="YES"           # Включить параллельный запуск
+rc_parallel_rcwait="NO"    # Не ждать завершения rc-сервисов
+
+
+# ЛОГИРОВАНИЕ И ОТЛАДКА
+rc_logger="YES"            # Логировать в /var/log/rc.log
+rc_log_path="/var/log/rc.log"
+rc_verbose="NO"            # Тихий режим (меньше вывода)
+
+# СИСТЕМНЫЕ НАСТРОЙКИ
+unicode="YES"              # Поддержка Unicode
+rc_cgroup_mode="legacy"    # Режим cgroups
+
+# ТАЙМАУТЫ
+rc_timeout_stopsec="10"    # Таймаут остановки (секунд)
+rc_timeout_startsec="30"   # Таймаут запуска
+
+# СЕТЬ
+rc_nocolor="NO"            # Цветной вывод
+rc_hotplug="*"             # Обработка hotplug событий
+EOF
+
+    # 2. Дополнительные настройки для ускорения
+    cat > /mnt/etc/conf.d/rc << 'EOF'
+# Дополнительные настройки для ускорения загрузки
+RC_PARALLEL_STARTUP="yes"        # Параллельный запуск
+RC_PARALLEL_STARTUP_NICE="10"    # Приоритет для параллельных задач
+RC_RETRY_KILL="3"               # Попыток убить процесс
+RC_RETRY_TIMEOUT="5"            # Пауза между попытками
+EOF
+}
+
+config_system
+###############################################################################
+# Принудительная настройка issue
+echo "Quasar Linux \\r \\l" > /mnt/etc/issue
+echo "Quasar Linux" > /mnt/etc/issue.net
+echo "Welcome to Quasar Linux!" > /mnt/etc/motd
+cd /mnt/bin
+ln -sf dash sh
+cd
+
+sleep 5
+clear
+
+mount --types proc /proc /mnt/proc
+mount --rbind /sys /mnt/sys
+mount --rbind /dev /mnt/dev
+mount --rbind /run /mnt/run
+
+cat > /mnt/etc/locale.gen << 'EOF'
+# Auto-generated locales
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+EOF
+chroot /mnt locale-gen
+
+
+echo "Activating services"
+
+mount --types proc /proc /mnt/proc
+mount --rbind /sys /mnt/sys
+mount --rbind /dev /mnt/dev
+mount --rbind /run /mnt/run
+rm /mnt/etc/fstab
+fstabgen -U /mnt >> /mnt/etc/fstab
+
+# Активация сервисов
+#   {service}       {runlevel}
+#
+#   1) UDEV         sysvinit
+#   2) DBUS         boot
+#   3) ELOGIND      boot
+#   4) ACPID        default
+#
+######################################################################################
+#  udev
+
+echo "$INFO_SETTING"
+
+if chroot /mnt rc-update add udev sysinit; then
+    echo "udev$SERVICE_ADD_AUTOBOOT_INFO"
+else
+    echo "${REINSTALL}udev..."
+    chroot /mnt pacman -S udev lib32-udev || chroot /mnt pacman -S udev
+    chroot /mnt rc-update add udev sysinit
+fi
+
+######################################################################################
+# dbus
+
+if chroot /mnt rc-update add dbus boot; then
+    echo "dbus$SERVICE_ADD_AUTOBOOT_INFO"
+else
+    echo "${REINSTALL}dbus..."
+    chroot /mnt pacman -S dbus dbus-openrc
+    chroot /mnt rc-update add dbus boot
+fi
+
+######################################################################################
+# elogind
+
+if chroot /mnt rc-update add elogind boot; then
+    echo "elogind$SERVICE_ADD_AUTOBOOT_INFO"
+else
+    echo "${REINSTALL}elogind..."
+    chroot /mnt pacman -S elogind elogind-openrc
+    chroot /mnt rc-update add elogind boot
+fi
+
+########################################################################################
+# acpid
+
+if chroot /mnt rc-update add acpid default; then
+    echo "acpid$SERVICE_ADD_AUTOBOOT_INFO"
+else
+    echo "${REINSTALL}acpid..."
+    chroot /mnt pacman -S acpid acpid-openrc
+    chroot /mnt rc-update add acpid default
+fi
+
+#########################################################################################
+# network manager
+
+if chroot /mnt rc-update add NetworkManager default; then
+    echo "network manager$SERVICE_ADD_AUTOBOOT_INFO"
+else
+    echo "${REINSTALL}network manager..."
+    chroot /mnt pacman -S networkmanager networkmanager-openrc
+    chroot /mnt rc-update add NetworkManager default
+fi
+
+#########################################################################################
+# Копирование конфигурационных файлов
+
+if [ -f /installer/test/framework/configs/pacman.conf ]; then
+    rm /mnt/etc/pacman.conf
+    cp /installer/test/framework/configs/pacman.conf /mnt/etc/
+else
+    echo "${WARRING}pacman.conf ${PATCH_RECOVERY_TEXT}"
+fi
+
+if [ -f /installer/test/framework/configs/pacman.d/mirrorlist ]; then
+    rm /mnt/etc/pacman.d/mirrorlist
+    cp /installer/test/framework/configs/pacman.d/mirrorlist /mnt/etc/pacman.d/
+else
+    echo "${WARRING}pacman.d ${PATCH_RECOVERY_TEXT}"
+fi
+
+#########################################################################################
+# Копирование post-инсталляционных скриптов
+
+cp -r /installer/modules/post /mnt/
+cp -r /installer/regions /mnt/
+
+#########################################################################################
+
+# Убираем автогенерацию motd
+if [ -d /mnt/etc/update-motd.d/ ]; then
+    rm -rf /mnt/etc/update-motd.d/
+fi
+
+########################################################################################
+# Симлинк для совместимости
+ln -sf /usr/lib/os-release /mnt/etc/os-release 2>/dev/null || true
+
+##########################################################################################
+
+if [ -d /installer/test/framework/configs/pixmaps ]; then
+    rm -rf /mnt/usr/share/pixmaps
+    cp -r /installer/test/framework/configs/pixmaps /mnt/usr/share
+else
+    echo "${WARRING}pixmaps ${PATCH_RECOVERY_TEXT}"
+fi
+
+###########################################################################################
+# Распаковка recovery образа
+echo "$RECOVERY_INSTALL"
+
+# Проверяем существование recovery раздела
+if mountpoint -q /mnt/recovery; then
+    echo "$MOUNT_RECOVERY"
+
+    # Проверяем существование recovery архива
+    if [ -f "/installer/image/recovery.tar.xz" ]; then
+        echo "$FOUD_RECOVERY"
+
+        # Распаковываем с сохранением прав и перезаписью существующих файлов
+        tar -xJf "/installer/image/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
+
+        if [ $? -eq 0 ]; then
+            echo "$INSTALL_RECOVERY_GOOD"
+
+            # Добавляем запись в fstab для автоматического монтирования recovery
+            if ! grep -q "/recovery" /mnt/etc/fstab; then
+                RECOVERY_UUID=$(blkid -s UUID -o value "$(mount | grep '/mnt/recovery' | cut -d' ' -f1)")
+                if [ -n "$RECOVERY_UUID" ]; then
+                    echo "# Recovery partition" >> /mnt/etc/fstab
+                    echo "UUID=$RECOVERY_UUID /recovery ext2 defaults,noatime 0 2" >> /mnt/etc/fstab
+                    echo "$RECOVERY_ON_FSTAB"
+                fi
+            fi
+        else
+            echo "$RECOVERY_UNPACK_ERROR"
+            exit 1
+        fi
+    else
+        echo "${WARRING}recovery.tar.xz ${PATCH_RECOVERY_TEXT} /installer/image/recovery.tar.xz"
+        echo ""
+        echo "$ALT_PATCH_RECOVERY_TEXT"
+
+        # Поиск recovery архива в других возможных местах
+        if [ -f "/installer/recovery.tar.xz" ]; then
+            echo "$FOUND_PATCH_RECOVERY"
+            tar -xJf "/installer/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
+
+        elif [ -f "/recovery.tar.xz" ]; then
+            echo "Found /recovery.tar.xz, extracting..."
+            tar -xJf "/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
+
+        else
+            echo "$RECOVERY_NOT_FOUND_SKIP"
+        fi
+    fi
+else
+    echo "$WAR_RECOVERY"
+fi
+
+###################################
+#                                 #
+#       Пост установка            #
+#                                 #
+###################################
+cat >> /mnt/usr/local/bin/post_install << 'EOF'
+#!/bin/bash
+setfont cyr-sun16
+cd /post
+sudo ./post_install
+EOF
+
+clear
+echo "Installing branding"
+
+chmod +x /mnt/usr/local/bin/post_install
+wget -O QuasarLinux.tar.bz2 "https://github.com/QuasarFoks/QuasarLinux/releases/download/REV-1.1-image/system-rev-1-1.tar.bz2" || {
+    echo "$DOWNLOADS_ERROR"
+    exit 1
+}
+
+downloaded_hash=$(sha256sum QuasarLinux.tar.bz2 | cut -d' ' -f1)
+expected_hash="ad19f72b38d020e72bf47756e85787687cd35bf711836e973e848dff8c8a5c78"
+
+if [ "$downloaded_hash" = "$expected_hash" ]; then
+    echo "$HASH_CHECK"
+    tar -xf QuasarLinux.tar.bz2 -C /mnt/
+    rm -f /mnt/README 2>/dev/null
+else
+    echo "$HASH_CHECK_ERROR"
+    echo "${EXPECTED}: $expected_hash"
+    echo "${GOT}:      $downloaded_hash"
+    exit 1
+fi
+
+echo "Base installation completed!"
+
+unset expected_hash
+unset downloaded_hash

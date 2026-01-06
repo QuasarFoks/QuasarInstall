@@ -1,0 +1,104 @@
+#!/bin/bash
+audio="$1"
+set -euo pipefail
+
+pipewire_sound() {
+
+    clear
+    echo "Установка PipeWire..."
+
+    # Удаляем конфликтующие пакеты
+    chroot /mnt pacman -Rdd jack2 --noconfirm 2>/dev/null || true
+
+    # Безопасная установка PipeWire
+    chroot /mnt pacman -S --noconfirm --needed \
+        pipewire lib32-pipewire \
+        pipewire-alsa pipewire-pulse pipewire-jack \
+        wireplumber pipewire-audio \
+        pipewire-openrc pipewire-pulse-openrc
+    # Дополнительные утилиты
+    chroot /mnt pacman -S --noconfirm pavucontrol
+    chroot /mnt rc-update add pipewire --user
+    chroot /mnt rc-update add pipewire-pulse --user
+    chroot /mnt rc-update add wireplumber --user
+
+}
+
+pulseaudio_sound() {
+
+    clear
+    echo "Установка PulseAudio..."
+
+    # Аккуратно удаляем PipeWire пакеты
+    local pipewire_packages=(
+        "pipewire" "pipewire-pulse" "pipewire-jack"
+        "wireplumber" "pipewire-alsa" "lib32-pipewire"
+    )
+
+    for pkg in "${pipewire_packages[@]}"; do
+        if chroot /mnt pacman -Q "$pkg" &>/dev/null; then
+            echo "Удаляем $pkg"
+            chroot /mnt pacman -Rdd --noconfirm "$pkg" 2>/dev/null || true
+        fi
+    done
+
+    # Устанавливаем PulseAudio
+    chroot /mnt pacman -S --noconfirm --needed \
+        pulseaudio pulseaudio-alsa \
+        pulseaudio-bluetooth pulseaudio-jack
+
+    # Настройка службы
+    if [ -d /etc/init.d ]; then
+        chroot /mnt rc-update add pulseaudio default 2>/dev/null || true
+    fi
+
+    echo "PulseAudio установлен"
+
+}
+
+jack_sound() {
+    clear
+    echo "Установка JACK2..."
+
+    # Удаляем PipeWire
+    local pipewire_packages=(
+        "pipewire" "pipewire-pulse" "pipewire-jack"
+        "wireplumber" "pipewire-alsa" "lib32-pipewire"
+        "pipewire-openrc" "pipewire-pulse-openrc"
+        "wireplumber-openrc"
+    )
+
+    for pkg in "${pipewire_packages[@]}"; do
+        if pacman -Q "$pkg" &>/dev/null; then
+            echo "Удаляем $pkg"
+            chroot /mnt pacman -Rdd --noconfirm "$pkg" 2>/dev/null || true
+        fi
+    done
+
+    # Устанавливаем JACK
+    chroot /mnt pacman -S --noconfirm --needed \
+        jack2 jack2-dbus lib32-jack2 calf
+    chroot /mnt pacman -S --noconfirm pavucontrol
+    chroot /mnt rc-update add pipewire --user
+    chroot /mnt rc-update add pipewire-pulse --user
+    chroot /mnt rc-update add wireplumber --user
+
+    echo "JACK2 установлен"
+}
+
+# Проверка аргументов
+if [ -z "$audio" ]; then
+    echo "Использование: $0 {pipewire|pulseaudio|jack}"
+    exit 1
+fi
+
+case "$audio" in
+    pipewire) pipewire_sound ;;
+    pulseaudio) pulseaudio_sound ;;
+    jack) jack_sound ;;
+    *)
+        echo "Неизвестный звуковой сервер: $audio"
+        echo "Доступные варианты: pipewire, pulseaudio, jack"
+        exit 1
+        ;;
+esac

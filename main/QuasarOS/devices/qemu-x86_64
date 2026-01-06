@@ -1,0 +1,11 @@
+###     SOURCE LIST
+### type: QEMU device
+### os: QuasarOS
+
+
+ARCH="x86_64"
+TYPE="img"
+FS="ext4"
+BOOTLOADER="grub"
+
+

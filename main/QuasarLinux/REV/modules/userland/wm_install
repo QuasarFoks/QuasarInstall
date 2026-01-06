@@ -1,0 +1,30 @@
+#!/bin/bash
+wm="$1"
+
+install_hyprland() {
+    chroot /mnt pacman -S --needed hyprland waybar rofi kitty hyprland-protocols hyprgraphics hypridle hyprcursor hyprland-qt-support hyprutils xdg-desktop-portal-hyprland wayland seatd --noconfirm
+    chroot /mnt pacman -S --needed --noconfirm dolphin
+}
+
+install_sway() {
+    chroot /mnt pacman -S sway --noconfirm
+    chroot /mnt pacman -S swayidle swaylock waybar wl-clipboard foot wayland seatd --noconfirm
+    chroot /mnt pacman -S --needed --noconfirm dolphin
+}
+
+install_i3() {
+    chroot /mnt pacman -S xorg-server xorg-xinit --noconfirm --needed
+    chroot /mnt pacman -S --needed --noconfirm i3-wm i3status i3lock dmenu rxvt-unicode foot
+    chroot /mnt pacman -S --needed --noconfirm dolphin
+}
+
+# Установка ly для всех WM
+chroot /mnt pacman -S ly ly-openrc --noconfirm
+chroot /mnt rc-update add ly default
+
+case "$wm" in
+    hyprland) install_hyprland ;;
+    sway) install_sway ;;
+    i3wm) install_i3 ;;
+    *) echo "Неизвестный оконный менеджер: $wm" ;;
+esac
