@@ -18,7 +18,8 @@ if [ "${LANG_MODE:-}" = "ru" ]; then
 elif [ "${LANG_MODE:-}" = "eu" ]; then
     echo "Installing basic graphics subsystem (mesa, vesa, fbdev)..."
 fi
-chroot /mnt pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
+chroot /mnt pacman -S ---needed --noconfirm mesa vulkan-icd-loader  xf86-video-vesa xf86-video-fbdev
+chroot /mnt pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader
 
 # Определяем и устанавливаем специфичные драйверы
 if echo "$gpu_info" | grep -qi "AMD"; then
@@ -27,7 +28,9 @@ if echo "$gpu_info" | grep -qi "AMD"; then
     elif [ "${LANG_MODE:-}" = "eu" ]; then
         echo "AMD graphics card detected"
     fi
-    chroot /mnt pacman -S --noconfirm xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver mesa-vdpau rocm-hip-sdk rocm-opencl-sdk rocm-ml-sdk
+    chroot /mnt pacman -S ---needed --noconfirm vulkan-radeon libva-mesa-driver mesa-vdpau mesa
+    chroot /mnt pacman -S ---needed --noconfirm lib32-vulkan-radeon
+    chroot /mnt pacman -S --noconfirm xf86-video-amdgpu rocm-hip-sdk rocm-opencl-sdk rocm-ml-sdk
 
 elif echo "$gpu_info" | grep -qi "Intel"; then
     if [ "${LANG_MODE:-}" = "ru" ]; then

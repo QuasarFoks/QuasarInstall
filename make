@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export BUILD_DIR="$SCRIPT_DIR"/build
+mkdir -p "$BUILD_DIR"
 
 list_os() {
   echo "
@@ -58,7 +59,7 @@ build_tools() {
 
 
 quasarlinux_rev_installer() {
-    rm -rf "$BUILD_DIR"/*
+    rm -rf "$BUILD_DIR"/* || true
     local QUASARLINUX_INSTALLER="main/QuasarLinux/REV"
     local QUASARLINUX_INSTALL_MODULES="$QUASARLINUX_INSTALLER/modules"
     local QUASARLINUX_INSTALL_MODULES_USERLAND="$QUASARLINUX_INSTALLER/userland"
@@ -71,6 +72,7 @@ quasarlinux_rev_installer() {
     mkdir "$BUILD_DIR"/packages || true
     mkdir "$BUILD_DIR"/profiles || true
     mkdir "$BUILD_DIR"/quasartools || true
+    mkdir "$BUILD_DIR"/image || true
 
     local MODULES="$BUILD_DIR/modules"
     cp -r "$SCRIPT_DIR"/packs/language "$BUILD_DIR"
@@ -82,12 +84,12 @@ quasarlinux_rev_installer() {
     cp "$QUASARLINUX_INSTALL_MODULES"/mirrorconfig.sh  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/network  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/parted  "$MODULES"
-    cp "$QUASARLINUX_INSTALL_MODULES"/region.sh  "$MODULES"
+    cp "$QUASARLINUX_INSTALL_MODULES"/region  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/users.sh  "$MODULES"
     cp -r "$QUASARLINUX_INSTALL_MODULES"/userland  "$MODULES"
 
     go build -o region_settings  "$QUASARLINUX_INSTALL_MODULES"/region_settings.go
-    cp region_settings "$MODULES"
+    cp region_settings "$MODULES" || true
 
 
     # Копировать содержимое профилей, а не саму директорию

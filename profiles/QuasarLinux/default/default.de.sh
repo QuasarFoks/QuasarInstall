@@ -6,7 +6,7 @@ echo "
 ++++++++++++++++++
 "
 install_from_modules() {
-	/installer/modules/userland/de_install "plasma" #2&> /dev/null
+	/installer/modules/userland/de_install "plasma"
 }
 main() {
 	install_from_modules	

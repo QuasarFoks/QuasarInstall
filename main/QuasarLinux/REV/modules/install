@@ -1,24 +1,31 @@
 #!/bin/bash
 
 SCRIPT_DIR="/installer/modules"
+chmod +x "$SCRIPT_DIR"
+express() {
+    "$SCRIPT_DIR"/parted
+    "$SCRIPT_DIR"/basepack
+    regions
+    "$SCRIPT_DIR"/mirrorconfig.sh
+    "$SCRIPT_DIR"/inst_pack
+    "$SCRIPT_DIR"/users.sh
+    "$SCRIPT_DIR"/bootloader
 
-main() {
-    $SCRIPT_DIR/parted
-    $SCRIPT_DIR/basepack
-    $SCRIPT_DIR/inst_pack
-    $SCRIPT_DIR/users
-    $SCRIPT_DIR/bootloader
+}
 
+regions() {
+    cd "$SCRIPT_DIR"
+    cp region_settings /mnt
+    cp region /mnt
+    fast-chroot /mnt /region_settings
 }
 
 parted_menu() {
-    $SCRIPT_DIR/parted
+    "$SCRIPT_DIR"/parted
 }
 
 user() {
-    clear
-    $SCRIPT_DIR/users
-    clear
+    "$SCRIPT_DIR"/users.sh
 }
 
 while true; do
@@ -35,7 +42,7 @@ while true; do
     [ $? -ne 0 ] && break   # если жмём ESC/Cancel → выход
 
     case $seting in
-        1) main ;;
+        1) express ;;
         2) parted_menu ;;
         3) "$SCRIPT_DIR/basepack" ;;
         4) "$SCRIPT_DIR/inst_pack" ;;

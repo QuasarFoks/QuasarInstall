@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 base_system() {
@@ -211,6 +211,17 @@ else
 fi
 
 #########################################################################################
+# chrony
+
+if chroot /mnt rc-update add chrony default; then
+    echo "chrony${SERVICE_ADD_AUTOBOOT_INFO}"
+else
+    echo "${REINSTALL}chrony..."
+    chroot /mnt pacman -S chrony-openrc
+    chroot /mnt rc-update add chrony default
+fi
+
+#########################################################################################
 # Копирование конфигурационных файлов
 
 if [ -f /installer/test/framework/configs/pacman.conf ]; then
@@ -256,7 +267,7 @@ fi
 ###########################################################################################
 # Распаковка recovery образа
 echo "$RECOVERY_INSTALL"
-
+# wget https://github.com/b-e-n-z1342/Recovery/releases/download/0.1/recovery-0.1.tar.xz -p /installer/image/recovery.tar.xz
 # Проверяем существование recovery раздела
 if mountpoint -q /mnt/recovery; then
     echo "$MOUNT_RECOVERY"

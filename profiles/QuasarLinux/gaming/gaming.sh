@@ -115,6 +115,12 @@ governor="ondemand"
 min_freq="0"
 max_freq="0"
 EOF
-
-
+install_packs() {
+    local USERLAND="/installer/modules/userland"
+    "$USERLAND"/de_install plasma
+    "$USERLAND"/audio_install pipewire
+    "$USERLAND"/office_install onlyoffice
+    "$USERLAND"/browser_install firefox
+    "$USERLAND"/wine_install portproton
+}
 
