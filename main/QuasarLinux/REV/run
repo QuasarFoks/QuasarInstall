@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-
+setfont ter-v16n
 # Предварительные настройки
 echo "Подготовка к установке QuasarLinux REV-1.1..."
 sleep 1

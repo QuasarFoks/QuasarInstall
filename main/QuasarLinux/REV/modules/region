@@ -3,7 +3,7 @@
 
 Europe() {
     # Получаем список файлов (регионов)
-    regions=($(ls /usr/share/zoneinfo/Europe/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Europe/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -16,11 +16,11 @@ Europe() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Europe/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Europe/"$selected" /mnt/etc/localtime
 }
 Asia() {
     # Получаем список файлов (регионов)
-    regions=($(ls /usr/share/zoneinfo/Asia/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Asia/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -33,10 +33,10 @@ Asia() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Asia/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Asia/"$selected" /mnt/etc/localtime
 }
 US() {
-    regions=($(ls /usr/share/zoneinfo/America/))
+    regions=($(ls /mnt/usr/share/zoneinfo/America/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -49,11 +49,11 @@ US() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/America/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/America/"$selected" /mnt/etc/localtime
 }
 
 Africa() {
-    regions=($(ls /usr/share/zoneinfo/Africa/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Africa/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -66,10 +66,10 @@ Africa() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Africa/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Africa/"$selected" /mnt/etc/localtime
 }
 Antarctica() {
-    regions=($(ls /usr/share/zoneinfo/Antarctica/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Antarctica/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -82,11 +82,11 @@ Antarctica() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Antarctica/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Antarctica/"$selected" /mnt/etc/localtime
 }
 
 Arctic() {
-    regions=($(ls /usr/share/zoneinfo/Arctic/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Arctic/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -99,11 +99,11 @@ Arctic() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Arctic/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Arctic/"$selected" /mnt/etc/localtime
 }
 
 Atlantic() {
-    regions=($(ls /usr/share/zoneinfo/Atlantic/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Atlantic/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -116,11 +116,11 @@ Atlantic() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Atlantic/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Atlantic/"$selected" /mnt/etc/localtime
 }
 
 Australia() {
-    regions=($(ls /usr/share/zoneinfo/Australia/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Australia/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -133,11 +133,11 @@ Australia() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Australia/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Australia/"$selected" /mnt/etc/localtime
 }
 
 Brazil() {
-    regions=($(ls /usr/share/zoneinfo/Brazil/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Brazil/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -150,11 +150,11 @@ Brazil() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Brazil/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Brazil/"$selected" /mnt/etc/localtime
 }
 
 Canada() {
-    regions=($(ls /usr/share/zoneinfo/Canada/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Canada/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -167,11 +167,11 @@ Canada() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Canada/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Canada/"$selected" /mnt/etc/localtime
 }
 
 Etc() {
-    regions=($(ls /usr/share/zoneinfo/Etc/))
+    regions=($(ls /mnt/usr/share/zoneinfo/Etc/))
 
     # Формируем строку для dialog (tag, item, status)
     checklist_items=()
@@ -184,7 +184,7 @@ Etc() {
       "${checklist_items[@]}")
 
     clear
-    sudo ln -s /usr/share/zoneinfo/Etc/"$selected" /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/Etc/"$selected" /mnt/etc/localtime
 }
 case $1 in
     Europe) Europe ;;

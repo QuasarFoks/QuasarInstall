@@ -11,13 +11,12 @@ express() {
     "$SCRIPT_DIR"/users.sh
     "$SCRIPT_DIR"/bootloader
 
+
 }
 
 regions() {
     cd "$SCRIPT_DIR"
-    cp region_settings /mnt
-    cp region /mnt
-    fast-chroot /mnt /region_settings
+    ./region_settings
 }
 
 parted_menu() {
@@ -28,6 +27,36 @@ user() {
     "$SCRIPT_DIR"/users.sh
 }
 
+
+android_install() {
+    "$SCRIPT_DIR"/userland/android_install # временно не будет работать :(
+}
+
+wine_install() {
+    "$SCRIPT_DIR"/userland/wine_config
+}
+
+audio_config() {
+    "$SCRIPT_DIR"/userland/audio_config
+}
+
+browser_install() {
+    "$SCRIPT_DIR"/userland/browser_config
+}
+
+office_install() {
+    "$SCRIPT_DIR"/userland/office_config
+}
+
+backup_system() {
+    "$SCRIPT_DIR"/userland/backup_system.sh
+}
+
+clean_system() {
+    "$SCRIPT_DIR"/userland/clean_full
+}
+
+
 while true; do
     seting=$(dialog --title "Quasar-install" --menu "$MENU_SELECT_OPTION" 15 70 7 \
         1 "$EXPRESS_SETUP" \
@@ -36,7 +65,12 @@ while true; do
         4 "$INSTALL_PACKAGES" \
         5 "$USER_SETUP" \
         6 "$INSTALL_BOOTLOADER" \
-        7 "$EXIT" \
+        7 "audio" \
+        8 "wine" \
+        9 "web browser" \
+        10 "region" \
+        11 "office" \
+        12 "$EXIT" \
         3>&1 1>&2 2>&3 3>&-)
 
     [ $? -ne 0 ] && break   # если жмём ESC/Cancel → выход
@@ -48,6 +82,11 @@ while true; do
         4) "$SCRIPT_DIR/inst_pack" ;;
         5) user ;;
         6) "$SCRIPT_DIR/bootloader" ;;
-        7) break ;;
+        7) audio_config ;;
+        8) wine_install ;;
+        9) browser_install ;;
+        10) region ;;
+        11) office_install ;;
+        12) break ;;
     esac
 done

@@ -62,7 +62,7 @@ func main() {
 	}
 
 	// Запускаем ./region с полным доступом к терминалу
-	cmd := exec.Command("/region", region)
+	cmd := exec.Command("./region", region)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

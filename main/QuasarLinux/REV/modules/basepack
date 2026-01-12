@@ -138,10 +138,7 @@ chroot /mnt locale-gen
 
 echo "Activating services"
 
-mount --types proc /proc /mnt/proc
-mount --rbind /sys /mnt/sys
-mount --rbind /dev /mnt/dev
-mount --rbind /run /mnt/run
+
 rm /mnt/etc/fstab
 fstabgen -U /mnt >> /mnt/etc/fstab
 
