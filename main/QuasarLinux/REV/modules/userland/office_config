@@ -1,0 +1,20 @@
+#!/bin/bash
+cd /installer/modules/userland
+office_set=$(dialog --title "Меню" --menu "Выберите office: " 15 70 8 \
+    1 "onlyoffice" \
+    2 "wps office" \
+    3 "officefactoring" \
+    4 "libreoffice" \
+    5 "zetaoffice" \
+    3>&1 1>&2 2>&3 3>&-)
+
+
+
+case "$office_set" in
+    1) onlyoffice ;;
+    2) wps ;;
+    3) officefactoring ;;
+    4) libreoffice ;;
+    5) zetaoffice ;;
+    *) echo "Неверный выбор" ;;
+esac

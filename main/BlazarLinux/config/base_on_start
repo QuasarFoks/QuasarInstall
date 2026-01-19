@@ -1,5 +1,5 @@
 export BLAZAR=/mnt/blazar
-export TOOL="$BLAZAR"/tools
+export TOOL="$BLAZAR"/tool
 export SOURCES="$BLAZAR"/sources
 
 

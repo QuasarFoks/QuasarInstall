@@ -1,7 +1,15 @@
 #!/bin/bash
 
+#############################
+##  QuasarBuilder          ##
+##  by: QuasarFoks         ##
+##  os: BlazarLinux        ##
+##  type: Download sources ##
+#############################
+
+
 export BLAZAR=/mnt/blazar
-export TOOL="$BLAZAR"/tools
+export TOOL="$BLAZAR"/tool
 export SOURCES="$BLAZAR"/sources
 
 packages=(

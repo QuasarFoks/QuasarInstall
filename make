@@ -6,22 +6,24 @@ mkdir -p "$BUILD_DIR"
 list_os() {
   echo "
   -- please select OS --
-    Операционная система           тип             версия установщика
-  1) QuasarLinux                стабильный          3.0
+    Операционная система           Тип             Версия
+----------------------------------------------------------------------
+  1) QuasarLinux                Стабильный       2.9-from-3.0
   2) QuasarXOS                  Скоро...            --
-  3) BlazarLinux                В разработке        --
+  3) BlazarLinux                Тестируется        0.1
   4) QuasarOS                   Скоро...            --
+----------------------------------------------------------------------
   "
 }
 edition_quasarlinux() {
     echo "
   -- please select OS --
-    Операционная система           тип              версия дистрибутива
-------------------------------------------------------------
-  1) Second Edition               Скоро               0.1
+    Редакция                       Тип               Версия
+------------------------------------------------------------------------
+  1) Second Edition             В разработке          0.1-DEV
   2) REVision                   Стабильная            1.1
   3) PRO                          Скоро               -.-
-------------------------------------------------------------
+------------------------------------------------------------------------
   "
   read -p ">>> " CHOISE_EDITION
   case "$CHOISE_EDITION" in
@@ -32,8 +34,17 @@ edition_quasarlinux() {
   esac
 
 }
+clean_dir_quasar() {
 
+      rm "$SCRIPT_DIR/region_settings"
+      rm "$SCRIPT_DIR/packs/QuasarTools/build/*"
 
+}
+blazarlinux_tui_installer() {
+    local BLAZAR="$SCRIPT_DIR"/main/BlazarLinux
+    cd "$BLAZAR"
+    ./make
+}
 
 build_tools() {
     cd packs/QuasarTools
@@ -103,6 +114,7 @@ quasarlinux_rev_installer() {
 
     chmod +x "$MODULES"/*
     chmod +x "$MODULES"/userland/*
+    clean_dir_quasar
 
 }
 main() {

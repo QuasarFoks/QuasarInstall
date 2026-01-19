@@ -1,124 +1,323 @@
-# Документация по установки QuasarLinux SE/REV
+# Документация по установке QuasarLinux SE / REV
 
-QuasarLinux это дистрибутив Linux основанный на Artix, имеет систему инициализации OpenRC. Он делится на редакции: PRO, SE, REV, каждая из них выделяется своими особенностями, но их объединяет одно -- это использованние QuasarInstall.
+QuasarLinux — это дистрибутив Linux, основанный на Artix Linux и использующий систему инициализации OpenRC. Дистрибутив делится на редакции **PRO**, **SE** и **REV**. Каждая редакция имеет свои особенности, но их объединяет одно — использование установщика **QuasarInstall**.
 
-# Что такое QuasarInstall ?
+> **QuasarLinux SE (Second Edition)** — это монолитная операционная система, построенная на базе редакции REV.
 
-QuasarInstall -- это модульный установщик для QuasarLinux и операционных систем QuasarFoks.
+---
 
-> на данный момент версия QuasarInstall: 2.9-from-3.0
+## Что такое QuasarInstall
 
-# Что он может и почему сторонние не подходят?
+**QuasarInstall** — это модульный установщик для QuasarLinux и операционных систем семейства QuasarFoks.
 
-Отличительные особенности QuasarInstall в отличиие от того же Calamares: 
+> Текущая версия QuasarInstall: **2.9-from-3.0**
 
-|   Критерии    | Quasarinstall | Calamares |
-|---------------|---------------|-----------|
-|  Модульный    |    да         |   да      |
-|Авто установка |   есть        |   нет     |
-| Сложность     |  Простой      | Сложный   | 
-|  Порог входа  |  Высокий      | Низкий    |
+---
 
-# Профили и автоустановка 
+## Возможности и отличия от сторонних установщиков
 
-Отличимая черта это профили, которые являются простыми sh скриптами, раньше была post-установка, но в скоре её заминили профили. 
+Основные отличия QuasarInstall от Calamares:
 
-## Базовые профили и их отчия
+| Критерий | QuasarInstall | Calamares |
+|--------|---------------|-----------|
+| Модульность | Да | Да |
+| Автоматическая установка | Есть | Нет |
+| Сложность | Низкая | Высокая |
+| Порог входа | Высокий | Низкий |
 
-Профили по умолчанию: `` AI, Gaming, Default, Custom``
+---
 
-### AI 
+## Профили и автоматическая установка
 
-Профиль для ИИ тянет такие пакеты: 
-базовые: ``  mesa vulkan-icd-loader  xf86-video-vesa xf86-video-fbdev ``
+Ключевая особенность QuasarInstall — **профили установки**. Профили представляют собой обычные `sh`-скрипты. Ранее использовалась post-установка, но позже она была полностью заменена профилями.
 
-AMD: ``xf86-video-amdgpu rocm-hip-sdk rocm-opencl-sdk rocm-ml-sdk vulkan-radeon libva-mesa-driver mesa-vdpau mesa``
+### Профили по умолчанию
 
-Nvidia: ``nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings cuda cudnn python-pytorch-cuda tensorflow-cuda``
-Intel: ``xf86-video-intel vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver intel-compute-runtime``
+- **AI**
+- **Gaming**
+- **Default**
+- **Custom**
 
-Второстепенные: ``python python-pip python-virtualenv python-numpy python-scipy python-matplotlib python-pandas cmake ninja openblas lapack fftw ``
+---
 
-!!! **Важно: в данном профиле нет поддержки виртуальных видео адаптеров типа Virtio и VMware** !!!
+## Профиль AI
 
+Профиль предназначен для задач машинного обучения, вычислений и работы с ИИ.
 
-## Gaming 
+**Базовые пакеты:**
+```
+mesa vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
+```
 
-- Игровой профиль уже тянет производительные драйвера,
-- AMD: ravd (OpenSource Radeon Vulkan Driver)
-- Nvidia: Nvidia-driver
-- Intel: vulkan-intel 
+**AMD:**
+```
+xf86-video-amdgpu rocm-hip-sdk rocm-opencl-sdk rocm-ml-sdk
+vulkan-radeon libva-mesa-driver mesa-vdpau mesa
+```
 
-Так же он меняет следующие параметры: 
-/etc/sysctl.d/99-gaming.conf:
+**NVIDIA:**
+```
+nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings
+cuda cudnn python-pytorch-cuda tensorflow-cuda
+```
+
+**Intel:**
+```
+xf86-video-intel vulkan-intel lib32-vulkan-intel
+intel-media-driver libva-intel-driver intel-compute-runtime
+```
+
+**Дополнительные пакеты:**
+```
+python python-pip python-virtualenv python-numpy python-scipy
+python-matplotlib python-pandas cmake ninja openblas lapack fftw
+```
+
+> **Важно:** профиль AI **не поддерживает виртуальные видеодрайверы** (VirtIO, VMware и аналоги).
+
+---
+
+## Профиль Gaming
+
+Профиль ориентирован на игры и низкую латентность.
+
+**Драйверы:**
+- AMD — RADV (Open Source Vulkan-драйвер)
+- NVIDIA — официальный проприетарный драйвер
+- Intel — vulkan-intel
+
+### Системные оптимизации
+
+`/etc/sysctl.d/99-gaming.conf`
 ```
 vm.max_map_count = 16777216
 fs.file-max = 524288
 kernel.pid_max = 4194303
 fs.inotify.max_user_watches = 524288
 
-# Уменьшение латентности сети
 net.core.rmem_max = 134217728
 net.core.wmem_max = 134217728
 net.ipv4.tcp_rmem = 4096 87380 134217728
 net.ipv4.tcp_wmem = 4096 65536 134217728
 net.ipv4.tcp_congestion_control = bbr
 ```
-/etc/conf.d/cpupower
+
+`/etc/conf.d/cpupower`
 ```
 governor="ondemand"
 min_freq="0"
 max_freq="0"
 ```
-Пакеты: plasma pipewire  onlyoffice  firefox portproton
-**!!! Важно: решение по поводу onlyoffice и firefox не однозначны и возможно будут изменены !!!**
 
+**Пакеты:**
+```
+plasma pipewire onlyoffice firefox portproton
+```
 
-## Default 
+> Решение по поводу `onlyoffice` и `firefox` не окончательное и может быть изменено.
 
-Данный профиль ставит стандуртную сборку QuasarLinux, она похожа на Gaming, но без изменение конфигуврационных файлов.
+---
 
-- Драйвера: 
-- AMD: ravd (OpenSource Radeon Vulkan Driver)
-- Nvidia: Nvidia-driver
-- Intel: vulkan-intel 
-- Пакеты: plasma pipewire  onlyoffice  firefox portproton.
+## Профиль Default
 
-## Custom 
+Стандартная сборка QuasarLinux. Аналогична Gaming-профилю, но **без изменения системных конфигураций**.
 
-Данный профиль интересен тем что в нем всё настраивается, от драйверов до пакетов. Так что на нем мы и заострим внимания.
+**Драйверы:**
+- AMD — RADV
+- NVIDIA — официальный драйвер
+- Intel — vulkan-intel
 
-#### Драйвера
+**Пакеты:**
+```
+plasma pipewire onlyoffice firefox portproton
+```
 
-AMD: на выбор:
-- Ravd -- Высокопроизводительный OpenSource драйвер, отлично подходящий для игр.
-- Amdvlk -- Оффициальный драйвер от Amd, он может быть менее производительным.
-- 2D Driver -- 2D драйвер, хорошо подходит для легкого GUI или консоли, крайне не рекомендуется для игр и сложных графических задач, а не вычислений.
-- ROMc -- Система ROMc сделаная для ML/AI, в основном поставляется с 2D драйвером.
+---
 
-Nvidia: Стандартный оффициальный драйвер.
-Intel: OpenSource драйвер.
-VM: Драйвера оф от производителя/сообщества вм 
+## Профиль Custom
 
-#### Компоненты 
+Профиль с полной ручной настройкой компонентов.
 
-- DE: на выбор Plasma, Xfce, Lxde, Lxqt, Gnome (Не стабильно) 
-- WM: sway, Hyprland, i3wm 
+### Драйверы
 
-- Plasma -- близкая по виду на Windows 10, очень удобная, но может быть тяжелой
-- Xfce -- Очень легкая DE, чем-то напоминает Gnome/MacOS, но очень простая.
-- Lxde -- Очень легчайшая, но функционал слабый. 
-- Lxqt -- Легкая DE, базируется на QT
-- Gnome -- Похож на MacOS, красивый и мимолистичный в некоторых местах, может тяжелее Plasma.
+**AMD:**
+- RADV — высокопроизводительный Open Source драйвер (рекомендуется для игр)
+- AMDVLK — официальный драйвер от AMD
+- 2D Driver — только 2D-графика (GUI / консоль)
+- ROMc — ML/AI-ориентированная подсистема (обычно с 2D-драйвером)
 
-- sway, Hyprland -- Легкие оконные менаджеры работающие на Wayland
-- i3wm -- Повторяет sway, но на X11.
+**NVIDIA:**
+- Официальный проприетарный драйвер
 
+**Intel:**
+- Open Source драйвер
 
+**VM:**
+- Драйверы от производителя или сообщества виртуальной машины
 
+### Компоненты
 
+**DE:** Plasma, Xfce, LXDE, LXQt, GNOME (нестабильно)
 
+**WM:** Sway, Hyprland, i3wm
 
+---
 
+## Аудиосистемы
 
+- **PipeWire** — современный мультимедийный сервер (по умолчанию)
+- **PulseAudio** — классический звуковой сервер
+- **JACK** — профессиональный сервер с низкой задержкой (может работать совместно с PipeWire)
+
+---
+
+# Установка QuasarLinux REV
+
+QuasarInstall в редакции REV полностью модульный (в SE используется фиксированный порядок модулей).
+
+## Этапы установки
+
+1. Системные требования и подготовка
+2. Загрузка с носителя
+3. Работа в LiveCD
+4. Запуск установщика
+5. Пошаговая установка (Custom-профиль)
+6. Создание пользователя
+7. Установка загрузчика
+8. Первичная настройка системы (опционально)
+
+---
+
+## Системные требования
+
+| Компонент | Минимальные | Рекомендуемые |
+|---------|-------------|---------------|
+| Процессор | x86_64 | x86_64 + SSE4.1 |
+| ОЗУ | 1 ГБ | 6 ГБ |
+| Видеокарта | 1366x768 | Vulkan-совместимая |
+| Хранилище | 20 ГБ | 40 ГБ |
+
+> Рекомендуемые требования рассчитаны на комфортную работу с графикой, играми и тяжёлыми задачами.
+
+---
+
+## Подготовка
+
+### Определение типа прошивки
+
+```
+ls /sys/firmware/efi
+```
+
+- Каталог существует — **UEFI**
+- Каталога нет — **Legacy BIOS**
+
+### Рекомендации
+
+**UEFI:**
+- Отключить Secure Boot
+- Отключить Fast Boot
+
+**Legacy BIOS:**
+- Изменения не требуются
+
+---
+
+## Запись ISO
+
+ISO можно скачать:
+- с официального сайта QuasarLinux
+- из GitHub Releases
+
+Рекомендуемые утилиты записи:
+- Rufus
+- balenaEtcher
+- Ventoy (возможны ошибки)
+
+---
+
+## Загрузка с носителя
+
+В меню загрузчика выберите:
+```
+From ISO/CD/DVD QuasarLinux x86_64
+```
+
+---
+
+## LiveCD и ISO-SDK
+
+После выбора языка запускается **ISO-SDK** — инструмент для:
+- входа в chroot
+- установки системы
+- восстановления (в разработке)
+- запуска Live-среды
+
+---
+
+## Установка (Install OS)
+
+### Parted-модуль
+
+Автоматическая или ручная разметка диска через `cfdisk`.
+
+**UEFI:**
+- ESP: 256–512 МБ (EFI Partition)
+- root: остальное пространство (Linux filesystem)
+
+**Legacy BIOS:**
+- boot: 256–512 МБ
+- root: остальное пространство
+
+---
+
+## BasePack
+
+Установка базовой системы и ядра:
+- **lts** — долгосрочная поддержка
+- **zen** — производительность
+- **vanilla** — стандартное ядро
+
+---
+
+## Профили установки
+
+Выбор одного из профилей:
+- Custom
+- Default
+- AI
+- Gaming
+
+---
+
+## Создание пользователя
+
+- Создание пользователя
+- Установка пароля пользователя
+- Установка пароля root
+
+---
+
+## Установка загрузчика
+
+**UEFI:**
+- GRUB
+- EFISTUB
+- rEFInd
+
+**Legacy BIOS:**
+- GRUB
+- Syslinux
+
+---
+
+## Завершение установки
+
+1. Выход из установщика
+2. Перезагрузка системы
+3. Извлечение установочного носителя
+
+---
+
+Документация завершена и готова к использованию.
 

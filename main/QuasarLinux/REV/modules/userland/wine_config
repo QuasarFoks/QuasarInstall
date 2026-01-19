@@ -1,0 +1,26 @@
+#!/bin/bash
+cd /installer/modules/userland
+wine=$(dialog --title "Меню" --menu "Выберите DE/WM: " 15 70 8 \
+    1 "wine" \
+    2 "wine-staging" \
+    3 "wine DXVK + VKD3D" \
+    4 "wine-ge" \
+    5 "PortProton" \
+    3>&1 1>&2 2>&3 3>&-)
+
+case $? in
+    0)
+        case $wine in
+            1) ./wine_install default ;;
+            2) ./wine_install staging ;;
+            3) ./wine_install staging_full ;;
+            4) ./wine_install  ge-version ;;
+            5) ./wine_install portproton ;;
+
+        esac
+        ;;
+    *)
+        clear
+        echo "Выбор wine отменен."
+        ;;
+esac

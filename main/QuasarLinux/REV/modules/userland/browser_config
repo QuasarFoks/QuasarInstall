@@ -1,0 +1,32 @@
+#!/bin/bash
+
+cd /installer/modules/userland
+browser=$(dialog --title "Меню" --menu "Выберите браузер: " 15 70 8 \
+    1 "Firefox" \
+    2 "Chromium" \
+    3 "Brave" \
+    4 "ungoogled_chromium" \
+    5 "librewolf" \
+    6 "tor browser" \
+    7 "yandex" \
+    8 "falkon" \
+    3>&1 1>&2 2>&3 3>&-)
+
+case $? in
+    0)
+        case $browser in
+        1) firefox ;;
+        2) chromium ;;
+        3) brave ;;
+        4) ungoogled_chromium ;;
+        5) librewolf ;;
+        6) torbrowser ;;
+        7) yandex ;;
+        8) falkon ;;
+        esac
+        ;;
+    *)
+        clear
+        echo "Выбор  браузера отменен."
+        ;;
+esac

@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+#############################
+##  QuasarBuilder          ##
+##  by: QuasarFoks         ##
+##  os: BlazarLinux        ##
+##  type: main             ##
+#############################
+
+
 export BLAZAR=/mnt/blazar
 export TOOL="$BLAZAR"/tool
 export SOURCES="$BLAZAR"/sources

@@ -3,19 +3,20 @@
 #  OS: BLAZARLINUX
 #  TYPE: Cross building
 set -euo pipefail
-set -x
+
 
 
 # Сборка BlazarLinux из исходников
 # Сборка идёт строго по книге :
 #   Linux From Scratch
 
-#export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$TOOL/bin"
-export MAKEFLAGS="-j8"
+
+export MAKEFLAGS="-j11"
 export BLAZAR=/mnt/blazar
 export TOOL="$BLAZAR"/tools
 export SOURCES="$BLAZAR"/sources
 export LFS_TGT=$(uname -m)-lfs-linux-gnu
+export PATH="$TOOL/bin:$PATH"
 
 # подготовка переменных
 
@@ -93,6 +94,11 @@ extract_packages() {
     done
 }
 m4_build() {
+    echo "||||||||||||||||||||||"
+    echo "||                  ||"
+    echo "||    M4            ||"
+    echo "||                  ||"
+    echo "||||||||||||||||||||||" 
     cd "$M4_DIR"
 
     ./configure --prefix=/usr   \
@@ -105,6 +111,11 @@ m4_build() {
 }
 
 ncurses_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    NCURSES       ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$NCURSES_DIR"
 	sed -i s/mawk// configure
 	mkdir build
@@ -135,18 +146,28 @@ ncurses_build() {
 
 
 bash_build() {
-    cd "$BASH_DIR"
-    ./configure --prefix=/usr                      \
-            --build=$(sh support/config.guess) \
-            --host="$LFS_TGT"                    \
-            --without-bash-malloc              \
-            bash_cv_strtold_broken=no
-    make  &&  make DESTDIR="$BLAZAR" install
-    cd "$BLAZAR"/bin
-    ln -sv bash sh
-    cd ..
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||      BASH        ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$BASH_DIR"
+    	./configure --prefix=/usr                      \
+        	--build=$(sh support/config.guess) \
+            	--host="$LFS_TGT"                    \
+            	--without-bash-malloc              \
+            	bash_cv_strtold_broken=no
+    	make  &&  make DESTDIR="$BLAZAR" install
+    	cd "$BLAZAR"/bin
+    	ln -sv bash sh
+    	cd ..
 }
 coreutils_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    COREUTILS     ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$COREUTILS_DIR"
 	./configure --prefix=/usr                     \
             --host="$LFS_TGT"                  \
@@ -164,6 +185,11 @@ coreutils_build() {
 }
 
 diffutils_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    DIFUTILS      ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$DIFUT_DIR"
 	./configure --prefix=/usr   \
             --host="$LFS_TGT" \
@@ -171,6 +197,11 @@ diffutils_build() {
 	make  && make DESTDIR="$BLAZAR" install
 }
 file_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||       FILE       ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$FILE_DIR"
 	mkdir build
 	pushd build
@@ -178,7 +209,7 @@ file_build() {
         	             --disable-libseccomp \
         	             --disable-xzlib      \
         	             --disable-zlib
-  		make -j2
+  		make
 	popd
 	./configure --prefix=/usr --host="$LFS_TGT" --build="$(./config.guess)"
 	make  FILE_COMPILE="$(pwd)/build/src/file"
@@ -186,6 +217,11 @@ file_build() {
 	rm -v "$BLAZAR"/usr/lib/libmagic.la
 }
 findutils_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    FindUTILS     ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$FINDUTILS_DIR"
 	./configure --prefix=/usr                   \
             --localstatedir=/var/lib/locate \
@@ -194,7 +230,12 @@ findutils_build() {
 	make  && make DESTDIR="$BLAZAR" install
 }
 gawk_build() {
-    cd "$GAWK_DIR"
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    GAWK          ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$GAWK_DIR"
 	sed -i 's/extras//' Makefile.in
 	./configure --prefix=/usr   \
             --host="$LFS_TGT" \
@@ -202,6 +243,11 @@ gawk_build() {
 	make  && make DESTDIR="$BLAZAR" install
 }
 grep_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||     GREP         ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$GREP_DIR"
 	./configure --prefix=/usr   \
             --host="$LFS_TGT" \
@@ -210,11 +256,21 @@ grep_build() {
 }
 
 gzip_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||      GZIP        ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$GZIP_DIR"
 	./configure --prefix=/usr --host=$LFS_TGT
 	make  && make DESTDIR="$BLAZAR" install
 }
 make_build() {
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||      MAKE        ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
 	cd "$MAKE_DIR"
 	./configure --prefix=/usr   \
             --without-guile \
@@ -224,97 +280,131 @@ make_build() {
 }
 
 patch_build() {
-    cd "$PATCH_S_DIR"
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||      PATCH       ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$PATCH_S_DIR"
 	./configure --prefix=/usr   \
             --host="$LFS_TGT" \
             --build=$(build-aux/config.guess)
 	make && make DESTDIR="$BLAZAR" install
 }
 sed_build() {
-    cd "$SED_DIR"
-    ./configure --prefix=/usr   \
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||       SED        ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$SED_DIR"
+    	./configure --prefix=/usr   \
             --host="$LFS_TGT" \
             --build=$(./build-aux/config.guess)
-    make  && make DESTDIR="$BLAZAR" install
+    	make  && make DESTDIR="$BLAZAR" install
 }
 tar_build() {
-    cd "$TAR_DIR"
-    ./configure --prefix=/usr                     \
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    TAR           ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$TAR_DIR"
+    	./configure --prefix=/usr                     \
             --host="$LFS_TGT"                \
             --build=$(build-aux/config.guess)
-    make  && make DESTDIR="$BLAZAR" install
+    	make  && make DESTDIR="$BLAZAR" install
 }
 xz_build() {
-    cd "$XZ_DIR"
-    ./configure --prefix=/usr                     \
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||      XZ          ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$XZ_DIR"
+    	./configure --prefix=/usr                     \
             --host="$LFS_TGT"                   \
             --build=$(build-aux/config.guess) \
             --disable-static                  \
             --docdir=/usr/share/doc/xz-5.6.2
-    make  && make DESTDIR="$BLAZAR" install
-    rm -v "$BLAZAR"/usr/lib/liblzma.la
+    	make  && make DESTDIR="$BLAZAR" install
+    	rm -v "$BLAZAR"/usr/lib/liblzma.la
 }
 binutils_build_stage_two() {
-    cd "$BINUTILS_DIR"
-    sed '6009s/$add_dir//' -i ltmain.sh
-    mkdir -v build || rm -rf build && mkdir -v build
-    cd       build
-    ../configure                   \
-        --prefix=/usr              \
-        --build=$(../config.guess) \
-        --host="$LFS_TGT"            \
-        --disable-nls              \
-        --enable-shared            \
-        --enable-gprofng=no        \
-        --disable-werror           \
-        --enable-64-bit-bfd        \
-        --enable-new-dtags         \
-        --enable-default-hash-style=gnu
-    make  && make DESTDIR="$BLAZAR" install
-    rm -v "$BLAZAR"/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    BINUTILS      ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$BINUTILS_DIR"
+    	sed '6009s/$add_dir//' -i ltmain.sh
+    	mkdir -v build 2>/dev/null || { rm -rf build && mkdir -v build; }
+    	cd       build
+    	../configure                   \
+        	--prefix=/usr              \
+        	--build=$(../config.guess) \
+        	--host="$LFS_TGT"            \
+        	--disable-nls              \
+        	--enable-shared            \
+        	--enable-gprofng=no        \
+        	--disable-werror           \
+        	--enable-64-bit-bfd        \
+        	--enable-new-dtags         \
+        	--enable-default-hash-style=gnu
+    	
+    	
+    	
+    	make 
+    	make DESTDIR="$BLAZAR" install
+    	rm -v "$BLAZAR"/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
 }
 gcc_build_stage_two() {
-    cd "$SOURCES"
-    cd "$GCC_DIR"
-    tar -xf ../mpfr-4.2.1.tar.xz
-    mv -v mpfr-4.2.1 mpfr
-    tar -xf ../gmp-6.3.0.tar.xz
-    mv -v gmp-6.3.0 gmp
-    tar -xf ../mpc-1.3.1.tar.gz
-    mv -v mpc-1.3.1 mpc
-    case "$(uname -m)" in
-        x86_64)
-            sed -e '/m64=/s/lib64/lib/' \
-                -i.orig gcc/config/i386/t-linux64
-        ;;
-    esac
-    sed '/thread_header =/s/@.*@/gthr-posix.h/' \
-        -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
-    mkdir -v build || rm -rf build && mkdir -v build
-    cd       build
-    ../configure                                       \
-        --build=$(../config.guess)                     \
-        --host=$LFS_TGT                                \
-        --target=$LFS_TGT                              \
-        LDFLAGS_FOR_TARGET=-L$PWD/$LFS_TGT/libgcc      \
-        --prefix=/usr                                  \
-        --with-build-sysroot="$BLAZAR"                      \
-        --enable-default-pie                           \
-        --enable-default-ssp                           \
-        --disable-nls                                  \
-        --disable-multilib                             \
-        --disable-libatomic                            \
-        --disable-libgomp                              \
-        --disable-libquadmath                          \
-        --disable-libsanitizer                         \
-        --disable-libssp                               \
-        --disable-libvtv                               \
-        --enable-languages=c,c++
-    make -j9 && make DESTDIR="$BLAZAR" install
-    ln -sv gcc "$BLAZAR"/usr/bin/cc
+	echo "||||||||||||||||||||||"
+	echo "||                  ||"
+    	echo "||    GCC TWO       ||"
+    	echo "||                  ||"
+    	echo "||||||||||||||||||||||" 
+    	cd "$SOURCES"
+    	cd "$GCC_DIR"
+    	tar -xf ../mpfr-4.2.1.tar.xz
+    	mv -v mpfr-4.2.1 mpfr
+    	tar -xf ../gmp-6.3.0.tar.xz
+    	mv -v gmp-6.3.0 gmp
+    	tar -xf ../mpc-1.3.1.tar.gz
+    	mv -v mpc-1.3.1 mpc
+    	case "$(uname -m)" in
+    	    x86_64)
+    	        sed -e '/m64=/s/lib64/lib/' \
+   	             -i.orig gcc/config/i386/t-linux64
+       	    ;;
+    	esac
+    	sed '/thread_header =/s/@.*@/gthr-posix.h/' \
+        	-i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
+    	mkdir -v build || rm -rf build && mkdir -v build
+    	cd       build
+    	../configure                                       \
+        	--build=$(../config.guess)                     \
+        	--host=$LFS_TGT                                \
+        	--target=$LFS_TGT                              \
+        	LDFLAGS_FOR_TARGET=-L$PWD/$LFS_TGT/libgcc      \
+        	--prefix=/usr                                  \
+        	--with-build-sysroot="$BLAZAR"                      \
+        	--enable-default-pie                           \
+        	--enable-default-ssp                           \
+        	--disable-nls                                  \
+        	--disable-multilib                             \
+        	--disable-libatomic                            \
+        	--disable-libgomp                              \
+        	--disable-libquadmath                          \
+        	--disable-libsanitizer                         \
+        	--disable-libssp                               \
+        	--disable-libvtv                               \
+        	--enable-languages=c,c++
+    	make && make DESTDIR="$BLAZAR" install
+    	ln -sv gcc "$BLAZAR"/usr/bin/cc
 }
 info() {
-    cat << EOF
+    	cat << EOF
 BlazarLinux Building
 
 BETA
@@ -325,7 +415,7 @@ main() {
     info
     check_prerequisites
     extract_packages
-    #m4_build
+    m4_build
     ncurses_build
     bash_build
     coreutils_build
