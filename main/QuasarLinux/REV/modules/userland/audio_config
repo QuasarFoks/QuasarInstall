@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+cd /installer/modules/userland
 pipe() {
     ./audio_install pipewire
 }
@@ -25,8 +26,8 @@ case $? in
     0)
         clear
         case $audio in
-            2) pipe ;;
-            1) pulse ;;
+            1) pipe ;;
+            2) pulse ;;
             3) jack ;;
             *) echo "Неверный выбор" ;;
         esac

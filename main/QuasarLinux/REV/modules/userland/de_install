@@ -3,49 +3,46 @@ set -euo pipefail
 de="$1"
 
 plasma() {
-    chroot /mnt /bin/sh << 'EOF'
-    pacman -S  --needed plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark --noconfirm
+
+    chroot /mnt pacman -S  --needed plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark --noconfirm
     sleep 1
     
     echo "Настройка SDDM..."
-    groupadd -f sddm
-    useradd -r -g sddm -s /usr/bin/nologin -d /var/lib/sddm sddm 2>/dev/null || true
-    mkdir -p /var/lib/sddm /var/run/sddm
-    chown sddm:sddm /var/lib/sddm /var/run/sddm
-    chmod 0755 /var/lib/sddm /var/run/sddm
-    usermod -aG seat,video,input sddm || true
-    usermod -aG video,input sddm || true
-    rc-update add sddm default
-EOF
+    chroot /mnt groupadd -f sddm
+    chroot /mnt useradd -r -g sddm -s /usr/bin/nologin -d /var/lib/sddm sddm 2>/dev/null || true
+    chroot /mnt mkdir -p /var/lib/sddm /var/run/sddm
+    chroot /mnt chown sddm:sddm /var/lib/sddm /var/run/sddm
+    chroot /mnt chmod 0755 /var/lib/sddm /var/run/sddm
+    chroot /mnt usermod -aG seat,video,input sddm || true
+    chroot /mnt usermod -aG video,input sddm || true
+    chroot /mnt rc-update add sddm default
+
 }
 
 xfce() {
-    chroot /mnt /bin/sh << 'EOF'
-    pacman -S --needed xfce4 thunar xorg lightdm lightdm-openrc lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
-    rc-update add lightdm default
-EOF
+    chroot /mnt pacman -S  xfce4 thunar xorg lightdm lightdm-openrc lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
+    chroot /mnt rc-update add lightdm default
+
 }
 
 lxqt() {
-    chroot /mnt /bin/sh << 'EOF'
-    pacman -S lxqt sddm dolphin kate sddm-openrc --noconfirm
-    rc-update add sddm default
-EOF
+
+    chroot /mnt pacman -S lxqt sddm dolphin kate  xorg sddm-openrc --noconfirm
+    chroot /mnt rc-update add sddm default
 }
 
 lxde() {
-    chroot /mnt /bin/sh << 'EOF'
-    pacman -S lxde lxdm dolphin kate lxdm-openrc --noconfirm
-    rc-update add lxdm default
-EOF
+
+    chroot /mnt pacman -S lxde lxdm dolphin kate  xorg lxdm-openrc --noconfirm
+    chroot /mnt rc-update add lxdm default
+
 }
 
 gnome() {
-    chroot /mnt /bin/sh << 'EOF'
-    pacman -S --needed --noconfirm gnome-shell gnome nautilus gnome-control-center gnome-terminal wayland seatd
-    pacman -S --needed gdm gdm-openrc --noconfirm
-    rc-update add gdm default
-EOF
+
+    chroot /mnt pacman -S --needed --noconfirm gnome-shell gnome nautilus gnome-control-center gnome-terminal wayland seatd
+    chroot /mnt pacman -S --needed gdm gdm-openrc --noconfirm
+    chroot /mnt rc-update add gdm default
 }
 
 case "$de" in

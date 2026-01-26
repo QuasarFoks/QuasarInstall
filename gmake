@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
+
+# --- Пути ---
+SCRIPT_DIR = Path(__file__).parent.resolve()
+BUILD_DIR = SCRIPT_DIR / "build"
+BUILD_DIR.mkdir(exist_ok=True)
+
+# --- Вспомогательные функции ---
+def run_cmd(cmd, cwd=None):
+    try:
+        return subprocess.run(cmd, shell=True, cwd=cwd, check=True, text=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        show_error(f"Ошибка выполнения:\n{cmd}\n\n{e.stderr or e.stdout}")
+        return None
+
+def show_error(text):
+    dialog = Gtk.MessageDialog(
+        flags=0,
+        message_type=Gtk.MessageType.ERROR,
+        buttons=Gtk.ButtonsType.OK,
+        text="Ошибка"
+    )
+    dialog.format_secondary_text(text)
+    dialog.run()
+    dialog.destroy()
+
+def show_info(text):
+    dialog = Gtk.MessageDialog(
+        flags=0,
+        message_type=Gtk.MessageType.INFO,
+        buttons=Gtk.ButtonsType.OK,
+        text="Готово"
+    )
+    dialog.format_secondary_text(text)
+    dialog.run()
+    dialog.destroy()
+
+def clean_dir_quasar():
+    region_settings = SCRIPT_DIR / "region_settings"
+    if region_settings.exists():
+        region_settings.unlink()
+    tools_build = SCRIPT_DIR / "packs" / "QuasarTools" / "build"
+    if tools_build.exists():
+        for f in tools_build.iterdir():
+            if f.is_file():
+                f.unlink()
+
+def build_tools():
+    tools_dir = SCRIPT_DIR / "packs" / "QuasarTools"
+    build_dir = tools_dir / "build"
+    build_dir.mkdir(exist_ok=True)
+
+    # fast-chroot
+    fc_dir = tools_dir / "fast-chroot"
+    if (fc_dir / "make").exists():
+        run_cmd("./make", cwd=fc_dir)
+        if (fc_dir / "fchroot").exists():
+            shutil.copy2(fc_dir / "fchroot", build_dir / "fchroot")
+
+    # Systemd-rc
+    rc_dir = tools_dir / "Systemd-rc"
+    if (rc_dir / "make").exists():
+        run_cmd("./make", cwd=rc_dir)
+        if (rc_dir / "systemctl").exists():
+            shutil.copy2(rc_dir / "systemctl", build_dir / "systemctl")
+
+    # Копирование в билд
+    qt_dir = BUILD_DIR / "quasartools"
+    qt_dir.mkdir(exist_ok=True)
+    for tool in build_dir.iterdir():
+        if tool.is_file():
+            shutil.copy2(tool, qt_dir)
+
+def quasarlinux_rev_installer():
+    shutil.rmtree(BUILD_DIR)
+    BUILD_DIR.mkdir()
+
+    rev_path = SCRIPT_DIR / "main" / "QuasarLinux" / "REV"
+    if not rev_path.exists():
+        show_error(f"Путь не найден:\n{rev_path}")
+        return
+
+    # Создание структуры
+    for d in ["modules", "tools", "packages", "profiles", "quasartools"]:
+        (BUILD_DIR / d).mkdir()
+    # Добавь:
+    language_src = SCRIPT_DIR / "packs" / "language"
+    if language_src.exists():
+        shutil.copytree(language_src, BUILD_DIR / "language", dirs_exist_ok=True)
+    else:
+        show_error(f"Внимание: packs/language не найден!")
+    # Копирование модулей
+    modules_src = rev_path / "modules"
+    modules_dst = BUILD_DIR / "modules"
+    for item_name in [
+        "bootloader", "basepack", "install", "inst_pack", "mirrorconfig.sh",
+        "network", "parted", "region", "users.sh", "userland"
+    ]:
+        src = modules_src / item_name
+        if src.exists():
+            if src.is_dir():
+                shutil.copytree(src, modules_dst / item_name)
+            else:
+                shutil.copy2(src, modules_dst)
+
+    # Сборка region_settings.go
+    go_file = modules_src / "region_settings.go"
+    if go_file.exists():
+        res = run_cmd(f"go build -o region_settings {go_file}")
+        if res and (Path("region_settings").exists()):
+            shutil.copy2("region_settings", modules_dst)
+            os.remove("region_settings")
+
+    # Профили
+    profiles_src = SCRIPT_DIR / "profiles" / "QuasarLinux"
+    if profiles_src.exists():
+        for p in profiles_src.iterdir():
+            if p.is_dir():
+                shutil.copytree(p, BUILD_DIR / "profiles" / p.name)
+
+    # Инструменты
+    build_tools()
+
+    # run-файл
+    runfile = rev_path / "run"
+    if runfile.exists():
+        shutil.copy2(runfile, BUILD_DIR)
+        os.chmod(BUILD_DIR / "run", 0o755)
+
+    # Права на модули
+    for f in modules_dst.rglob("*"):
+        if f.is_file():
+            os.chmod(f, 0o755)
+
+    # Очистка
+    clean_dir_quasar()
+    show_info(f"REV-сборка готова!\n{BUILD_DIR}")
+
+def blazarlinux_tui_installer():
+    blazar = SCRIPT_DIR / "main" / "BlazarLinux"
+    if not blazar.exists():
+        show_error(f"BlazarLinux не найден:\n{blazar}")
+        return
+    run_cmd("./make", cwd=blazar)
+    show_info("Сборка BlazarLinux запущена (TUI)")
+
+# --- GUI ---
+class QuasarBuilder(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="QuasarInstall — Builder")
+        self.set_border_width(15)
+        self.set_default_size(600, 300)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(vbox)
+
+        label = Gtk.Label(label="Выберите операционную систему для сборки:")
+        label.set_halign(Gtk.Align.START)
+        vbox.pack_start(label, False, False, 0)
+
+        btn1 = Gtk.Button(label="1) QuasarLinux — Стабильный (2.9-from-3.0)")
+        btn1.connect("clicked", self.on_quasarlinux)
+        vbox.pack_start(btn1, False, False, 0)
+
+        btn2 = Gtk.Button(label="2) QuasarXOS — Скоро...")
+        btn2.set_sensitive(False)
+        vbox.pack_start(btn2, False, False, 0)
+
+        btn3 = Gtk.Button(label="3) BlazarLinux — Тестируется (0.1)")
+        btn3.connect("clicked", lambda _: blazarlinux_tui_installer())
+        vbox.pack_start(btn3, False, False, 0)
+
+        btn4 = Gtk.Button(label="4) QuasarOS — Скоро...")
+        btn4.set_sensitive(False)
+        vbox.pack_start(btn4, False, False, 0)
+
+        close_btn = Gtk.Button(label="Выход")
+        close_btn.connect("clicked", Gtk.main_quit)
+        vbox.pack_start(close_btn, False, False, 10)
+
+    def on_quasarlinux(self, _):
+        win = Gtk.Window(title="Редакция QuasarLinux")
+        win.set_transient_for(self)
+        win.set_modal(True)
+        win.set_border_width(15)
+        win.set_default_size(500, 200)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        win.add(vbox)
+
+        label = Gtk.Label(label="Выберите редакцию:")
+        label.set_halign(Gtk.Align.START)
+        vbox.pack_start(label, False, False, 0)
+
+        btn_se = Gtk.Button(label="1) Second Edition — В разработке (0.1-DEV)")
+        btn_se.set_sensitive(False)
+        vbox.pack_start(btn_se, False, False, 0)
+
+        btn_rev = Gtk.Button(label="2) REVision — Стабильная (1.1)")
+        btn_rev.connect("clicked", lambda _: [win.destroy(), quasarlinux_rev_installer()])
+        vbox.pack_start(btn_rev, False, False, 0)
+
+        btn_pro = Gtk.Button(label="3) PRO — Скоро")
+        btn_pro.set_sensitive(False)
+        vbox.pack_start(btn_pro, False, False, 0)
+
+        win.show_all()
+
+# --- Запуск ---
+if __name__ == "__main__":
+    app = QuasarBuilder()
+    app.connect("destroy", Gtk.main_quit)
+    app.show_all()
+    Gtk.main()

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-
+office="$1"
 option1() {
     chroot /mnt flatpak install flathub org.onlyoffice.desktopeditors -y
 }
@@ -24,7 +24,6 @@ option5() {
 
 
 main() {
-    local office="$1"
     if [ -z "$office" ]; then
         echo "пропускаем"
         exit 0
@@ -39,4 +38,5 @@ main() {
         *) echo "Неверный выбор" ;;
     esac
 }
-main
+
+main "$@"

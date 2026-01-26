@@ -152,7 +152,7 @@ createUser() {
     if ! addToSudoers "$username"; then
         return 1
     fi
-
+    export $username
     echo "$username"
     return 0
 }

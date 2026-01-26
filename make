@@ -36,8 +36,8 @@ edition_quasarlinux() {
 }
 clean_dir_quasar() {
 
-      rm "$SCRIPT_DIR/region_settings"
-      rm "$SCRIPT_DIR/packs/QuasarTools/build/*"
+      rm "$SCRIPT_DIR/region_settings" || true
+      rm "$SCRIPT_DIR/packs/QuasarTools/build/*" || true
 
 }
 blazarlinux_tui_installer() {
@@ -77,6 +77,10 @@ quasarlinux_rev_installer() {
     local QUASARLINUX_INSTALL_PROFILES="profiles/QuasarLinux"
     local profiles="$(ls -x --width=1 $QUASARLINUX_INSTALL_PROFILES)"
 
+    chmod +x "$QUASARLINUX_INSTALL_PROFILES/custom/custom.sh"
+    chmod +x "$QUASARLINUX_INSTALL_PROFILES/default/default.sh"
+    chmod +x "$QUASARLINUX_INSTALL_PROFILES/gaming/gaming.sh"
+    chmod +x "$QUASARLINUX_INSTALL_PROFILES/ai/ai.sh"
     # Создание нужных каталогов
     mkdir "$BUILD_DIR"/modules || true
     mkdir "$BUILD_DIR"/tools || true

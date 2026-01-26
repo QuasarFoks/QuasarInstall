@@ -11,10 +11,10 @@ office_set=$(dialog --title "Меню" --menu "Выберите office: " 15 70 
 
 
 case "$office_set" in
-    1) onlyoffice ;;
-    2) wps ;;
-    3) officefactoring ;;
-    4) libreoffice ;;
-    5) zetaoffice ;;
+    1) ./office_install onlyoffice ;;
+    2) ./office_install wps ;;
+    3) ./office_install officefactoring ;;
+    4) ./office_install libreoffice ;;
+    5) ./office_install zetaoffice ;;
     *) echo "Неверный выбор" ;;
 esac

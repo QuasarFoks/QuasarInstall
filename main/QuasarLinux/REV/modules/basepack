@@ -313,18 +313,16 @@ if mountpoint -q /mnt/recovery; then
 else
     echo "$WAR_RECOVERY"
 fi
+git clone https://github.com/QuasarFoks/Systemd-rc.git
+SRC_FILE="Systemd-rc/src/systemctl/openrc/systemctl.go"
+go build -a -ldflags '-s -w' -o "systemctl" "$SRC_FILE"
+cp systemctl /mnt/bin
 
 ###################################
 #                                 #
 #       Пост установка            #
 #                                 #
 ###################################
-cat >> /mnt/usr/local/bin/post_install << 'EOF'
-#!/bin/bash
-setfont cyr-sun16
-cd /post
-sudo ./post_install
-EOF
 
 clear
 echo "Installing branding"

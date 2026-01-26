@@ -1,6 +1,13 @@
 #!/bin/bash
-audio="$1"
+
+
 set -euo pipefail
+
+
+
+
+audio="$1"
+
 
 pipewire_sound() {
 
@@ -18,9 +25,9 @@ pipewire_sound() {
         pipewire-openrc pipewire-pulse-openrc
     # Дополнительные утилиты
     chroot /mnt pacman -S --noconfirm pavucontrol
-    chroot /mnt rc-update add pipewire --user
-    chroot /mnt rc-update add pipewire-pulse --user
-    chroot /mnt rc-update add wireplumber --user
+    chroot /mnt sudo -C $username rc-update add pipewire --user
+    chroot /mnt sudo -C $username rc-update add pipewire-pulse --user
+    chroot /mnt sudo -C $username rc-update add wireplumber --user
 
 }
 
@@ -61,15 +68,13 @@ jack_sound() {
     echo "Установка JACK2..."
 
     # Удаляем PipeWire
-    local pipewire_packages=(
-        "pipewire" "pipewire-pulse" "pipewire-jack"
-        "wireplumber" "pipewire-alsa" "lib32-pipewire"
-        "pipewire-openrc" "pipewire-pulse-openrc"
-        "wireplumber-openrc"
+    local audio_packages=(
+        'pipewire-jack'
+        'pulseaudio-jack'
     )
 
-    for pkg in "${pipewire_packages[@]}"; do
-        if pacman -Q "$pkg" &>/dev/null; then
+    for pkg in "${audio_packages[@]}"; do
+        if chroot /mnt pacman -Q "$pkg" &>/dev/null; then
             echo "Удаляем $pkg"
             chroot /mnt pacman -Rdd --noconfirm "$pkg" 2>/dev/null || true
         fi
@@ -79,9 +84,9 @@ jack_sound() {
     chroot /mnt pacman -S --noconfirm --needed \
         jack2 jack2-dbus lib32-jack2 calf
     chroot /mnt pacman -S --noconfirm pavucontrol
-    chroot /mnt rc-update add pipewire --user
-    chroot /mnt rc-update add pipewire-pulse --user
-    chroot /mnt rc-update add wireplumber --user
+    chroot /mnt sudo -C $username rc-update add pipewire --user
+    chroot /mnt sudo -C $username rc-update add pipewire-pulse --user
+    chroot /mnt sudo -C $username rc-update add wireplumber --user
 
     echo "JACK2 установлен"
 }

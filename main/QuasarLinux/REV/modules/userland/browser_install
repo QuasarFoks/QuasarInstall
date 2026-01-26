@@ -1,35 +1,35 @@
 #!/bin/bash
 set -euo pipefail
 function option1() {
-    flatpak install flathub org.mozilla.firefox -y
+    chroot /mnt flatpak install flathub org.mozilla.firefox -y
 }
 
 function option2() {
-    flatpak install flathub org.chromium.Chromium -y
+    chroot /mnt  flatpak install flathub org.chromium.Chromium -y
 }
 
 function option3() {
-    flatpak install flathub com.brave.Browser -y 
+    chroot /mnt  flatpak install flathub com.brave.Browser -y
 }
 
 function option4() {
-    flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
+    chroot /mnt flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
 }
 
 function option5() {
-    flatpak install flathub io.gitlab.librewolf-community -y 
+    chroot /mnt  flatpak install flathub io.gitlab.librewolf-community -y
 }
 
 function option6() {
-    flatpak install flathub com.github.micahflee.torbrowser-launcher -y
+    chroot /mnt  flatpak install flathub com.github.micahflee.torbrowser-launcher -y
 }
 
 function option7() {
-    flatpak install flathub ru.yandex.Browser -y
+    chroot /mnt  flatpak install flathub ru.yandex.Browser -y
 }
 
 function option8() {
-    flatpak install flathub org.kde.falkon -y
+    chroot /mnt  flatpak install flathub org.kde.falkon -y
 }
 
 main() {
@@ -51,3 +51,4 @@ main() {
         *) echo "Неверный выбор" ;;
     esac
 }
+main "$@"

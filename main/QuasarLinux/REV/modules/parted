@@ -15,7 +15,7 @@ if [ ! -e "$DISK" ]; then
 fi
 
 #   BEST_COMPRESS_SPEED
-#   BLANCE
+BLANCE="balance"
 #   FAST_WEAKER_COMPRESSION
 #
 
@@ -97,7 +97,7 @@ old_os_backap() {
 
     old_os_back=$(dialog --title "$SELECT_MODE_TITLE" --menu "$SELECT_MODE_MENU" 15 60 3 \
         1 "tar.xz ($BEST_COMPRESS_SPEED)" \
-        2 "tar.zst ($BLANCE)" \
+        2 "tar.zst (баланс)" \
         3 "tar.gz ($FAST_WEAKER_COMPRESSION)" 3>&1 1>&2 2>&3 3>&-)
 
     case "$old_os_back" in
@@ -107,10 +107,25 @@ old_os_backap() {
     esac
 
     # 3. Удаляем всё кроме old.os и boot
-    find /mnt -maxdepth 1 -mindepth 1 \
-        ! -name 'old.os' \
-        ! -name 'boot' \
-        -exec rm -rf {} +
+    # 1. Сначала проверь, что найдётся:
+    local TARGET="/mnt"
+
+    # Проверка монтирования
+    if ! mountpoint -q "$TARGET"; then
+        echo "$TARGET не примонтирован. Выход."
+        exit 1
+    fi
+
+    # Проверка наличия нужных каталогов
+    for dir in old.os boot; do
+        if [[ ! -d "$TARGET/$dir" ]]; then
+            echo "Предупреждение: $TARGET/$dir не существует!"
+        fi
+    done
+
+    # Удаляем всё, кроме old.os и boot
+    find "$TARGET" -maxdepth 1 -mindepth 1 ! -name 'old.os' ! -name 'boot' -exec rm -rf {} +
+
 }
 
 # Функция авторазметки
@@ -140,39 +155,31 @@ auto_partition() {
         parted -s "$DISK" mklabel msdos
     fi
 
-    # Создаем разделы согласно требованиям
+    # Создаем разделы
     echo "$CREATING_PARTITIONS"
 
     if [ $UEFI_MODE -eq 1 ]; then
-        # UEFI разделы
+        # UEFI: ESP + swap + root
         parted -s "$DISK" mkpart primary fat32 1MiB 513MiB
         parted -s "$DISK" set 1 esp on
         export BOOT_PART="${DISK}1"
 
-        parted -s "$DISK" mkpart primary 513MiB 2GiB
-        export RECOVERY_PART="${DISK}2"
+        parted -s "$DISK" mkpart primary 513MiB 4.5GiB
+        export SWAP_PART="${DISK}2"
 
-        parted -s "$DISK" mkpart primary 2GiB 6GiB
-        export SWAP_PART="${DISK}3"
-
-        # Оставшееся место под корень
-        parted -s "$DISK" mkpart primary 6GiB 100%
-        export ROOT_PART="${DISK}4"
+        parted -s "$DISK" mkpart primary 4.5GiB 100%
+        export ROOT_PART="${DISK}3"
     else
-        # BIOS разделы
+        # BIOS: boot + swap + root
         parted -s "$DISK" mkpart primary 1MiB 513MiB
         parted -s "$DISK" set 1 boot on
         export BOOT_PART="${DISK}1"
 
-        parted -s "$DISK" mkpart primary 513MiB 2GiB
-        export RECOVERY_PART="${DISK}2"
+        parted -s "$DISK" mkpart primary 513MiB 4.5GiB
+        export SWAP_PART="${DISK}2"
 
-        parted -s "$DISK" mkpart primary 2GiB 6GiB
-        export SWAP_PART="${DISK}3"
-
-        # Оставшееся место под корень
-        parted -s "$DISK" mkpart primary 6GiB 100%
-        export ROOT_PART="${DISK}4"
+        parted -s "$DISK" mkpart primary 4.5GiB 100%
+        export ROOT_PART="${DISK}3"
     fi
 
     partprobe "$DISK"
@@ -182,7 +189,6 @@ auto_partition() {
     fdisk -l "$DISK" | grep "^/dev"
     echo "========================="
 }
-
 # Функция форматирования разделов
 format_partitions() {
     echo "$FORMATTING_TITLE"

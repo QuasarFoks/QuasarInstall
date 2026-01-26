@@ -15,14 +15,14 @@ browser=$(dialog --title "Меню" --menu "Выберите браузер: " 1
 case $? in
     0)
         case $browser in
-        1) firefox ;;
-        2) chromium ;;
-        3) brave ;;
-        4) ungoogled_chromium ;;
-        5) librewolf ;;
-        6) torbrowser ;;
-        7) yandex ;;
-        8) falkon ;;
+        1) ./browser_install firefox ;;
+        2) ./browser_install  chromium ;;
+        3) ./browser_install  brave ;;
+        4) ./browser_install  ungoogled_chromium ;;
+        5) ./browser_install  librewolf ;;
+        6) ./browser_install  torbrowser ;;
+        7) ./browser_install  yandex ;;
+        8) ./browser_install  falkon ;;
         esac
         ;;
     *)

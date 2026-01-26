@@ -3,6 +3,7 @@
 #   QuasarLinux
 #   custom prefix
 #   by QuasarFoks
+#set -e || true
 
 cat << EOF
 ========================
