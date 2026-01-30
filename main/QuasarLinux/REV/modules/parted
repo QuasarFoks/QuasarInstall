@@ -207,8 +207,8 @@ format_partitions() {
     mkfs.ext4 -F "$ROOT_PART"
 
     # Форматируем recovery раздел (ext2)
-    echo "$FORMATTING_RECOVERY"
-    mkfs.ext2 -F "$RECOVERY_PART"
+    # echo "$FORMATTING_RECOVERY"
+    # mkfs.ext2 -F "$RECOVERY_PART"
 
     # Создаем swap
     echo "$CREATING_SWAP"

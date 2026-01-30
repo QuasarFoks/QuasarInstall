@@ -16,8 +16,8 @@ gpu_info=$(lspci -nn | grep -i 'VGA\|3D\|Display' | head -1)
 
 echo "install (mesa, vesa, fbdev)..."
 
-chroot /mnt pacman -S --needed --noconfirm mesa vulkan-icd-loader  xf86-video-vesa xf86-video-fbdev
-chroot /mnt pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader
+chroot /mnt pacman -Sy --needed --noconfirm mesa vulkan-icd-loader  xf86-video-vesa xf86-video-fbdev
+chroot /mnt pacman -Sy --noconfirm lib32-mesa lib32-vulkan-icd-loader
 
 
 if echo "$gpu_info" | grep -qi "AMD"; then

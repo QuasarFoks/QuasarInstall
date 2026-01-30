@@ -7,6 +7,7 @@ mount --rbind /sys /mnt/sys
 mount --rbind /dev /mnt/dev
 mount --rbind /run /mnt/run
 main() {
+    chroot /mnt pacman -Syy
     prefix=$(dialog --title "Quasar-install" --menu "$SELECT_OPTION" 15 70 7 \
                 1 "Custom" \
                 2 "AI prefix" \

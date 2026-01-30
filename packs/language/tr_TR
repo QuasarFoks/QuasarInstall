@@ -10,7 +10,7 @@ export KERNEL_INFO_VANILA="Linux (Standart)"
 ### Selected
 export CAND_TEXT="Seçim iptal edildi"
 export ERROR="Hata: "
-
+export LANG_SYS="tr_TR.UTF-8 UTF-8"
 ### basepack
 export INFO_INSTALL="
 ╔════════════════════════════════════════════════╗

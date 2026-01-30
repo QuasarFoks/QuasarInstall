@@ -128,11 +128,7 @@ mount --rbind /sys /mnt/sys
 mount --rbind /dev /mnt/dev
 mount --rbind /run /mnt/run
 
-cat > /mnt/etc/locale.gen << 'EOF'
-# Auto-generated locales
-en_US.UTF-8 UTF-8
-ru_RU.UTF-8 UTF-8
-EOF
+echo "$LANG_SYS" >> /mnt/etc/locale.conf || echo "en_US.UTF-8" >> /mnt/etc/locale.conf
 chroot /mnt locale-gen
 
 
@@ -221,25 +217,18 @@ fi
 #########################################################################################
 # Копирование конфигурационных файлов
 
-if [ -f /installer/test/framework/configs/pacman.conf ]; then
+if [ -f /installer/profiles/base/pacman.conf ]; then
     rm /mnt/etc/pacman.conf
-    cp /installer/test/framework/configs/pacman.conf /mnt/etc/
+    cp /installer/profiles/base/pacman.conf /mnt/etc/
 else
     echo "${WARRING}pacman.conf ${PATCH_RECOVERY_TEXT}"
 fi
 
-if [ -f /installer/test/framework/configs/pacman.d/mirrorlist ]; then
-    rm /mnt/etc/pacman.d/mirrorlist
-    cp /installer/test/framework/configs/pacman.d/mirrorlist /mnt/etc/pacman.d/
-else
-    echo "${WARRING}pacman.d ${PATCH_RECOVERY_TEXT}"
-fi
+
 
 #########################################################################################
 # Копирование post-инсталляционных скриптов
 
-cp -r /installer/modules/post /mnt/
-cp -r /installer/regions /mnt/
 
 #########################################################################################
 
@@ -254,9 +243,9 @@ ln -sf /usr/lib/os-release /mnt/etc/os-release 2>/dev/null || true
 
 ##########################################################################################
 
-if [ -d /installer/test/framework/configs/pixmaps ]; then
+if [ -d /installer/profiles/base/pixmaps ]; then
     rm -rf /mnt/usr/share/pixmaps
-    cp -r /installer/test/framework/configs/pixmaps /mnt/usr/share
+    cp -r /installer/profiles/base/pixmaps /mnt/usr/share
 else
     echo "${WARRING}pixmaps ${PATCH_RECOVERY_TEXT}"
 fi
@@ -315,14 +304,9 @@ else
 fi
 git clone https://github.com/QuasarFoks/Systemd-rc.git
 SRC_FILE="Systemd-rc/src/systemctl/openrc/systemctl.go"
-go build -a -ldflags '-s -w' -o "systemctl" "$SRC_FILE"
+go build -o "systemctl" "$SRC_FILE"
 cp systemctl /mnt/bin
 
-###################################
-#                                 #
-#       Пост установка            #
-#                                 #
-###################################
 
 clear
 echo "Installing branding"

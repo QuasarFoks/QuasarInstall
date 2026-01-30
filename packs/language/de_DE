@@ -13,6 +13,7 @@ export ERROR="Fehler: "
 
 ### basepack
 export INFO_INSTALL="
+export LANG_SYS="de_DE.UTF-8 UTF-8"
 ╔════════════════════════════════════════════════╗
 ║      Installiere Basissystem                   ║
 ╚════════════════════════════════════════════════╝

@@ -19,10 +19,12 @@ pipewire_sound() {
 
     # Безопасная установка PipeWire
     chroot /mnt pacman -S --noconfirm --needed \
-        pipewire lib32-pipewire \
+        pipewire \
         pipewire-alsa pipewire-pulse pipewire-jack \
         wireplumber pipewire-audio \
         pipewire-openrc pipewire-pulse-openrc
+    chroot /mnt pacman -S --noconfirm --needed lib32-pipewire
+
     # Дополнительные утилиты
     chroot /mnt pacman -S --noconfirm pavucontrol
     chroot /mnt sudo -C $username rc-update add pipewire --user
@@ -82,7 +84,9 @@ jack_sound() {
 
     # Устанавливаем JACK
     chroot /mnt pacman -S --noconfirm --needed \
-        jack2 jack2-dbus lib32-jack2 calf
+        jack2 jack2-dbus calf
+    chroot /mnt pacman -S --noconfirm --needed \
+        lib32-jack2
     chroot /mnt pacman -S --noconfirm pavucontrol
     chroot /mnt sudo -C $username rc-update add pipewire --user
     chroot /mnt sudo -C $username rc-update add pipewire-pulse --user

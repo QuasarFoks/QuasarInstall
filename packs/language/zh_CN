@@ -10,7 +10,7 @@ export KERNEL_INFO_VANILA="Linux (标准)"
 ### Selected
 export CAND_TEXT="选择已取消"
 export ERROR="错误："
-
+export LANG_SYS="zh_CN.UTF-8 UTF-8"
 ### basepack
 export INFO_INSTALL="
 ╔════════════════════════════════════════════════╗

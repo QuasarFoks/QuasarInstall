@@ -10,7 +10,7 @@ export KERNEL_INFO_VANILA="Linux (Стандарт)"
 ### Selected
 export CAND_TEXT="Выбор отменен"
 export ERROR="Ошибка: "
-
+export LANG_SYS="ru_RU.UTF-8 UTF-8"
 ### basepack
 export INFO_INSTALL="
 ╔════════════════════════════════════════════════╗

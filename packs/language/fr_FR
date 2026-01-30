@@ -10,7 +10,7 @@ export KERNEL_INFO_VANILA="Linux (Standard)"
 ### Selected
 export CAND_TEXT="Sélection annulée"
 export ERROR="Erreur: "
-
+export LANG_SYS="fr_FR.UTF-8 UTF-8"
 ### basepack
 export INFO_INSTALL="
 ╔════════════════════════════════════════════════╗

@@ -17,8 +17,8 @@ gpu_info=$(lspci -nn | grep -i 'VGA\|3D\|Display' | head -1)
 
 echo "Installing basic graphics subsystem (mesa, vesa, fbdev)..."
 
-chroot /mnt pacman -S --noconfirm mesa  vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
-chroot /mnt pacman -S --needed --noconfirm lib32-mesa
+chroot /mnt pacman -Sy --noconfirm mesa  vulkan-icd-loader lib32-vulkan-icd-loader xf86-video-vesa xf86-video-fbdev
+chroot /mnt pacman -Sy --needed --noconfirm lib32-mesa
 
 # Определяем и устанавливаем специфичные драйверы
 video_drivers() {
@@ -95,8 +95,7 @@ install_packs() {
     local USERLAND="/installer/modules/userland"
     "$USERLAND"/de_install plasma
     "$USERLAND"/audio_install pipewire
-    "$USERLAND"/office_install onlyoffice
     "$USERLAND"/browser_install firefox
     "$USERLAND"/wine_install portproton
 }
-
+install_packs
