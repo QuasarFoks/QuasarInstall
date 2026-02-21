@@ -6,7 +6,7 @@ express() {
     "$SCRIPT_DIR"/parted
     "$SCRIPT_DIR"/basepack
     regions
-    "$SCRIPT_DIR"/mirrorconfig.sh
+    #"$SCRIPT_DIR"/mirrorconfig.sh
     "$SCRIPT_DIR"/users.sh
     "$SCRIPT_DIR"/inst_pack
     "$SCRIPT_DIR"/bootloader

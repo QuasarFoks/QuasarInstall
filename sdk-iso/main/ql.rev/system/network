@@ -1,0 +1,138 @@
+#!/bin/bash
+
+configure_dns() {
+    echo "Select a DNS server:"
+    echo "1) Cloudflare (1.1.1.1, 1.0.0.1)   -- FAST"
+    echo "2) Google (8.8.8.8, 8.8.4.4)       -- fast and stable"
+    echo "3) Quad9 (9.9.9.9, 149.112.112.112) -- stable"
+    echo "4) OpenDNS (208.67.222.222, 208.67.220.220)"
+    echo "5) Skip DNS configuration"
+    read -p "Your choice [1-5]: " dns_choice
+
+    case $dns_choice in
+        1)
+            dns_servers="1.1.1.1 1.0.0.1"
+            ;;
+        2)
+            dns_servers="8.8.8.8 8.8.4.4"
+            ;;
+        3)
+            dns_servers="9.9.9.9 149.112.112.112"
+            ;;
+        4)
+            dns_servers="208.67.222.222 208.67.220.220"
+            ;;
+        5)
+            echo "DNS configuration skipped."
+            return 0
+            ;;
+        *)
+            echo "ERROR: Invalid choice"
+            return 1
+            ;;
+    esac
+
+    echo "Setting DNS servers: $dns_servers"
+    sudo mkdir -p /etc/NetworkManager/conf.d/
+    echo -e "[global]\ndns=none" | sudo tee /etc/NetworkManager/conf.d/dns.conf >/dev/null
+    sudo rc-service NetworkManager restart
+
+    # Back up existing resolv.conf if it exists
+    if [ -f /etc/resolv.conf ]; then
+        sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+    fi
+
+    for server in $dns_servers; do
+        echo "nameserver $server" | sudo tee -a /etc/resolv.conf >/dev/null
+    done
+
+    echo "DNS configured successfully!"
+}
+
+# Check if a Wi-Fi adapter is available
+check_wifi_available() {
+    if nmcli device | grep -q wifi; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Main Wi-Fi connection function
+connect_to_wifi() {
+    echo "Available Wi-Fi networks:"
+    nmcli device wifi list
+
+    read -p "Enter the network SSID: " ssid
+    if [ -z "$ssid" ]; then
+        echo "Error: SSID cannot be empty!"
+        return 1
+    fi
+
+    read -sp "Enter the password (leave blank for open networks): " password
+    echo
+
+    if [ -z "$password" ]; then
+        echo "Connecting to open network: $ssid..."
+        if ! nmcli device wifi connect "$ssid"; then
+            echo "Failed to connect to network: $ssid"
+            return 1
+        fi
+    else
+        echo "Connecting to secured network: $ssid..."
+        if ! nmcli device wifi connect "$ssid" password "$password"; then
+            echo "Failed to connect to network: $ssid (wrong password?)"
+            return 1
+        fi
+    fi
+
+    echo "Successfully connected to: $ssid!"
+
+    # Offer DNS setup
+    read -p "Would you like to configure DNS servers? [y/N]: " configure_dns_choice
+    if [[ "$configure_dns_choice" =~ ^[Yy]$ ]]; then
+        configure_dns
+    fi
+
+    return 0
+}
+
+# Check internet connectivity
+check_internet() {
+    echo "Checking internet connection..."
+    if ping -c 3 archlinux.org &> /dev/null; then
+        echo "Internet connection is active!"
+        return 0
+    else
+        echo "No internet connection!"
+        return 1
+    fi
+}
+
+# Main network setup flow
+echo "=== Network Configuration ==="
+
+# Check for Wi-Fi hardware
+if check_wifi_available; then
+    read -p "A Wi-Fi adapter was detected. Would you like to connect? [Y/n]: " wifi_choice
+    if [[ "$wifi_choice" =~ ^[Nn]$ ]]; then
+        echo "Skipping Wi-Fi setup..."
+    else
+        connect_to_wifi
+    fi
+else
+    echo "No Wi-Fi adapter found. Skipping Wi-Fi setup..."
+fi
+
+# Always verify internet access
+if ! check_internet; then
+    echo "Warning: No internet connection detected!"
+    echo "Some installation features may not work without internet access."
+    read -p "Continue anyway? [y/N]: " no_internet_choice
+    if [[ ! "$no_internet_choice" =~ ^[Yy]$ ]]; then
+        echo "Installation aborted."
+        exit 1
+    fi
+fi
+
+echo "Proceeding to main installation..."

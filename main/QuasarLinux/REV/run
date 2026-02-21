@@ -1,8 +1,11 @@
 #!/bin/bash
 clear
 setfont ter-v16n
+
+VERSION="REV-1.1-20f26g"
+
 # Предварительные настройки
-echo "Подготовка к установке QuasarLinux REV-1.1..."
+echo "Подготовка к установке QuasarLinux $VERSION..."
 sleep 1
 
 # Проверка и установка зависимостей
@@ -51,7 +54,7 @@ install_main() {
 # Основной процесс установки
 main() {
     echo "========================================"
-    echo "  Установка QuasarLinux REV-1.1"
+    echo "  Установка QuasarLinux $VERSION"
     echo "========================================"
 
     # 1. Установка зависимостей

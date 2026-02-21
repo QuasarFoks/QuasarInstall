@@ -1,24 +1,105 @@
 #!/bin/bash
 
 SRC="/installer"
+
+# Монтирование
 clear
 mount --types proc /proc /mnt/proc
 mount --rbind /sys /mnt/sys
 mount --rbind /dev /mnt/dev
 mount --rbind /run /mnt/run
+
+# Функция выбора профиля
+select_profile() {
+    local profiles=()
+    local dir
+
+    for dir in "$SRC"/profiles/*/; do
+        [ -d "$dir" ] || continue
+        [ -f "${dir}main.conf" ] || continue
+
+        local name=$(basename "$dir")
+        profiles+=("$name" "$name")
+    done
+
+    [ ${#profiles[@]} -eq 0 ] && {
+        dialog --msgbox "Нет профилей в $SRC/profiles/" 10 40
+        return 1
+    }
+
+    exec 3>&1
+    local choice=$(dialog --title "Quasar-install" --menu "Выберите профиль:" 15 50 10 "${profiles[@]}" 2>&1 1>&3)
+    local code=$?
+    exec 3>&-
+
+    [ $code -eq 0 ] && echo "$choice" || echo ""
+}
+
 main() {
     chroot /mnt pacman -Syy
-    prefix=$(dialog --title "Quasar-install" --menu "$SELECT_OPTION" 15 70 7 \
-                1 "Custom" \
-                2 "AI prefix" \
-                3 "Gaming prefix" \
-                4 "default prefix" \
-                3>&1 1>&2 2>&3 3>&-)
-    case $prefix in
-        1) "$SRC"/profiles/custom/custom.sh ;;
-        2) "$SRC"/profiles/ai/ai.sh ;;
-        3) "$SRC"/profiles/gaming/gaming.sh ;;
-        4) "$SRC"/profiles/default/default.sh ;;
-    esac
+
+    profile=$(select_profile)
+    [ -z "$profile" ] && exit 1
+
+    # ===== ПАРСИНГ MAIN.CONF =====
+    config_file="$SRC/profiles/$profile/main.conf"
+    if [ -f "$config_file" ]; then
+        # Читаем конфиг
+        source "$config_file"
+
+        # Можно вывести прочитанные значения для проверки
+        echo "Загружен конфиг для профиля: $profile"
+        echo "desktop=$desktop"
+        echo "audio=$audio"
+        echo "android=$android"
+        echo "browser=$browser"
+        echo "office=$office"
+        echo "wine=$wine"
+        echo "custom_package=$custom_package"
+
+        # Здесь можно сразу использовать эти переменные
+        # Например, добавить пакеты в установку
+        ALL_PACKAGES="$custom_package"
+
+        # В зависимости от флагов добавляем пакеты
+        local USERLAND="/installer/modules/userland"
+        clear
+        "$USERLAND"/de_install "$desktop"
+
+        "$USERLAND"/audio_install "$audio"
+
+        "$USERLAND"/office_install  "$office"
+
+        "$USERLAND"/browser_install "$office"
+
+        "$USERLAND"/wine_install "$wine"
+
+        "$USERLAND"/android_install "$android"
+
+        chroot /mnt pacman -S "${custom_package}"
+
+
+        run_scripts || true
+
+
+
+
+        # Можешь передать переменные в скрипт профиля через аргументы или окружение
+        unset desktop audio android browser office wine custom_package
+    else
+        echo "Внимание: main.conf не найден в $profile"
+    fi
+    # ===== КОНЕЦ ПАРСИНГА =====
+
+    # Запускаем скрипт выбранного профиля
+    script_path="$SRC/profiles/$profile/$profile.sh"
+
+    if [ -x "$script_path" ]; then
+        "$script_path"  # Скрипт получит доступ к переменным через export
+    else
+        dialog --msgbox "Скрипт $script_path не найден или не исполняемый" 10 50
+        exit 1
+    fi
 }
+
 main

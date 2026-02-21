@@ -51,8 +51,8 @@ unset base_system_kernel
 ################################################################################
 # Создание файлов OS release
 config_system() {
-    cat > /mnt/usr/lib/os-release << 'OS_EOF'
-NAME="Quasar Linux REV-1.1"
+    cat > /mnt/usr/lib/os-release << OS_EOF
+NAME="Quasar Linux $VERSION"
 PRETTY_NAME="Quasar Linux"
 ID=quasar
 BUILD_ID=rolling
@@ -65,9 +65,9 @@ PRIVACY_POLICY_URL="https://quasarfoks.github.io/policy"
 LOGO=quasarlogo
 OS_EOF
 
-    cat > /mnt/etc/lsb-release << 'LSB_EOF'
+    cat > /mnt/etc/lsb-release << LSB_EOF
 DISTRIB_ID=Quasar
-DISTRIB_RELEASE=1.1
+DISTRIB_RELEASE=$VERSION
 DISTRIB_DESCRIPTION="Quasar Linux"
 DISTRIB_CODENAME=rolling
 LSB_EOF
