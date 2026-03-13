@@ -1,252 +1,155 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
-# Языковые переменные
+# --- Инициализация локализации ---
+SYSTEM_LANG=${LANG:0:5}
+SUPPORTED_LANGS=("de_DE" "en_US" "es_ES" "fr_FR" "it_IT" "ja_JP" "pt_BR" "ru_RU" "tr_TR" "zh_CN")
 
+LANG_FOUND=0
+for lang in "${SUPPORTED_LANGS[@]}"; do
+    if [ "$SYSTEM_LANG" = "$lang" ]; then
+        LANG_FOUND=1
+        break
+    fi
+done
 
-# mountChrootDirs — монтирует необходимые файловые системы для chroot
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
+
+export TEXTDOMAIN="installer"
+export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+
+if ! command -v gettext &> /dev/null; then
+    _() { echo "$1"; }
+    _err() { echo "ERROR: $1"; }
+else
+    _() { gettext -s "$1"; }
+    _err() { echo "ERROR: $(gettext -s "$1")"; }
+fi
+# --------------------------------
+
 mountChrootDirs() {
     local dirs=("/dev" "/dev/pts" "/proc" "/sys" "/run")
-
     for dir in "${dirs[@]}"; do
         targetDir="/mnt$dir"
-
-        # Создаем директорию если её нет
         mkdir -p "$targetDir"
-
-        # Монтируем
         case "$dir" in
-            "/dev")
-                mount --bind "/dev" "$targetDir"
-                ;;
-            "/dev/pts")
-                mount --bind "/dev/pts" "$targetDir"
-                ;;
-            "/proc")
-                mount -t proc proc "$targetDir"
-                ;;
-            "/sys")
-                mount -t sysfs sysfs "$targetDir"
-                ;;
-            "/run")
-                mount -t tmpfs tmpfs "$targetDir"
-                ;;
+            "/dev") mount --bind "/dev" "$targetDir" ;;
+            "/dev/pts") mount --bind "/dev/pts" "$targetDir" ;;
+            "/proc") mount -t proc proc "$targetDir" ;;
+            "/sys") mount -t sysfs sysfs "$targetDir" ;;
+            "/run") mount -t tmpfs tmpfs "$targetDir" ;;
         esac
 
         if [ $? -ne 0 ]; then
-            printf "${ERROR_MOUNT}\n" "$dir" >&2
+            _err "Failed to mount $dir" >&2
             return 1
         fi
     done
-
-    echo " * Файловые системы смонтированы для chroot"
+    echo " * $(_ "File systems mounted for chroot")"
     return 0
 }
 
-# unmountChrootDirs — отмонтирует файловые системы после работы
 unmountChrootDirs() {
     local dirs=("/run" "/sys" "/proc" "/dev/pts" "/dev")
-
     for dir in "${dirs[@]}"; do
         targetDir="/mnt$dir"
         umount -R "$targetDir" 2>/dev/null || true
     done
-
-    echo " * Файловые системы отмонтированы"
+    echo " * $(_ "File systems unmounted")"
 }
 
-# runChroot — запускает команду внутри chroot
 runChroot() {
     chroot /mnt "$@"
 }
 
-# addToSudoers — добавляет пользователя в sudoers
 addToSudoers() {
     local username="$1"
-    printf "${ADD_TO_SUDO}\n" "$username"
-
-    # Создаем файл в /etc/sudoers.d/ (более безопасно)
     local sudoersFile="/etc/sudoers.d/$username"
     local sudoersContent="$username ALL=(ALL:ALL) ALL"
 
-    # Записываем конфиг в chroot
     if ! echo "$sudoersContent" | runChroot tee "$sudoersFile" >/dev/null; then
-        printf "${ERROR_SUDO}\n" >&2
+        _err "Failed to configure sudoers" >&2
         return 1
     fi
 
-    # Устанавливаем правильные права (только root для чтения)
     if ! runChroot chmod 440 "$sudoersFile"; then
-        printf "${ERROR_PERMISSIONS}\n" >&2
+        _err "Failed to set permissions on sudoers file" >&2
         return 1
     fi
-
-    printf "${USER_ADDED_TO_SUDO}\n" "$username"
     return 0
 }
 
-# createUser — создаёт пользователя и группу через dialog
 createUser() {
-    # Диалог для ввода имени пользователя
-    username=$(dialog --title "$USER_SETUP_TITLE" \
-                      --inputbox "$ENTER_USERNAME" \
-                      10 50 \
-                      3>&1 1>&2 2>&3 3>&-)
+    local user_title=$(_ "User Setup")
+    local enter_user_msg=$(_ "Enter username:")
+
+    username=$(dialog --title "$user_title" --inputbox "$enter_user_msg" 10 50 3>&1 1>&2 2>&3 3>&-)
 
     if [ -z "$username" ]; then
-        dialog --msgbox "${USERNAME_EMPTY}" 7 40
+        dialog --msgbox "$(_ "Username cannot be empty!")" 7 40
         return 1
     fi
 
-    if [ "$username" = "root" ]; then
-        dialog --msgbox "${USERNAME_ROOT}" 7 40
-        return 1
-    fi
-
-    # Создаем группу
-    printf "${CREATE_GROUP}\n" "$username"
     runChroot groupadd "$username" 2>/dev/null || true
 
-    # Создаем пользователя
-    printf "${CREATE_USER}\n" "$username"
     if ! runChroot useradd -m -g "$username" -G wheel "$username"; then
-        printf "${ERROR_CREATE_USER}\n" >&2
+        _err "Failed to create user" >&2
         return 1
     fi
 
-    # Устанавливаем пароль через диалог
     while true; do
-        password=$(dialog --title "$USER_SETUP_TITLE" \
-                          --insecure \
-                          --passwordbox "$(printf "${SET_PASSWORD}" "$username")" \
-                          10 50 \
-                          3>&1 1>&2 2>&3 3>&-)
-
-        password_confirm=$(dialog --title "$USER_SETUP_TITLE" \
-                                  --insecure \
-                                  --passwordbox "Подтвердите пароль:" \
-                                  10 50 \
-                                  3>&1 1>&2 2>&3 3>&-)
+        password=$(dialog --title "$user_title" --insecure --passwordbox "$(_ "Enter password for") $username" 10 50 3>&1 1>&2 2>&3 3>&-)
+        confirm=$(dialog --title "$user_title" --insecure --passwordbox "$(_ "Confirm password:")" 10 50 3>&1 1>&2 2>&3 3>&-)
 
         if [ -z "$password" ]; then
-            dialog --msgbox "Пароль не может быть пустым!" 7 40
+            dialog --msgbox "$(_ "Password cannot be empty!")" 7 40
             continue
         fi
-
-        if [ "$password" != "$password_confirm" ]; then
-            dialog --msgbox "Пароли не совпадают! Попробуйте снова." 7 50
-            continue
-        fi
-
-        break
+        [ "$password" = "$confirm" ] && break
+        dialog --msgbox "$(_ "Passwords do not match!")" 7 50
     done
 
-    # Устанавливаем пароль
     echo "$username:$password" | runChroot chpasswd
-    if [ $? -ne 0 ]; then
-        printf "${ERROR_SET_PASSWORD}\n" >&2
-        return 1
-    fi
-
-    # Добавляем в sudo
-    if ! addToSudoers "$username"; then
-        return 1
-    fi
-    export $username
+    addToSudoers "$username"
     echo "$username"
-    return 0
 }
 
-# setRootPassword — устанавливает пароль root через dialog
 setRootPassword() {
+    local user_title=$(_ "Root Password Setup")
     while true; do
-        password=$(dialog --title "$USER_SETUP_TITLE" \
-                          --insecure \
-                          --passwordbox "$SET_ROOT_PASSWORD" \
-                          10 50 \
-                          3>&1 1>&2 2>&3 3>&-)
-
-        password_confirm=$(dialog --title "$USER_SETUP_TITLE" \
-                                  --insecure \
-                                  --passwordbox "Подтвердите пароль для root:" \
-                                  10 50 \
-                                  3>&1 1>&2 2>&3 3>&-)
+        password=$(dialog --title "$user_title" --insecure --passwordbox "$(_ "Enter root password:")" 10 50 3>&1 1>&2 2>&3 3>&-)
+        confirm=$(dialog --title "$user_title" --insecure --passwordbox "$(_ "Confirm root password:")" 10 50 3>&1 1>&2 2>&3 3>&-)
 
         if [ -z "$password" ]; then
-            dialog --msgbox "Пароль не может быть пустым!" 7 40
+            dialog --msgbox "$(_ "Password cannot be empty!")" 7 40
             continue
         fi
-
-        if [ "$password" != "$password_confirm" ]; then
-            dialog --msgbox "Пароли не совпадают! Попробуйте снова." 7 50
-            continue
-        fi
-
-        break
+        [ "$password" = "$confirm" ] && break
+        dialog --msgbox "$(_ "Passwords do not match!")" 7 50
     done
 
-    # Устанавливаем пароль
     echo "root:$password" | runChroot chpasswd
-    if [ $? -ne 0 ]; then
-        printf "${ERROR_SET_PASSWORD}\n" >&2
-        return 1
-    fi
-
-    return 0
-}
-
-# enableSudoGroup — включает группу wheel в sudo
-enableSudoGroup() {
-    echo "$ENABLE_SUDO_GROUP"
-
-    # Раскомментируем строку с %wheel в sudoers
-    if ! runChroot sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers; then
-        printf "${WARNING_WHEEL}\n" >&2
-        return 1
-    fi
-
-    return 0
 }
 
 main() {
     clear
-    echo "====================================="
-    echo "      $USER_SETUP_TITLE"
-    echo "====================================="
-
-    # Монтируем файловые системы для chroot
-    if ! mountChrootDirs; then
-        exit 1
-    fi
-
-    # Гарантируем отмонтирование при выходе
+    mountChrootDirs
     trap unmountChrootDirs EXIT
 
-    # Включаем группу wheel в sudo
-    enableSudoGroup || true
+    # Enable wheel
+    runChroot sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers || true
 
-    # Создаем пользователя
-    username=$(createUser)
-    if [ $? -ne 0 ]; then
-        exit 1
-    fi
+    created_user=$(createUser)
+    [ $? -ne 0 ] && exit 1
 
-    echo ""
+    setRootPassword
 
-    # Устанавливаем пароль root
-    if ! setRootPassword; then
-        exit 1
-    fi
-
-    clear
-    echo "\n====================================="
-    printf "  ${USER_CREATED_SUCCESS}\n" "$username"
-    echo "====================================="
-
-    # Показываем итоговое сообщение
-    dialog --title "Готово" \
-           --msgbox "$(printf "${USER_CREATED_SUCCESS}\n\nПользователь: $username\nПароль root установлен" "$username")" \
-           10 50
+    dialog --title "$(_ "Done")" \
+           --msgbox "$(_ "User created successfully:") $created_user\n$(_ "Root password set.")" 10 50
 }
 
 main

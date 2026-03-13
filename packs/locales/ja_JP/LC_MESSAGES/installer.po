@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quasar Linux Installer\n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: QuasarFoks-Localizer\n"
+
+msgid "Select kernel"
+msgstr "カーネルを選択"
+
+msgid "Choose kernel version:"
+msgstr "カーネルバージョンを選択:"
+
+msgid "Installing base system (OpenRC)..."
+msgstr "ベースシステムをインストール中 (OpenRC)..."
+
+msgid "Installing base system (Systemd)..."
+msgstr "ベースシステムをインストール中 (Systemd)..."
+
+msgid "Init System"
+msgstr "初期化システム"
+
+msgid "Select init system:"
+msgstr "初期化システムを選択 (OpenRC — デフォルト):"
+
+msgid "Enable ZRAM swap (OpenRC)?"
+msgstr "ZRAM swap を有効にしますか (OpenRC のみ)?"
+
+msgid "[*] Mounting file systems..."
+msgstr "[*] ファイルシステムをマウント中 (proc, sys, dev)..."
+
+msgid "Profile:"
+msgstr "プロファイル:"
+
+msgid "[ERROR] Profiles not found in"
+msgstr "[エラー] ディレクトリにプロファイルが見つかりません"
+
+msgid "Select installation profile"
+msgstr "インストールプロファイルを選択"
+
+msgid "[*] Loaded profile:"
+msgstr "[*] プロファイルを読み込みました:"
+
+msgid "[*] Starting installation in chroot..."
+msgstr "[*] chroot 内でインストールを開始..."
+
+msgid "[*] Installation completed."
+msgstr "[*] インストールが正常に完了しました。"
+
+msgid "Region:"
+msgstr "地域:"
+
+msgid "Generated on"
+msgstr "生成日:"
+
+msgid "Select Region"
+msgstr "ミラー地域を選択"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "ダウンロード速度最適化のため地域を選択:"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "選択した地域用にミラーリストを設定しました!"
+
+msgid "Select continent/region:"
+msgstr "大陸または地域を選択:"
+
+msgid "Enter choice [1-11]: "
+msgstr "選択 [1-11]: "
+
+msgid "Invalid input!"
+msgstr "無効な入力です。もう一度試してください。"
+
+msgid "Timezone Selection:"
+msgstr "タイムゾーン選択:"
+
+msgid "Select your city/region:"
+msgstr "都市または特定のゾーンを選択:"
+
+msgid "Timezone set to:"
+msgstr "タイムゾーン設定:"
+
+msgid "Preparing for installation QuasarLinux $VERSION..."
+msgstr "QuasarLinux $VERSION のインストールを準備中..."
+
+msgid "checking components"
+msgstr "システムコンポーネントを確認中..."
+
+msgid "Initializing keys"
+msgstr "pacman キーを初期化中..."
+
+msgid "Launching the main installer"
+msgstr "メインインストーラーを起動..."
+
+msgid "error of the main installer: $1"
+msgstr "メインインストーラーのエラー：$1"
+
+msgid "Installing  QuasarLinux $VERSION"
+msgstr "QuasarLinux $VERSION をインストール中"
+
+msgid "available modules:"
+msgstr "利用可能なモジュール:"
+
+msgid "launching available modules..."
+msgstr "利用可能なモジュールを起動..."
+
+msgid "The main installation module has not been found!"
+msgstr "メインインストールモジュールが見つかりません!"
+
+msgid "  The installation is complete!"
+msgstr "  インストールが完全に完了しました!"
+
+msgid "An error occurred in the step: $1"
+msgstr "ステップでエラーが発生：$1"
+
+msgid "unknown error"
+msgstr "不明なエラー"
+

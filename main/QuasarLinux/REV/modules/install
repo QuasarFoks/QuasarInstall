@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SCRIPT_DIR="/installer/modules"
-chmod +x "$SCRIPT_DIR"
+chmod +x "$SCRIPT_DIR"/*
 express() {
     "$SCRIPT_DIR"/parted
     "$SCRIPT_DIR"/basepack
@@ -16,7 +16,7 @@ express() {
 
 regions() {
     cd "$SCRIPT_DIR"
-    ./region_settings
+    ./region_settings.sh
 }
 
 parted_menu() {

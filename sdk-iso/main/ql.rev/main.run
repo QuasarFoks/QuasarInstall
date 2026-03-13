@@ -49,6 +49,7 @@ check_network() {
 start_install() {
 	if [ -f /installer/run ]; then
 		chmod +x /installer/run
+		/installer/run
 	else 
 		error "RUN file is not found"
 		echo "/installer/run is not found, please check install QuasarInstall" >> /usr/local/sdm/log/log_1.txt

@@ -93,11 +93,11 @@ def quasarlinux_rev_installer():
     for d in ["modules", "tools", "packages", "profiles", "quasartools"]:
         (BUILD_DIR / d).mkdir()
     # Добавь:
-    language_src = SCRIPT_DIR / "packs" / "language"
+    language_src = SCRIPT_DIR / "packs" / "locales"
     if language_src.exists():
-        shutil.copytree(language_src, BUILD_DIR / "language", dirs_exist_ok=True)
+        shutil.copytree(language_src, BUILD_DIR / "locales", dirs_exist_ok=True)
     else:
-        show_error(f"Внимание: packs/language не найден!")
+        show_error(f"Внимание: packs/locales не найден!")
     # Копирование модулей
     modules_src = rev_path / "modules"
     modules_dst = BUILD_DIR / "modules"
@@ -167,7 +167,7 @@ class QuasarBuilder(Gtk.Window):
         label.set_halign(Gtk.Align.START)
         vbox.pack_start(label, False, False, 0)
 
-        btn1 = Gtk.Button(label="1) QuasarLinux — Стабильный (2.9-from-3.0)")
+        btn1 = Gtk.Button(label="1) QuasarLinux — Стабильный (3.0)")
         btn1.connect("clicked", self.on_quasarlinux)
         vbox.pack_start(btn1, False, False, 0)
 

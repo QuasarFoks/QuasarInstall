@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quasar Linux Installer\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: QuasarFoks-Localizer\n"
+
+msgid "Select kernel"
+msgstr "Выбор ядра"
+
+msgid "Choose kernel version:"
+msgstr "Выберите версию ядра для установки:"
+
+msgid "Installing base system (OpenRC)..."
+msgstr "Установка базовой системы (OpenRC)..."
+
+msgid "Installing base system (Systemd)..."
+msgstr "Установка базовой системы (Systemd)..."
+
+msgid "Init System"
+msgstr "Система инициализации"
+
+msgid "Select init system:"
+msgstr "Выберите систему инициализации (OpenRC — по умолчанию):"
+
+msgid "Enable ZRAM swap (OpenRC)?"
+msgstr "Включить ZRAM swap (только для OpenRC)?"
+
+msgid "[*] Mounting file systems..."
+msgstr "[*] Монтирование системных ресурсов (proc, sys, dev)..."
+
+msgid "Profile:"
+msgstr "Профиль:"
+
+msgid "[ERROR] Profiles not found in"
+msgstr "[ОШИБКА] Профили не найдены в директории"
+
+msgid "Select installation profile"
+msgstr "Выберите профиль окружения"
+
+msgid "[*] Loaded profile:"
+msgstr "[*] Загружен профиль:"
+
+msgid "[*] Starting installation in chroot..."
+msgstr "[*] Запуск процесса установки внутри chroot..."
+
+msgid "[*] Installation completed."
+msgstr "[*] Установка успешно завершена."
+
+msgid "Region:"
+msgstr "Регион:"
+
+msgid "Generated on"
+msgstr "Сгенерировано:"
+
+msgid "Select Region"
+msgstr "Выбор региона зеркал"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "Выберите ваш регион для оптимизации скорости загрузки:"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "Список зеркал успешно настроен для выбранного региона!"
+
+msgid "Select continent/region:"
+msgstr "Выберите континент или регион:"
+
+msgid "Enter choice [1-11]: "
+msgstr "Ваш выбор [1-11]: "
+
+msgid "Invalid input!"
+msgstr "Неверный ввод, попробуйте снова."
+
+msgid "Timezone Selection:"
+msgstr "Выбор часового пояса:"
+
+msgid "Select your city/region:"
+msgstr "Выберите ваш город или конкретную зону:"
+
+msgid "Timezone set to:"
+msgstr "Часовой пояс установлен на:"
+
+msgid "Preparing for installation QuasarLinux $VERSION..."
+msgstr "Подготовка к установке QuasarLinux $VERSION..."
+
+msgid "checking components"
+msgstr "Проверка компонентов системы..."
+
+msgid "Initializing keys"
+msgstr "Инициализация ключей pacman..."
+
+msgid "Launching the main installer"
+msgstr "Запуск основного установщика..."
+
+msgid "error of the main installer: $1"
+msgstr "ошибка основного установщика: $1"
+
+msgid "Installing  QuasarLinux $VERSION"
+msgstr "Установка QuasarLinux $VERSION"
+
+msgid "available modules:"
+msgstr "Доступные модули:"
+
+msgid "launching available modules..."
+msgstr "Запуск доступных модулей..."
+
+msgid "The main installation module has not been found!"
+msgstr "Основной модуль установки не найден!"
+
+msgid "  The installation is complete!"
+msgstr "  Установка полностью завершена!"
+
+msgid "An error occurred in the step: $1"
+msgstr "Произошла ошибка на этапе: $1"
+
+msgid "unknown error"
+msgstr "неизвестная ошибка"
+

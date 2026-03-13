@@ -1,0 +1,30 @@
+## Gitwork (gitwr)
+## Yaml manifest 
+## by QuasarFoks Community
+
+default:
+    using: "git"
+    ignorelist: "/gitwr/ignorelist"
+repos:
+    repo:
+      repo_name: "none"
+      local_name: "QuasarInstall"
+      hosting: "Github" # Github or Gitlab or other
+      username: "QuasarFoks"
+      auth_method: "ssh"  #
+    mirror-repo:
+      repo_name: "none"
+      local_name: "QuasarInstall" # Должен быть одинаковым как у основного local_repo !
+      hosting: "Codeberg"
+      username: "QuasarFoks"
+      auth_method: "ssh"
+config:
+    allrepo:
+      enable_local_build: "yes"
+      enable_local_cicd:  "yes"
+      enable_local_release: "yes"
+    cicd_build:
+      libc: "glibc"
+      compiler: "gcc"
+      python_env: "/.gitwr/pyenv"
+# this is layout

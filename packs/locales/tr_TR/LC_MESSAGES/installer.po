@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quasar Linux Installer\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: QuasarFoks-Localizer\n"
+
+msgid "Select kernel"
+msgstr "Çekirdek seç"
+
+msgid "Choose kernel version:"
+msgstr "Çekirdek sürümünü seçin:"
+
+msgid "Installing base system (OpenRC)..."
+msgstr "Temel sistem kuruluyor (OpenRC)..."
+
+msgid "Installing base system (Systemd)..."
+msgstr "Temel sistem kuruluyor (Systemd)..."
+
+msgid "Init System"
+msgstr "Init Sistemi"
+
+msgid "Select init system:"
+msgstr "Init sistemini seçin (OpenRC — varsayılan):"
+
+msgid "Enable ZRAM swap (OpenRC)?"
+msgstr "ZRAM swap etkinleştirilsin (sadece OpenRC)?"
+
+msgid "[*] Mounting file systems..."
+msgstr "[*] Dosya sistemleri bağlanıyor (proc, sys, dev)..."
+
+msgid "Profile:"
+msgstr "Profil:"
+
+msgid "[ERROR] Profiles not found in"
+msgstr "[HATA] Dizin içinde profil bulunamadı"
+
+msgid "Select installation profile"
+msgstr "Kurulum profilini seçin"
+
+msgid "[*] Loaded profile:"
+msgstr "[*] Yüklenen profil:"
+
+msgid "[*] Starting installation in chroot..."
+msgstr "[*] chroot içinde kurulum başlatılıyor..."
+
+msgid "[*] Installation completed."
+msgstr "[*] Kurulum başarıyla tamamlandı."
+
+msgid "Region:"
+msgstr "Bölge:"
+
+msgid "Generated on"
+msgstr "Oluşturulma tarihi:"
+
+msgid "Select Region"
+msgstr "Yansı bölgesini seç"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "İndirme hızını optimize etmek için bölgenizi seçin:"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "Yansı listesi seçilen bölge için yapılandırıldı!"
+
+msgid "Select continent/region:"
+msgstr "Kıtayı veya bölgeyi seçin:"
+
+msgid "Enter choice [1-11]: "
+msgstr "Seçiminiz [1-11]: "
+
+msgid "Invalid input!"
+msgstr "Geçersiz giriş, tekrar deneyin."
+
+msgid "Timezone Selection:"
+msgstr "Zaman Dilimi Seçimi:"
+
+msgid "Select your city/region:"
+msgstr "Şehrinizi veya belirli bölgenizi seçin:"
+
+msgid "Timezone set to:"
+msgstr "Zaman dilimi ayarlandı:"
+
+msgid "Preparing for installation QuasarLinux $VERSION..."
+msgstr "QuasarLinux $VERSION kurulumuna hazırlanılıyor..."
+
+msgid "checking components"
+msgstr "Sistem bileşenleri kontrol ediliyor..."
+
+msgid "Initializing keys"
+msgstr "pacman anahtarları başlatılıyor..."
+
+msgid "Launching the main installer"
+msgstr "Ana yükleyici başlatılıyor..."
+
+msgid "error of the main installer: $1"
+msgstr "ana yükleyici hatası: $1"
+
+msgid "Installing  QuasarLinux $VERSION"
+msgstr "QuasarLinux $VERSION kuruluyor"
+
+msgid "available modules:"
+msgstr "Kullanılabilir modüller:"
+
+msgid "launching available modules..."
+msgstr "Kullanılabilir modüller başlatılıyor..."
+
+msgid "The main installation module has not been found!"
+msgstr "Ana kurulum modülü bulunamadı!"
+
+msgid "  The installation is complete!"
+msgstr "  Kurulum tamamen tamamlandı!"
+
+msgid "An error occurred in the step: $1"
+msgstr "Adımda hata oluştu: $1"
+
+msgid "unknown error"
+msgstr "bilinmeyen hata"
+

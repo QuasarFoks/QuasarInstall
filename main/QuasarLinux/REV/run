@@ -1,16 +1,49 @@
-#!/bin/bash
+#!/usr/bin/env bash
 clear
 setfont ter-v16n
+SYSTEM_LANG=${LANG:0:5}  # берем первые 5 символов (ru_RU, en_US и т.д.)
+VERSION="REV-1.1-"
+# Поддерживаемые языки
+SUPPORTED_LANGS=("de_DE" "en_US" "es_ES" "fr_FR" "it_IT" "ja_JP" "pt_BR" "ru_RU" "tr_TR" "zh_CN")
 
-VERSION="REV-1.1-20f26g"
+# Проверяем, поддерживается ли язык системы
+LANG_FOUND=0
+for lang in "${SUPPORTED_LANGS[@]}"; do
+    if [ "$SYSTEM_LANG" = "$lang" ]; then
+        LANG_FOUND=1
+        break
+    fi
+done
+
+# Если язык не поддерживается, используем en_US
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
+
+# Настройка gettext
+export TEXTDOMAIN="installer"
+export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+
+
+if ! command -v gettext &> /dev/null; then
+    echo "Warning: gettext not installed. Using default English."
+    _() { echo "$1"; }
+    _err() { echo "$1"; }
+else
+    _() { gettext "$1"; }
+    _err() { echo "ERROR: $(gettext "$1")"; }
+fi
+
 
 # Предварительные настройки
-echo "Подготовка к установке QuasarLinux $VERSION..."
+echo "$(_ "Preparing for installation QuasarLinux $VERSION...") "
 sleep 1
 
 # Проверка и установка зависимостей
 install_deps() {
-    echo "Установка необходимых пакетов..."
+    echo "$(_ "checking components")"
     pacman -Sy --noconfirm
     which dialog >/dev/null 2>&1 || pacman -S --noconfirm dialog
     which curl >/dev/null 2>&1 || pacman -S --noconfirm curl
@@ -25,15 +58,15 @@ install_deps() {
 
 # Инициализация ключей
 init_keys() {
-    echo "Инициализация ключей..."
+    echo "$(_ "Initializing keys")"
     pacman-key --init
     pacman-key --populate artix
-    pacman-key --populate archlinux 2>/dev/null || true
+    pacman-key --populate archlinux
 }
 
 # Установка основного установщика
 install_main() {
-    echo "Запуск основного установщика..."
+    echo "$(_ "Launching the main installer")"
 
     # Права на исполнение
     chmod +x modules/*
@@ -44,9 +77,9 @@ install_main() {
 
     # Проверяем успешность
     if [ $? -eq 0 ]; then
-        echo "Базовая установка завершена успешно"
+        echo ""
     else
-        echo "Ошибка базовой установки!"
+        echo "$(_err "error of the main installer: $1")"
         exit 1
     fi
 }
@@ -54,7 +87,7 @@ install_main() {
 # Основной процесс установки
 main() {
     echo "========================================"
-    echo "  Установка QuasarLinux $VERSION"
+    echo "$(_   "Installing  QuasarLinux $VERSION")"
     echo "========================================"
 
     # 1. Установка зависимостей
@@ -64,7 +97,7 @@ main() {
     init_keys
 
     # 3. Показываем доступные модули
-    echo "Доступные модули:"
+    echo "$(_ "available modules:")"
     ls modules/
     echo ""
 
@@ -72,26 +105,27 @@ main() {
     install_main
 
     # 5. Запуск дополнительных модулей
-    echo "Запуск дополнительных модулей..."
+    echo "$(_ "launching available modules...")"
     if [ -f "modules/install" ]; then
         bash modules/install
     else
-        echo "Основной модуль установки не найден!"
+        echo "$(_ "The main installation module has not been found!")"
         exit 1
     fi
 
     echo ""
     echo "========================================"
-    echo "  Установка завершена!"
+    echo "$(_ "  The installation is complete!")"
     echo "========================================"
+
 }
 
 # Обработка ошибок
 error_handler() {
-    echo "Произошла ошибка на шаге: $1"
+    echo "$(_err "An error occurred in the step: $1")"
     exit 1
 }
 
 # Запуск с обработкой ошибок
-trap 'error_handler "Неизвестная ошибка"' ERR
+trap 'error_handler "echo "$(_err "unknown error")""' ERR
 main

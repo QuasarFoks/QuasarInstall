@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quasar Linux Installer\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: QuasarFoks-Localizer\n"
+
+msgid "Select kernel"
+msgstr "选择内核"
+
+msgid "Choose kernel version:"
+msgstr "选择内核版本:"
+
+msgid "Installing base system (OpenRC)..."
+msgstr "正在安装基础系统 (OpenRC)..."
+
+msgid "Installing base system (Systemd)..."
+msgstr "正在安装基础系统 (Systemd)..."
+
+msgid "Init System"
+msgstr "初始化系统"
+
+msgid "Select init system:"
+msgstr "选择初始化系统 (OpenRC — 默认):"
+
+msgid "Enable ZRAM swap (OpenRC)?"
+msgstr "启用 ZRAM swap (仅限 OpenRC)?"
+
+msgid "[*] Mounting file systems..."
+msgstr "[*] 挂载文件系统 (proc, sys, dev)..."
+
+msgid "Profile:"
+msgstr "配置文件:"
+
+msgid "[ERROR] Profiles not found in"
+msgstr "[错误] 目录中未找到配置文件"
+
+msgid "Select installation profile"
+msgstr "选择安装配置文件"
+
+msgid "[*] Loaded profile:"
+msgstr "[*] 已加载配置文件:"
+
+msgid "[*] Starting installation in chroot..."
+msgstr "[* 开始在 chroot 中安装..."
+
+msgid "[*] Installation completed."
+msgstr "[*] 安装成功完成。"
+
+msgid "Region:"
+msgstr "区域:"
+
+msgid "Generated on"
+msgstr "生成于"
+
+msgid "Select Region"
+msgstr "选择镜像区域"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "选择您的地理区域以优化下载速度:"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "镜像列表已成功配置为选定区域!"
+
+msgid "Select continent/region:"
+msgstr "选择大洲或区域:"
+
+msgid "Enter choice [1-11]: "
+msgstr "您的选择 [1-11]: "
+
+msgid "Invalid input!"
+msgstr "输入无效，请重试。"
+
+msgid "Timezone Selection:"
+msgstr "时区选择:"
+
+msgid "Select your city/region:"
+msgstr "选择您的城市或具体区域:"
+
+msgid "Timezone set to:"
+msgstr "时区设置为:"
+
+msgid "Preparing for installation QuasarLinux $VERSION..."
+msgstr "准备安装 QuasarLinux $VERSION..."
+
+msgid "checking components"
+msgstr "检查系统组件..."
+
+msgid "Initializing keys"
+msgstr "初始化 pacman 密钥..."
+
+msgid "Launching the main installer"
+msgstr "启动主安装程序..."
+
+msgid "error of the main installer: $1"
+msgstr "主安装程序错误：$1"
+
+msgid "Installing  QuasarLinux $VERSION"
+msgstr "正在安装 QuasarLinux $VERSION"
+
+msgid "available modules:"
+msgstr "可用模块:"
+
+msgid "launching available modules..."
+msgstr "启动可用模块..."
+
+msgid "The main installation module has not been found!"
+msgstr "未找到主安装模块!"
+
+msgid "  The installation is complete!"
+msgstr "  安装完全完成!"
+
+msgid "An error occurred in the step: $1"
+msgstr "步骤出错：$1"
+
+msgid "unknown error"
+msgstr "未知错误"
+

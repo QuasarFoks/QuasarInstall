@@ -1,202 +1,55 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+# --- Локализация ---
+export TEXTDOMAIN="installer"
+export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+_() { gettext -s "$1"; }
 
-Europe() {
-    # Получаем список файлов (регионов)
-    regions=($(ls /mnt/usr/share/zoneinfo/Europe/))
+set_timezone() {
+    local continent="$1"
+    local zone_path="/mnt/usr/share/zoneinfo/$continent"
 
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
+    # Проверка, существует ли директория
+    if [ ! -d "$zone_path" ]; then
+        echo "$(_ "Error: Continent directory not found:") $continent"
+        exit 1
+    fi
+
+    # Получаем список регионов (только файлы, не папки)
+    mapfile -t regions < <(find "$zone_path" -maxdepth 1 -type f -printf "%f\n" | sort)
+
+    # Формируем массив для dialog
+    local checklist_items=()
     for region in "${regions[@]}"; do
         checklist_items+=("$region" "$region" "off")
     done
 
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
+    # Вызываем dialog
+    selected=$(dialog --stdout --title "$(_ "Timezone Selection:") $continent" \
+        --radiolist "$(_ "Select your city/region:")" 20 50 10 \
+        "${checklist_items[@]}")
 
-    clear
-    sudo ln -s /usr/share/zoneinfo/Europe/"$selected" /mnt/etc/localtime
-}
-Asia() {
-    # Получаем список файлов (регионов)
-    regions=($(ls /mnt/usr/share/zoneinfo/Asia/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Asia/"$selected" /mnt/etc/localtime
-}
-US() {
-    regions=($(ls /mnt/usr/share/zoneinfo/America/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/America/"$selected" /mnt/etc/localtime
+    if [ -n "$selected" ]; then
+        clear
+        # Удаляем старую ссылку, если есть, и создаем новую
+        rm -f /mnt/etc/localtime
+        ln -s "/usr/share/zoneinfo/$continent/$selected" /mnt/etc/localtime
+        echo "$(_ "Timezone set to:") $continent/$selected"
+    else
+        echo "$(_ "Selection cancelled.")"
+    fi
 }
 
-Africa() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Africa/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Africa/"$selected" /mnt/etc/localtime
-}
-Antarctica() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Antarctica/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Antarctica/"$selected" /mnt/etc/localtime
-}
-
-Arctic() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Arctic/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Arctic/"$selected" /mnt/etc/localtime
-}
-
-Atlantic() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Atlantic/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Atlantic/"$selected" /mnt/etc/localtime
-}
-
-Australia() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Australia/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Australia/"$selected" /mnt/etc/localtime
-}
-
-Brazil() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Brazil/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Brazil/"$selected" /mnt/etc/localtime
-}
-
-Canada() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Canada/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Canada/"$selected" /mnt/etc/localtime
-}
-
-Etc() {
-    regions=($(ls /mnt/usr/share/zoneinfo/Etc/))
-
-    # Формируем строку для dialog (tag, item, status)
-    checklist_items=()
-    for region in "${regions[@]}"; do
-        checklist_items+=("$region" "$region" "off")
-    done
-
-    # Вызываем dialog с checklist
-    selected=$(dialog --stdout --radiolist "Выберите регионы:" 30 40 10 \
-      "${checklist_items[@]}")
-
-    clear
-    sudo ln -s /usr/share/zoneinfo/Etc/"$selected" /mnt/etc/localtime
-}
-case $1 in
-    Europe) Europe ;;
-    Asia) Asia ;;
-    US) US ;;
-    Africa) Africa ;;
-    Antarctica) Antarctica ;;
-    Arctic) Arctic ;;
-    Atlantic) Atlantic ;;
-    Australia) Australia ;;
-    Brazil) Brazil ;;
-    Canada) Canada ;;
-    Etc) Etc ;;
-    *) echo "Нету подходящего региона" ;;
+# --- Обработка аргумента ---
+case "$1" in
+    Europe|Asia|America|Africa|Antarctica|Arctic|Atlantic|Australia|Brazil|Canada|Etc)
+        set_timezone "$1"
+        ;;
+    US) # Исправляем алиас, так как в zoneinfo папка называется America
+        set_timezone "America"
+        ;;
+    *)
+        echo "$(_ "Region not supported or not found.")"
+        exit 1
+        ;;
 esac

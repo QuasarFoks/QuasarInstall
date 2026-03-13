@@ -8,7 +8,7 @@ list_os() {
   -- please select OS --
     Операционная система           Тип             Версия
 ----------------------------------------------------------------------
-  1) QuasarLinux                Стабильный       2.9-from-3.0
+  1) QuasarLinux                Стабильный         3.0
   2) QuasarXOS                  Скоро...            --
   3) BlazarLinux                Тестируется        0.1
   4) QuasarOS                   Скоро...            --
@@ -90,7 +90,7 @@ quasarlinux_rev_installer() {
     mkdir "$BUILD_DIR"/image || true
 
     local MODULES="$BUILD_DIR/modules"
-    cp -r "$SCRIPT_DIR"/packs/language "$BUILD_DIR"
+    cp -r "$SCRIPT_DIR"/packs/locales "$BUILD_DIR"
 
     cp "$QUASARLINUX_INSTALL_MODULES"/bootloader "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/basepack "$MODULES"

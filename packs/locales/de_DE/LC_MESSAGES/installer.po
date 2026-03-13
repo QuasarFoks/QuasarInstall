@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quasar Linux Installer\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: QuasarFoks-Localizer\n"
+
+msgid "Select kernel"
+msgstr "Kernel auswählen"
+
+msgid "Choose kernel version:"
+msgstr "Wählen Sie die Kernel-Version:"
+
+msgid "Installing base system (OpenRC)..."
+msgstr "Installation des Basissystems (OpenRC)..."
+
+msgid "Installing base system (Systemd)..."
+msgstr "Installation des Basissystems (Systemd)..."
+
+msgid "Init System"
+msgstr "Init-System"
+
+msgid "Select init system:"
+msgstr "Wählen Sie das Init-System (OpenRC — Standard):"
+
+msgid "Enable ZRAM swap (OpenRC)?"
+msgstr "ZRAM-Swap aktivieren (nur OpenRC)?"
+
+msgid "[*] Mounting file systems..."
+msgstr "[*] Einhängen der Dateisysteme (proc, sys, dev)..."
+
+msgid "Profile:"
+msgstr "Profil:"
+
+msgid "[ERROR] Profiles not found in"
+msgstr "[FEHLER] Profile nicht gefunden im Verzeichnis"
+
+msgid "Select installation profile"
+msgstr "Installationsprofil auswählen"
+
+msgid "[*] Loaded profile:"
+msgstr "[*] Geladenes Profil:"
+
+msgid "[*] Starting installation in chroot..."
+msgstr "[*] Start der Installation im chroot..."
+
+msgid "[*] Installation completed."
+msgstr "[*] Installation erfolgreich abgeschlossen."
+
+msgid "Region:"
+msgstr "Region:"
+
+msgid "Generated on"
+msgstr "Generiert am"
+
+msgid "Select Region"
+msgstr "Spiegel-Region auswählen"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "Wählen Sie Ihre Region zur Optimierung der Downloadgeschwindigkeit:"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "Spiegelliste erfolgreich für die ausgewählte Region konfiguriert!"
+
+msgid "Select continent/region:"
+msgstr "Kontinent oder Region auswählen:"
+
+msgid "Enter choice [1-11]: "
+msgstr "Ihre Wahl [1-11]: "
+
+msgid "Invalid input!"
+msgstr "Ungültige Eingabe, versuchen Sie es erneut."
+
+msgid "Timezone Selection:"
+msgstr "Zeitzonenauswahl:"
+
+msgid "Select your city/region:"
+msgstr "Wählen Sie Ihre Stadt oder spezifische Zone:"
+
+msgid "Timezone set to:"
+msgstr "Zeitzone eingestellt auf:"
+
+msgid "Preparing for installation QuasarLinux $VERSION..."
+msgstr "Vorbereitung der Installation von QuasarLinux $VERSION..."
+
+msgid "checking components"
+msgstr "Überprüfung der Systemkomponenten..."
+
+msgid "Initializing keys"
+msgstr "Initialisierung der pacman-Schlüssel..."
+
+msgid "Launching the main installer"
+msgstr "Starten des Hauptinstallationsprogramms..."
+
+msgid "error of the main installer: $1"
+msgstr "Fehler des Hauptinstallationsprogramms: $1"
+
+msgid "Installing  QuasarLinux $VERSION"
+msgstr "Installation von QuasarLinux $VERSION"
+
+msgid "available modules:"
+msgstr "Verfügbare Module:"
+
+msgid "launching available modules..."
+msgstr "Starten der verfügbaren Module..."
+
+msgid "The main installation module has not been found!"
+msgstr "Hauptinstallationsmodul nicht gefunden!"
+
+msgid "  The installation is complete!"
+msgstr "  Installation vollständig abgeschlossen!"
+
+msgid "An error occurred in the step: $1"
+msgstr "Fehler aufgetreten im Schritt: $1"
+
+msgid "unknown error"
+msgstr "unbekannter Fehler"
+
