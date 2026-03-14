@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+# Определяем язык из системы
+SYSTEM_LANG=${LANG:0:5}  # берем первые 5 символов (ru_RU, en_US и т.д.)
+
+# Поддерживаемые языки
+SUPPORTED_LANGS=("de_DE" "en_US" "es_ES" "fr_FR" "it_IT" "ja_JP" "pt_BR" "ru_RU" "tr_TR" "zh_CN")
+
+# Проверяем, поддерживается ли язык системы
+LANG_FOUND=0
+for lang in "${SUPPORTED_LANGS[@]}"; do
+    if [ "$SYSTEM_LANG" = "$lang" ]; then
+        LANG_FOUND=1
+        break
+    fi
+done
+
+# Если язык не поддерживается, используем en_US
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
+
+# Настройка gettext
+export TEXTDOMAIN="installer"
+export TEXTDOMAINDIR="/usr/local/sdk/locale"
+
+# Проверка наличия gettext
+if ! command -v gettext &> /dev/null; then
+    echo "Warning: gettext not installed. Using default English."
+    _() { echo "$1"; }
+else
+    _() { gettext "$1"; }
+fi
+
+UEFI_MODE=0
+[ -d /sys/firmware/efi ] && UEFI_MODE=1
+
+rootdir="/usr/local/sdk/rootdir"
+
+mount_vfs() {
+    mount --bind /proc "$rootdir"/proc
+    mount --bind /dev "$rootdir"/dev
+    mount --bind /run "$rootdir"/run
+    mount --bind /sys "$rootdir"/sys
+    echo "nameserver 8.8.8.8" >> "$rootdir"/etc/resolv.conf
+}
+
+mount_parted() {
+    echo "$(_ "Select disk")"
+    lsblk -d -o NAME,SIZE,MODEL,TYPE
+    read -p "$(_ "Enter disk name (e.g. sda/nvme0n1): ")" DISK
+    local DISK="/dev/$DISK"
+    if [ ! -e "$DISK" ]; then
+        echo "$(_ "Error: disk") $DISK $(_ "does not exist!")"
+        exit 1
+    fi
+    clear
+
+    fdisk -l "$DISK" | grep "^/dev"
+    read -p "$(_ "Enter ROOT partition (e.g. sda2): ")" VAR_ROOT_PART
+    ROOT_PART="/dev/$VAR_ROOT_PART"
+    mount "$ROOT_PART" "$rootdir"
+    clear
+    fdisk -l "$DISK" | grep "^/dev"
+
+    if [ $UEFI_MODE -eq 1 ]; then
+        read -p "$(_ "Enter EFI partition (e.g. sda1): ")" BOOT_PART
+        local BOOT_PART="/dev/$BOOT_PART"
+        mount "$BOOT_PART" "$rootdir"/boot/efi
+    else
+        echo "$(_ "If no partition, leave empty")"
+        read -p "$(_ "Enter BOOT partition (sda1/nvmen1p1): ")" BOOT_PART
+        [ ! -e "$BOOT_PART" ] && echo "$(_ "skipping")" || local BOOT_PART="/dev/$BOOT_PART" && mount "$BOOT_PART" "$rootdir"/boot
+    fi
+}
+
+extra_fs() {
+    # home part
+    read -p "$(_ "Separate /home partition? (y/n): ")" answer
+
+    if [ "$answer" = "y" ]; then
+        fdisk -l "$DISK" | grep "^/dev"
+        read -p "$(_ "Enter HOME partition (e.g. sda2): ")" VAR_HOME_PART
+        HOME_PART="/dev/$VAR_HOME_PART"
+        mount "$HOME_PART" "$rootdir/home"
+    fi
+    unset answer
+
+    read -p "$(_ "Separate /var partition? (y/n): ")" answer_var
+
+    if [ "$answer_var" = "y" ]; then
+        fdisk -l "$DISK" | grep "^/dev"
+        read -p "$(_ "Enter /var partition (e.g. sda2): ")" VAR_VAR_PART
+        VAR_PART="/dev/$VAR_VAR_PART"
+        mount "$VAR_PART" "$rootdir/var"
+    fi
+
+    read -p "$(_ "Separate /usr partition? (y/n): ")" answer_usr
+
+    if [ "$answer_usr" = "y" ]; then
+        fdisk -l "$DISK" | grep "^/dev"
+        read -p "$(_ "Enter /usr partition (e.g. sda2): ")" VAR_USR_PART
+        USR_PART="/dev/$VAR_USR_PART"
+        mount "$USR_PART" "$rootdir/usr"
+    fi
+}
+
+run_chroot() {
+    chroot "$rootdir"
+}
+
+main() {
+    mount_parted
+    mount_vfs
+    extra_fs
+    run_chroot
+}
+
+main

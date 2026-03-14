@@ -4,7 +4,7 @@ de="$1"
 
 plasma() {
 
-    chroot /mnt pacman -S  --needed plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark --noconfirm
+    chroot /mnt pacman -S  --needed plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark kio-admin xorg-server  --noconfirm
     sleep 1
     
     echo "Настройка SDDM..."

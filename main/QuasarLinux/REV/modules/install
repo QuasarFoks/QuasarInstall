@@ -59,18 +59,18 @@ clean_system() {
 
 while true; do
     seting=$(dialog --title "Quasar-install" --menu "$MENU_SELECT_OPTION" 15 70 7 \
-        1 "$EXPRESS_SETUP" \
-        2 "$PARTITIONING" \
-        3 "$INSTALL_BASE" \
-        4 "$INSTALL_PACKAGES" \
-        5 "$USER_SETUP" \
-        6 "$INSTALL_BOOTLOADER" \
+        1 "express" \
+        2 "partition" \
+        3 "install base" \
+        4 "install profiles" \
+        5 "user settings" \
+        6 "install bootloader" \
         7 "audio" \
         8 "wine" \
         9 "web browser" \
         10 "region" \
         11 "office" \
-        12 "$EXIT" \
+        12 "exit" \
         3>&1 1>&2 2>&3 3>&-)
 
     [ $? -ne 0 ] && break   # если жмём ESC/Cancel → выход
