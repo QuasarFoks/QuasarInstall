@@ -31,7 +31,9 @@ string disk_check() {
     vector<std::string> disks;
     const std::string sys_block_path = "/sys/block";
 
-    if (!fs::exists(sys_block_path)) return disks;
+    if (!fs::exists(sys_block_path)) {
+        return disks;
+    }
 
     for (const auto& entry : fs::directory_iterator(sys_block_path)) {
         if (entry.is_directory()) {

@@ -130,9 +130,12 @@ fstabgen -U /mnt >> /mnt/etc/fstab
 # Активация сервисов (OpenRC)
 if [ "${SYSTEM_INIT:-1}" -eq 1 ]; then
     echo "$(_ "Activating OpenRC services...")"
-    for svc in udev dbus elogind acpid NetworkManager chrony; do
-        chroot /mnt rc-update add $svc default 2>/dev/null || echo "Failed to add $svc"
-    done
+    chroot /mnt rc-update add udev sysinit 2>/dev/null || echo "Failed to add $svc"
+    chroot /mnt rc-update add dbus  boot 2>/dev/null || echo "Failed to add $svc"
+    chroot /mnt rc-update add elogind boot 2>/dev/null || echo "Failed to add $svc"
+    chroot /mnt rc-update add acpid default 2>/dev/null || echo "Failed to add $svc"
+    chroot /mnt rc-update add NetworkManager default 2>/dev/null || echo "Failed to add $svc"
+    chroot /mnt rc-update add chrony default 2>/dev/null || echo "Failed to add $svc"
 
     # Сборка systemctl-shim (твоя фишка)
     echo "$(_ "Building systemctl-shim...")"
@@ -149,7 +152,6 @@ fi
 # Брендинг и финальные штрихи
 echo "$(_ "Installing branding...")"
 wget -O QuasarLinux.tar.bz2 "https://github.com/QuasarFoks/QuasarLinux/releases/download/REV-1.1-image/system-rev-1-1.tar.bz2"
-# Здесь твоя проверка хэша (пропущена для краткости, но логика ясна)
 tar -xf QuasarLinux.tar.bz2 -C /mnt/
 
 echo "$(_ "Base installation completed!")"
