@@ -93,6 +93,7 @@ quasarlinux_rev_installer() {
     cp -r "$SCRIPT_DIR"/packs/locales "$BUILD_DIR"
 
     cp "$QUASARLINUX_INSTALL_MODULES"/bootloader "$MODULES"
+    g++ "$QUASARLINUX_INSTALL_MODULES"/basepack.cpp -lncurses -lncurl  -o basepack
     cp "$QUASARLINUX_INSTALL_MODULES"/basepack "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/install  "$MODULES"
     cp "$QUASARLINUX_INSTALL_MODULES"/inst_pack  "$MODULES"

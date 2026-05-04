@@ -10,12 +10,35 @@
 #include <cstdio>
 #include <memory>
 #include <array>
+#define _(STRING) gettext(STRING)
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define BOLD_BRIGHT_WHITE "\033[1;97m"
 
+void log(string level, string message) {
+    if (level == "debug") {
+        cerr << BOLD_BRIGHT_WHITE << "DEBUG: " << RESET << _(message.c_str()) << endl;
+    }
+    if (level == "error") {
+        cerr << RED << "ERR: " << RESET << _(message.c_str()) << endl;
+    }
+    if (level == "warning") {
+        cerr << YELLOW << "WAR: " << RESET << _(message.c_str()) << endl;
+    }
+    if (level == "fixme") {
+        cerr << MAGENTA << "FIXME: " << RESET << _(message.c_str()) << endl;
+    }
+}
 
 using namespace std;
 void prepart()
 {
-    using namespace std;
+    log("debug", "mount vfs");
     system("mount --bind /dev /mnt/dev");
     system("mount --bind /proc /mnt/proc");
     system("mount --bind /sys /mnt/sys");
@@ -40,8 +63,10 @@ bool check_efi()
 {
     namespace fs = std::filesystem;
     if (fs::exists("/sys/firmware/efi")) {
+        log("debug", "efi mode yes");
         return true;
     } else {
+        log("debug", "efi mode no");
         return false;
     }
 }
@@ -171,10 +196,10 @@ void install_efistub(const string& disk, int efi_part_num, const string& root_de
 
     string kernel = find_kernel();
     if (kernel.empty()) {
-        cerr << "CRITICAL: Kernel not found!" << endl;
+        log("fixme", "CRITICAL: Kernel not found!");
         return;
     }
-    cout << "[OK] Kernel: " << kernel << endl;
+    log("debug", "kernel:" + kernel );
 
     string vmlinuz_src = "/mnt/boot/vmlinuz-" + kernel;
     string initrd_src  = "/mnt/boot/initramfs-" + kernel + ".img";
@@ -372,9 +397,9 @@ void install_syslinux(const string& disk_dev, const string& root_uuid) {
         cfg << "PROMPT 0\n";
         cfg << "TIMEOUT 50\n\n";
         cfg << "LABEL QuasarLinux\n";
-        cfg << "    KERNEL /vmlinuz-" << kernel << "\n";
-        cfg << "    APPEND root=UUID=" << root_uuid << " rw\n";
-        cfg << "    INITRD /initramfs-" << kernel << ".img\n";
+        cfg << "\tKERNEL /vmlinuz-" << kernel << "\n";
+        cfg << "\tAPPEND root=UUID=" << root_uuid << " rw\n";
+        cfg << "\tINITRD /initramfs-" << kernel << ".img\n";
         cfg.close();
         cout << "[OK] Syslinux configuration created." << endl;
     } else {
