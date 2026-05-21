@@ -13,7 +13,7 @@
 #include <locale.h>
 #include <curl/curl.h>
 #include <sys/mount.h>
-
+#include <cstring>
 
 #define _(STRING) gettext(STRING)
 #define RESET   "\033[0m"
@@ -24,8 +24,9 @@
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
 #define BOLD_BRIGHT_WHITE "\033[1;97m"
-
-void create_user(std::string username)
+int execute(initializer_list<const char*> args);
+void log(std::string level, std::string message);
+void create_user(std::string username);
 
 
 #endif

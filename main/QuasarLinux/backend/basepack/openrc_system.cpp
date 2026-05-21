@@ -65,7 +65,7 @@ void config_openrc_two() {
 
 
     std::cerr << ">>> Install base system complete." << std::endl;
-    execl("/usr/bin/tar", "-zstd", "-xvf", "/installer/packages/kresd-x86_64.tar.zst", "-C", "/mnt");
+    system("tar -zstd -xvf /installer/packages/kresd-x86_64.tar.zst  -C /mnt");
 
 
     system("chmod +x /mnt/etc/init.d/kresd");

@@ -41,24 +41,26 @@ int main(int argc, char *argv[]) {
     // Help
     if (argc > 1 && (std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h")) {
         std::cout << "Usage: " << argv[0] << " [init] [kernel] [zram]" << std::endl;
-        std::cout << "  init: openrc (default), systemd" << std::endl;
+        std::cout << "  init: openrc (default), systemd (beta)" << std::endl;
         std::cout << "  kernel: linux-lts (default), linux, linux-zen" << std::endl;
         std::cout << "  zram: zram_on (default: no zram)" << std::endl;
         std::cout << "Example: " << argv[0] << " openrc linux-zen zram_on" << std::endl;
         return 0;
     }
 
-    std::string init = argc > 1 ? argv[1] : "openrc";
-    std::string kernel = argc > 2 ? argv[2] : "linux-lts";
-    std::string zram = argc > 3 ? argv[3] : "no";
-    
-    log("debug", "Starting setup: init=" + init + " kernel=" + kernel + " zram=" + zram);
+    std::string revision = argv[1];
+    std::string init = argv[2];
+    std::string kernel = argv[3];
+    std::string zram_flag = argv[4];
+
+    // basepack REV openrc linux zram_on
+    log("debug", "Starting setup: init=" + init + " kernel=" + kernel + " zram=" + zram_flag);
 
     if (init == "openrc") {
         openrc_base_system(kernel);
         config_system_openrc();
         enable_services_openrc();
-        if (zram == "zram_on") {
+        if (zram_flag == "zram_on") {
             zram_enable_openrc();
         }
         config_openrc_two();
@@ -66,7 +68,7 @@ int main(int argc, char *argv[]) {
     else if (init == "systemd") {
         systemd_base_system(kernel);
         systemd_enable_service();
-        if (zram == "zram_on") {
+        if (zram_flag == "zram_on") {
             zram_enable_systemd();
         }
     } 

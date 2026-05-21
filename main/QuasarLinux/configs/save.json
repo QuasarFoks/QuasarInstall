@@ -1,0 +1,15 @@
+{
+    "partmanager": true,
+    "baseinstall": true,
+    "createuser": true,
+    "bootloader": true,
+
+
+    "userland-desktop": "true",
+    "userland-audio": "true",
+    "usernald-browser": "true",
+    "userland-office": "true",
+    "userland-android_support": "skip",
+
+    "backup_system": true
+}

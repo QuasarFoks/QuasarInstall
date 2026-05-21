@@ -1,0 +1,48 @@
+{
+    "revision": "REV",
+    "revision_preset": [
+        {
+            "version": "1.2",
+            "arch": "x86_64",
+            "init": "openrc",
+            "kernel": "linux-zen"
+
+        }
+    ],
+
+    "zram": false,
+
+    "type_part": "auto",
+    "disk": "/dev/sdX",
+
+    "part_preset": [
+        {
+            "boot": "/dev/sdX1",
+            "root": "/dev/sdX2",
+            "rootfs": "ext4",
+            "swap": true,
+            "firm": "uefi",
+            "luks": false
+        }
+    ],      
+
+    "bootloader": "grub",
+    
+    "username": "tester",
+    "sudo_support": true,
+
+    "region": "Moscow",
+    "desktop": "plasma",
+    "audio": "pipewire",
+    "browser": "firefox",
+    "wine": "portproton",
+    "android_support": false,
+    "office": "none",
+
+    "system_preset": [
+        {
+            "systemd_command_support": true,
+            "DEBAndRPM_support": false
+        }
+    ]
+}
