@@ -14,6 +14,7 @@
 #include <curl/curl.h>
 #include <filesystem>
 #include <sys/mount.h>
+#include <jsoncpp/json/json.h>
 #define _(STRING) gettext(STRING)
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -26,6 +27,7 @@
 namespace fs = std::filesystem;
 //main
 void log(std::string level, std::string message);
+void save_progress(const std::string& module, const std::string& action, bool success);
 void prepart();
 
 //grub

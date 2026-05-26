@@ -1,18 +1,51 @@
-build/*
-packs/QuasarTools/*
-
-*.kate-swp
-*.swap
-*.iso
-*.img
-releases/
-*.log
+```
+# Compiled and build artifacts
 *.o
-*.a
-*.so
+*.obj
+*.out
+build/
+dist/
+
+# Dependencies
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs and temp files
+*.log
 *.tmp
-framwork/
-regions-*
-region-*
-region_settings
-packs/var.*
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Gradle
+.gradle/
+target/
+
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+```

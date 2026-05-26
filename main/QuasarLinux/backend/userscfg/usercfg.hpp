@@ -14,6 +14,7 @@
 #include <curl/curl.h>
 #include <sys/mount.h>
 #include <cstring>
+#include <jsoncpp/json/json.h>
 
 #define _(STRING) gettext(STRING)
 #define RESET   "\033[0m"
@@ -26,6 +27,7 @@
 #define BOLD_BRIGHT_WHITE "\033[1;97m"
 int execute(initializer_list<const char*> args);
 void log(std::string level, std::string message);
+void save_progress(const std::string& module, const std::string& action, bool success);
 void create_user(std::string username);
 
 

@@ -13,6 +13,7 @@
 #include <locale.h>
 #include <curl/curl.h>
 #include <sys/mount.h>
+#include <jsoncpp/json/json.h>
 
 
 #define _(STRING) gettext(STRING)
@@ -26,6 +27,7 @@
 #define BOLD_BRIGHT_WHITE "\033[1;97m"
 using namespace std;
 void log(std::string level, std::string message);
+void save_progress(const std::string& module, const std::string& action, bool success);
 void prepart();
 void system_settings();
 
