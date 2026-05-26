@@ -14,7 +14,6 @@
 #include <curl/curl.h>
 #include <sys/mount.h>
 #include <cstring>
-#include <jsoncpp/json/json.h>
 
 #define _(STRING) gettext(STRING)
 #define RESET   "\033[0m"

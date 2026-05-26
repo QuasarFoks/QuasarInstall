@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "basepack.hpp"
 
 void log(std::string level, std::string message) {
@@ -22,21 +23,30 @@ void log(std::string level, std::string message) {
 
 void save_progress(const std::string& module, const std::string& action, bool success) {
     std::string save_path = "/mnt/save.json";
-    Json::Value root;
     std::ifstream file(save_path);
+    std::string content = "{";
     
     if (file.is_open()) {
-        file >> root;
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        content = buffer.str();
         file.close();
     }
     
-    root[module] = success;
-    root["last_action"] = action;
-    
+    // Simple manual JSON update without jsoncpp
     std::ofstream out(save_path);
     if (out.is_open()) {
-        Json::StreamWriterBuilder builder;
-        out << Json::writeString(builder, root);
+        // Remove closing brace and add new entry
+        if (content.length() > 1 && content.back() == '}') {
+            content.pop_back();
+            if (content.length() > 1) content += ",";
+        } else {
+            content = "{";
+        }
+        content += "\"" + module + "\":" + (success ? "true" : "false");
+        content += ",\"last_action\":\"" + action + "\"";
+        content += "}";
+        out << content;
         out.close();
         log("debug", "Saved progress: " + module + " = " + (success ? "true" : "false"));
     } else {

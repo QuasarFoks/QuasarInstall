@@ -13,7 +13,6 @@
 #include <locale.h>
 #include <curl/curl.h>
 #include <sys/mount.h>
-#include <jsoncpp/json/json.h>
 
 
 #define _(STRING) gettext(STRING)
