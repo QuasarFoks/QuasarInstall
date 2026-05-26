@@ -1,21 +1,59 @@
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "basepack.hpp"
 
 void log(std::string level, std::string message) {
     if (level == "debug") {
-        std::cerr << BOLD_BRIGHT_WHITE << "DEBUG: " << RESET << _(message.c_str()) <<  std::endl;
+        std::cerr << BOLD_BRIGHT_WHITE << "DEBUG::basepack:: " << RESET << _(message.c_str()) <<  std::endl;
+    }
+    if (level == "info") {
+        std::cerr << BLUE << "INFO::basepack:: "  << RESET << _(message.c_str()) <<  std::endl;
     }
     if (level == "error") {
-         std::cerr << RED << "ERR: " << RESET << _(message.c_str()) <<  std::endl;
+         std::cerr << RED << "ERR::basepack:: " << RESET << _(message.c_str()) <<  std::endl;
     }
     if (level == "warning") {
-         std::cerr << YELLOW << "WAR: " << RESET << _(message.c_str()) <<  std::endl;
+         std::cerr << YELLOW << "WAR::basepack:: " << RESET << _(message.c_str()) <<  std::endl;
     }
     if (level == "fixme") {
-         std::cerr << MAGENTA << "FIXME: " << RESET << _(message.c_str()) <<  std::endl;
+         std::cerr << MAGENTA << "FIXME::basepack:: " << RESET << _(message.c_str()) <<  std::endl;
     }
 }
+
+void save_progress(const std::string& module, const std::string& action, bool success) {
+    std::string save_path = "/mnt/save.json";
+    std::ifstream file(save_path);
+    std::string content = "{";
+    
+    if (file.is_open()) {
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        content = buffer.str();
+        file.close();
+    }
+    
+    // Simple manual JSON update without jsoncpp
+    std::ofstream out(save_path);
+    if (out.is_open()) {
+        // Remove closing brace and add new entry
+        if (content.length() > 1 && content.back() == '}') {
+            content.pop_back();
+            if (content.length() > 1) content += ",";
+        } else {
+            content = "{";
+        }
+        content += "\"" + module + "\":" + (success ? "true" : "false");
+        content += ",\"last_action\":\"" + action + "\"";
+        content += "}";
+        out << content;
+        out.close();
+        log("debug", "Saved progress: " + module + " = " + (success ? "true" : "false"));
+    } else {
+        log("error", "Failed to save progress to " + save_path);
+    }
+}
+
 void prepart()
 {
     if (mount("/dev", "/mnt/dev", NULL, MS_BIND, NULL) == -1) {
@@ -48,6 +86,11 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    if (argc < 5) {
+        log("error", "Not enough arguments!");
+        return 1;
+    }
+
     std::string revision = argv[1];
     std::string init = argv[2];
     std::string kernel = argv[3];
@@ -55,6 +98,7 @@ int main(int argc, char *argv[]) {
 
     // basepack REV openrc linux zram_on
     log("debug", "Starting setup: init=" + init + " kernel=" + kernel + " zram=" + zram_flag);
+    save_progress("basepack", "started", true);
 
     if (init == "openrc") {
         openrc_base_system(kernel);
@@ -74,9 +118,11 @@ int main(int argc, char *argv[]) {
     } 
     else {
         log("error", "Unknown init system: " + init);
+        save_progress("basepack", "failed", false);
         return 1;
     }
 
     log("info", "Setup completed!");
+    save_progress("basepack", "completed", true);
     return 0;
 }

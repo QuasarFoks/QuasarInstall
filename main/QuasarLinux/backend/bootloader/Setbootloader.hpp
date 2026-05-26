@@ -26,6 +26,7 @@
 namespace fs = std::filesystem;
 //main
 void log(std::string level, std::string message);
+void save_progress(const std::string& module, const std::string& action, bool success);
 void prepart();
 
 //grub

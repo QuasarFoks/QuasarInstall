@@ -14,6 +14,7 @@
 #include <curl/curl.h>
 #include <filesystem>
 #include <sys/mount.h>
+
 #define _(STRING) gettext(STRING)
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -24,5 +25,8 @@
 #define CYAN    "\033[36m"
 #define BOLD_BRIGHT_WHITE "\033[1;97m"
 namespace fs = std::filesystem;
+
+void log(std::string level, std::string message);
+void save_progress(const std::string& module, const std::string& action, bool success);
 
 #endif
