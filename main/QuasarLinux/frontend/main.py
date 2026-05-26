@@ -6,6 +6,7 @@ import subprocess
 import re
 import pwd
 import gettext
+import platform
 
 # --- i18n ---
 gettext.bindtextdomain('installer', '/usr/local/sdk/global/locale')
@@ -20,6 +21,12 @@ def dialog_std(args: list, h="10", w="60"):
     cmd = ["dialog", "--stdout", "--title", "QuasarInstall", "--backtitle", "v3.0"] + args + [h, w]
     proc = subprocess.run(cmd, text=True, capture_output=True)
     return proc.stdout.strip() if proc.returncode == 0 else None
+
+def dialog_yesno(args: list, h="10", w="60"):
+    """Run yesno dialog, return True if user pressed Yes."""
+    cmd = ["dialog", "--title", "QuasarInstall", "--backtitle", "v3.0"] + args + [h, w]
+    proc = subprocess.run(cmd, text=True, capture_output=True)
+    return proc.returncode == 0
 
 def dialog_password(prompt: str, h="10", w="50"):
     """Return password from stderr or None."""
@@ -39,7 +46,7 @@ def get_kernel():
     return dialog_std(["--menu", _("Kernel:"), "10", "50", "3", "1", "linux", "2", "linux-lts", "3", "linux-zen"])
 
 def get_zram():
-    return dialog_std(["--yesno", _("Enable zram?"), "6", "40"]) == "0"
+    return dialog_yesno(["--yesno", _("Enable zram?"), "6", "40"])
 
 def get_disk():
     out = subprocess.run(["lsblk", "-ndpo", "NAME,SIZE,MODEL", "--output", "NAME,SIZE,MODEL"], capture_output=True, text=True).stdout
@@ -57,9 +64,11 @@ def get_part_type():
 def get_custom_partition():
     boot = dialog_std(["--inputbox", _("Boot partition (e.g. /dev/sda1):"), "8", "40", "/dev/sdX1"])
     root = dialog_std(["--inputbox", _("Root partition (e.g. /dev/sda2):"), "8", "40", "/dev/sdX2"])
-    rootfs = dialog_std(["--menu", _("Root FS:"), "10", "50", "3", "1", "ext4", "2", "btrfs", "3", "xfs"])
-    swap = dialog_std(["--yesno", _("Create swap?"), "6", "40"]) == "0"
-    luks = dialog_std(["--yesno", _("Enable LUKS?"), "6", "40"]) == "0"
+    rootfs_raw = dialog_std(["--menu", _("Root FS:"), "10", "50", "3", "1", "ext4", "2", "btrfs", "3", "xfs"])
+    rootfs_map = {"1": "ext4", "2": "btrfs", "3": "xfs"}
+    rootfs = rootfs_map.get(rootfs_raw, "ext4")
+    swap = dialog_yesno(["--yesno", _("Create swap?"), "6", "40"])
+    luks = dialog_yesno(["--yesno", _("Enable LUKS?"), "6", "40"])
     return {"boot": boot, "root": root, "rootfs": rootfs, "swap": swap, "luks": luks}
 
 def get_bootloader(firm: str):
@@ -91,20 +100,37 @@ def get_username():
         return name, pw1
 
 def get_sudo(username: str):
-    return dialog_std(["--yesno", _("Add '{}' to sudo/wheel?".format(username)), "6", "40"]) == "0"
+    return dialog_yesno(["--yesno", _("Add '{}' to sudo/wheel?".format(username)), "6", "40"])
 
 def get_region():
     return dialog_std(["--menu", _("Region/Mirror:"), "12", "50", "4", "1", "Moscow", "2", "London", "3", "NewYork", "4", "Tokyo"])
 
 def get_userland():
     res = {}
-    res["desktop"] = dialog_std(["--menu", _("Desktop Environment:"), "10", "50", "3", "1", "plasma", "2", "gnome", "3", "none"]) or "none"
-    res["audio"] = dialog_std(["--menu", _("Audio Server:"), "10", "50", "2", "1", "pipewire", "2", "pulseaudio"]) or "pipewire"
-    res["browser"] = dialog_std(["--menu", _("Browser:"), "10", "50", "3", "1", "firefox", "2", "chromium", "3", "none"]) or "none"
-    res["wine"] = dialog_std(["--menu", _("Wine/Compat:"), "10", "50", "3", "1", "portproton", "2", "wine", "3", "none"]) or "none"
-    res["android_support"] = dialog_std(["--yesno", _("Android support (Waydroid)?"), "6", "40"]) == "0"
-    res["office"] = dialog_std(["--menu", _("Office Suite:"), "10", "50", "3", "1", "libreoffice", "2", "wps", "3", "none"]) or "none"
+    desktop_raw = dialog_std(["--menu", _("Desktop Environment:"), "10", "50", "3", "1", "plasma", "2", "gnome", "3", "none"])
+    res["desktop"] = {"1": "plasma", "2": "gnome", "3": "none"}.get(desktop_raw, "none")
+
+    audio_raw = dialog_std(["--menu", _("Audio Server:"), "10", "50", "2", "1", "pipewire", "2", "pulseaudio"])
+    res["audio"] = {"1": "pipewire", "2": "pulseaudio"}.get(audio_raw, "pipewire")
+
+    browser_raw = dialog_std(["--menu", _("Browser:"), "10", "50", "3", "1", "firefox", "2", "chromium", "3", "none"])
+    res["browser"] = {"1": "firefox", "2": "chromium", "3": "none"}.get(browser_raw, "none")
+
+    wine_raw = dialog_std(["--menu", _("Wine/Compat:"), "10", "50", "3", "1", "portproton", "2", "wine", "3", "none"])
+    res["wine"] = {"1": "portproton", "2": "wine", "3": "none"}.get(wine_raw, "none")
+
+    res["android_support"] = dialog_yesno(["--yesno", _("Android support (Waydroid)?"), "6", "40"])
+
+    office_raw = dialog_std(["--menu", _("Office Suite:"), "10", "50", "3", "1", "libreoffice", "2", "wps", "3", "none"])
+    res["office"] = {"1": "libreoffice", "2": "wps", "3": "none"}.get(office_raw, "none")
+
     return res
+
+def guess_partitions(disk: str):
+    """Generate default partition names based on disk path."""
+    if any(x in disk for x in ["nvme", "mmcblk"]):
+        return {"boot": f"{disk}p1", "root": f"{disk}p2"}
+    return {"boot": f"{disk}1", "root": f"{disk}2"}
 
 # --- Main ---
 def main():
@@ -135,11 +161,24 @@ def main():
     part_type_map = {"1": "auto", "2": "replacement", "3": "custom"}
     type_part = part_type_map.get(get_part_type(), "auto")
 
+    # Build part_preset
     part_preset = []
     if type_part == "custom":
         pp = get_custom_partition()
         if pp:
+            pp["firm"] = firm
             part_preset.append(pp)
+    else:
+        # auto / replacement — генерим дефолт по диску
+        guessed = guess_partitions(disk)
+        part_preset.append({
+            "boot": guessed["boot"],
+            "root": guessed["root"],
+            "rootfs": "ext4",
+            "swap": True,
+            "firm": firm,
+            "luks": False
+        })
 
     bootloader = get_bootloader(firm)
     if not bootloader: bootloader = "grub"
@@ -150,18 +189,22 @@ def main():
     region = get_region() or "Moscow"
     ul = get_userland()
 
-    # Build config
+    # Build config строго под default.json
     config = {
         "revision": edition,
-        "edition": edition,
-        "init": init,
-        "kernel": kernel,
+        "revision_preset": [
+            {
+                "version": "1.2",
+                "arch": platform.machine(),
+                "init": init,
+                "kernel": kernel
+            }
+        ],
         "zram": zram,
         "type_part": type_part,
         "disk": disk,
         "part_preset": part_preset,
         "bootloader": bootloader,
-        "firm": firm,
         "username": username,
         "sudo_support": sudo_support,
         "region": region,
@@ -171,7 +214,12 @@ def main():
         "wine": ul["wine"],
         "android_support": ul["android_support"],
         "office": ul["office"],
-        "system_preset": [{"systemd_command_support": init == "systemd", "DEBAndRPM_support": False}]
+        "system_preset": [
+            {
+                "systemd_command_support": init == "systemd",
+                "DEBAndRPM_support": False
+            }
+        ]
     }
 
     os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)

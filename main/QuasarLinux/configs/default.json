@@ -9,7 +9,7 @@
 
         }
     ],
-
+    "firm": "uefi",
     "zram": false,
 
     "type_part": "auto",
@@ -21,7 +21,6 @@
             "root": "/dev/sdX2",
             "rootfs": "ext4",
             "swap": true,
-            "firm": "uefi",
             "luks": false
         }
     ],      
