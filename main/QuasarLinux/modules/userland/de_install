@@ -1,0 +1,55 @@
+#!/bin/bash
+set -euo pipefail
+de="$1"
+
+plasma() {
+
+    chroot /mnt pacman -S  --needed plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark --noconfirm
+    sleep 1
+    
+    echo "Настройка SDDM..."
+    chroot /mnt groupadd -f sddm
+    chroot /mnt useradd -r -g sddm -s /usr/bin/nologin -d /var/lib/sddm sddm 2>/dev/null || true
+    chroot /mnt mkdir -p /var/lib/sddm /var/run/sddm
+    chroot /mnt chown sddm:sddm /var/lib/sddm /var/run/sddm
+    chroot /mnt chmod 0755 /var/lib/sddm /var/run/sddm
+    chroot /mnt usermod -aG seat,video,input sddm || true
+    chroot /mnt usermod -aG video,input sddm || true
+    chroot /mnt rc-update add sddm default
+
+}
+
+xfce() {
+    chroot /mnt pacman -S  xfce4 thunar xorg lightdm lightdm-openrc lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
+    chroot /mnt rc-update add lightdm default
+
+}
+
+lxqt() {
+
+    chroot /mnt pacman -S lxqt sddm dolphin kate  xorg sddm-openrc --noconfirm
+    chroot /mnt rc-update add sddm default
+}
+
+lxde() {
+
+    chroot /mnt pacman -S lxde lxdm dolphin kate  xorg lxdm-openrc --noconfirm
+    chroot /mnt rc-update add lxdm default
+
+}
+
+gnome() {
+
+    chroot /mnt pacman -S --needed --noconfirm gnome-shell gnome nautilus gnome-control-center gnome-terminal wayland seatd
+    chroot /mnt pacman -S --needed gdm gdm-openrc --noconfirm
+    chroot /mnt rc-update add gdm default
+}
+
+case "$de" in
+    plasma) plasma ;;
+    lxde) lxde ;;
+    lxqt) lxqt ;;
+    xfce4|xfce) xfce ;;
+    gnome) gnome ;;
+    *) echo "Неизвестная среда рабочего стола: $de" ;;
+esac

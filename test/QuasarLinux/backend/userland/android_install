@@ -1,0 +1,55 @@
+#!/bin/bash 
+set -euo pipefail
+waydroid() {
+    sudo pacman -Syy
+    sudo pacman -Suy
+    sudo pacman -S lxc python python-gobject nftables dnsmasq gtk3 dbus-python --noconfirm
+    yay -S waydroid-git --noconfirm
+    yay -S waydroid-openrc --noconfirm
+    
+    sudo mkdir -p /etc/init.d
+    sudo tee /etc/init.d/waydroid > /dev/null << 'EOF'
+#!/sbin/openrc-run
+# Waydroid
+
+description="Запуск Waydroid-контейнера"
+command=/usr/bin/waydroid
+command_args="container start"
+pidfile=/run/waydroid.pid
+command_background=false
+
+depend() {
+    need localmount
+    use net
+}
+EOF
+    
+    sudo chmod +x /etc/init.d/waydroid
+    sudo rc-update add waydroid default
+    if [ ! -e /dev/binder ]; then
+        echo "binder отсутствует :("
+    fi
+    waydroid init
+}
+
+bilisos_kvm() {
+    echo "В разработке!"
+}
+
+set=$(dialog --title "quasar-post-install" --menu "выберите пункт: " 15 70 5 \
+    1 "Waydroid" \
+    2 "BilisOS-QEMU/KVM" \
+    3>&1 1>&2 2>&3 3>&-)
+
+case $? in
+    0)
+        case $set in
+            1) waydroid ;;
+            2) bilisos_kvm ;;
+        esac
+        ;;
+    *)
+        echo "Установка прервана пользователем."
+        exit 1
+        ;;
+esac

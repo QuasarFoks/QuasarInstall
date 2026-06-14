@@ -1,0 +1,39 @@
+#!/bin/bash
+set -euo pipefail
+cd /installer/modules/userland
+pipe() {
+    ./audio_install pipewire
+}
+
+pulse() {
+    ./audio_install pulseaudio
+}
+
+jack() {
+    ./audio_install jack
+}
+
+
+
+audio=$(dialog --title "Меню" --menu ": " 15 70 5 \
+        1 "pipewire  (рекомендуется)" \
+        2 "pulseaudio" \
+        3 "Jack2 с pipewire" \
+        3>&1 1>&2 2>&3 3>&-)
+
+
+case $? in
+    0)
+        clear
+        case $audio in
+            1) pipe ;;
+            2) pulse ;;
+            3) jack ;;
+            *) echo "Неверный выбор" ;;
+        esac
+        ;;
+    *)
+        clear
+        echo "Ничего не выбрано или отмена."
+        ;;
+esac
