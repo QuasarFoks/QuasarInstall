@@ -36,7 +36,7 @@ express() {
 
 regions() {
     cd "$SCRIPT_DIR"
-    ./region_settings.sh
+    ./region.sh
 }
 
 parted_menu() {
@@ -53,19 +53,19 @@ android_install() {
 }
 
 wine_install() {
-    "$SCRIPT_DIR"/userland/wine_config.sh
+    "$SCRIPT_DIR"/userland/wine_config.sh || "$SCRIPT_DIR"/userland/wine_config
 }
 
 audio_config() {
-    "$SCRIPT_DIR"/userland/audio_config.sh
+    "$SCRIPT_DIR"/userland/audio_config.sh || "$SCRIPT_DIR"/userland/audio_config
 }
 
 browser_install() {
-    "$SCRIPT_DIR"/userland/browser_config.sh
+    "$SCRIPT_DIR"/userland/browser_config.sh || "$SCRIPT_DIR"/userland/browser_config
 }
 
 office_install() {
-    "$SCRIPT_DIR"/userland/office_config.sh
+    "$SCRIPT_DIR"/userland/office_config.sh || "$SCRIPT_DIR"/userland/office_config
 }
 
 backup_system() {

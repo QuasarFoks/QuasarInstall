@@ -142,15 +142,27 @@ mount --rbind /sys /mnt/sys
 mount --rbind /dev /mnt/dev
 mount --rbind /run /mnt/run
 
-echo "$(_ "Configuring locale...")" >> /mnt/etc/locale.conf || echo "en_US.UTF-8" >> /mnt/etc/locale.conf
+echo "$(_ "Configuring locale...")" >> /mnt/etc/locale.conf || echo "$LANG" >> /mnt/etc/locale.conf
 chroot /mnt locale-gen
 
 
 echo "$(_ "Activating services")"
 
+MEMSIZE=$(free -g | awk '/Mem:/ {print $2}')
+
+if [[ $MEMSIZE < 2 ]]; then
+
+
+
+
+
 
 rm /mnt/etc/fstab
 fstabgen -U /mnt >> /mnt/etc/fstab
+
+
+
+
 
 # Активация сервисов
 #   {service}       {runlevel}
@@ -221,7 +233,7 @@ fi
 # chrony
 
 if chroot /mnt rc-update add chrony default; then
-    echo "chrony${$(_ " added to autostart")}"
+    echo "chrony$(_ " added to autostart")"
 else
     echo "$(_ "Reinstalling ")chrony..."
     chroot /mnt pacman -S chrony-openrc
@@ -266,56 +278,58 @@ fi
 
 ###########################################################################################
 # Распаковка recovery образа
-echo "$(_ "Installing recovery...")"
-# wget https://github.com/b-e-n-z1342/Recovery/releases/download/0.1/recovery-0.1.tar.xz -p /installer/image/recovery.tar.xz
-# Проверяем существование recovery раздела
-if mountpoint -q /mnt/recovery; then
-    echo "$(_ "Recovery partition mounted")"
+recovery() {
+    echo "$(_ "Installing recovery...")"
+    # wget https://github.com/b-e-n-z1342/Recovery/releases/download/0.1/recovery-0.1.tar.xz -p /installer/image/recovery.tar.xz
+    # Проверяем существование recovery раздела
+    if mountpoint -q /mnt/recovery; then
+        echo "$(_ "Recovery partition mounted")"
 
-    # Проверяем существование recovery архива
-    if [ -f "/installer/image/recovery.tar.xz" ]; then
-        echo "$(_ "Found recovery archive")"
+        # Проверяем существование recovery архива
+        if [ -f "/installer/image/recovery.tar.xz" ]; then
+            echo "$(_ "Found recovery archive")"
 
-        # Распаковываем с сохранением прав и перезаписью существующих файлов
-        tar -xJf "/installer/image/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
+            # Распаковываем с сохранением прав и перезаписью существующих файлов
+            tar -xJf "/installer/image/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
 
-        if [ $? -eq 0 ]; then
-            echo "$(_ "Recovery installed successfully")"
+            if [ $? -eq 0 ]; then
+                echo "$(_ "Recovery installed successfully")"
 
-            # Добавляем запись в fstab для автоматического монтирования recovery
-            if ! grep -q "/recovery" /mnt/etc/fstab; then
-                RECOVERY_UUID=$(blkid -s UUID -o value "$(mount | grep '/mnt/recovery' | cut -d' ' -f1)")
-                if [ -n "$RECOVERY_UUID" ]; then
-                    echo "# Recovery partition" >> /mnt/etc/fstab
-                    echo "UUID=$RECOVERY_UUID /recovery ext2 defaults,noatime 0 2" >> /mnt/etc/fstab
-                    echo "$(_ "Recovery added to fstab")"
+                # Добавляем запись в fstab для автоматического монтирования recovery
+                if ! grep -q "/recovery" /mnt/etc/fstab; then
+                    RECOVERY_UUID=$(blkid -s UUID -o value "$(mount | grep '/mnt/recovery' | cut -d' ' -f1)")
+                    if [ -n "$RECOVERY_UUID" ]; then
+                        echo "# Recovery partition" >> /mnt/etc/fstab
+                        echo "UUID=$RECOVERY_UUID /recovery ext2 defaults,noatime 0 2" >> /mnt/etc/fstab
+                        echo "$(_ "Recovery added to fstab")"
+                    fi
                 fi
+            else
+                echo "$(_ "Error: failed to unpack recovery")"
+                exit 1
             fi
         else
-            echo "$(_ "Error: failed to unpack recovery")"
-            exit 1
+            echo "$(_ "Warning: ")recovery.tar.xz $(_ "not found at ")/installer/image/recovery.tar.xz"
+            echo ""
+            echo "$(_ "Searching for recovery archive in alternative locations...")"
+
+            # Поиск recovery архива в других возможных местах
+            if [ -f "/installer/recovery.tar.xz" ]; then
+                echo "$(_ "Found alternative recovery archive")"
+                tar -xJf "/installer/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
+
+            elif [ -f "/recovery.tar.xz" ]; then
+                echo "$(_ "Found /recovery.tar.xz, extracting...")"
+                tar -xJf "/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
+
+            else
+                echo "$(_ "Recovery archive not found, skipping")"
+            fi
         fi
     else
-        echo "$(_ "Warning: ")recovery.tar.xz $(_ "not found at ")/installer/image/recovery.tar.xz"
-        echo ""
-        echo "$(_ "Searching for recovery archive in alternative locations...")"
-
-        # Поиск recovery архива в других возможных местах
-        if [ -f "/installer/recovery.tar.xz" ]; then
-            echo "$(_ "Found alternative recovery archive")"
-            tar -xJf "/installer/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
-
-        elif [ -f "/recovery.tar.xz" ]; then
-            echo "$(_ "Found /recovery.tar.xz, extracting...")"
-            tar -xJf "/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
-
-        else
-            echo "$(_ "Recovery archive not found, skipping")"
-        fi
+        echo "$(_ "Warning: recovery partition not mounted")"
     fi
-else
-    echo "$(_ "Warning: recovery partition not mounted")"
-fi
+}
 git clone https://github.com/QuasarFoks/Systemd-rc.git
 SRC_FILE="Systemd-rc/src/systemctl/openrc/systemctl.go"
 go build -o "systemctl" "$SRC_FILE"

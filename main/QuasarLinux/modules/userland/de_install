@@ -4,18 +4,7 @@ de="$1"
 
 plasma() {
 
-    chroot /mnt pacman -S  --needed plasma konsole dolphin kate gwenview sddm sddm-openrc kcalc vlc wayland seatd ark --noconfirm
-    sleep 1
-    
-    echo "Настройка SDDM..."
-    chroot /mnt groupadd -f sddm
-    chroot /mnt useradd -r -g sddm -s /usr/bin/nologin -d /var/lib/sddm sddm 2>/dev/null || true
-    chroot /mnt mkdir -p /var/lib/sddm /var/run/sddm
-    chroot /mnt chown sddm:sddm /var/lib/sddm /var/run/sddm
-    chroot /mnt chmod 0755 /var/lib/sddm /var/run/sddm
-    chroot /mnt usermod -aG seat,video,input sddm || true
-    chroot /mnt usermod -aG video,input sddm || true
-    chroot /mnt rc-update add sddm default
+    /installer/profiles/DEWM/plasma
 
 }
 

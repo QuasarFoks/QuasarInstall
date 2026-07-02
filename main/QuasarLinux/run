@@ -1,24 +1,26 @@
-#/bin/bash 
+#!/usr/bin/env bash
+setfont ter-v16n || echo "There might be issues with Cyrillic characters."
+sleep 3
 clear
-chmod +x arch/network
-chmod +x modules/* 
-chmod +x modules/post/*
-./arch/install
-pacman -Sy
-which dialog || pacamn -S dialog
-which curl || pacman -S curl
-which git || pacman -S git
-which mkfs.fat || pacman -S dosfstools
-setfont ter-v16n || pacman -S terminus-font & setfont ter-16n
-echo "подготовка"
-pacman-key --init
-pacman-key --populate artixlinux || echo ""
-pacman-key --populate artix
+
+chmod +x /installer/modules/* || true
+SRC="/installer/wiki.qr"
+WIKI_GITVERSE="$SRC/gitverse-mirror-wiki.txt"
+WIKI="$SRC/github-wiki.txt"
+paste "$WIKI" "$WIKI_GITVERSE"
+read -n 1 -s -p "Press any key to continue..."
+
+check_desp() {
+    which dialog || pacamn -S dialog
+    which curl || pacman -S curl
+    which git || pacman -S git
+    which mkfs.fat || pacman -S dosfstools
+}
 
 
-clear
-echo "Установка QuasarLinux REV-1.2"
-sleep 1
-ls modules/
-
-bash modules/install.sh
+main() {
+    check_desp
+    echo "Installing QuasarLinux REV-1.3"
+    bash /installer/modules/install.sh
+}
+main

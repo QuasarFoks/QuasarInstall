@@ -105,7 +105,8 @@ old_os_backap() {
     --exclude=/mnt/lost+found \
     --exclude=/mnt/.snapshots  \
     --exclude=/mnt/srv \
-    --exclude=/mnt/mnt         --exclude=/mnt/media  \
+    --exclude=/mnt/mnt \
+    --exclude=/mnt/media  \
     --exclude=/mnt/home \
     --exclude=/mnt/swap.img   \
     --exclude=/mnt/.Trash*   \
@@ -223,8 +224,12 @@ format_partitions() {
 
     # Форматируем корневой раздел (ext4)
     echo "$(_ "Formatting root partition...")"
-    mkfs.ext4 -F "$ROOT_PART"
+    mkfs.btrfs -f  "$ROOT_PART"
 
+    btrfs subvolume create /mnt/@root
+    btrfs subvolume create /mnt/@home
+    btrfs subvolume create /mnt/@var
+    btrfs subvolume create /mnt/@timeshift
     # Форматируем recovery раздел (ext2)
     # echo "$(_ "Formatting recovery partition...")"
     # mkfs.ext2 -F "$RECOVERY_PART"
@@ -242,7 +247,11 @@ mount_partitions() {
     echo "$(_ "Mounting partitions...")"
 
     # Монтируем корневой раздел
-    mount "$ROOT_PART" /mnt
+    mount -o subvol=@root "$ROOT_PART" /mnt
+    mkdir -p /mnt/home
+    mount -o subvol=@home "$ROOT_PART" /mnt/home
+    mkdir -p /mnt/.timeshift
+    mount -o subvol=@timeshift "$ROOT_PART" /mnt/.timeshift
 
     # Создаем и монтируем boot/efi
     if [ $UEFI_MODE -eq 1 ]; then
@@ -254,8 +263,8 @@ mount_partitions() {
     fi
 
     # Создаем и монтируем recovery
-    mkdir -p /mnt/recovery
-    mount "$RECOVERY_PART" /mnt/recovery
+    #mkdir -p /mnt/recovery
+    #mount "$RECOVERY_PART" /mnt/recovery
 
     echo "$(_ "Mounting complete!")"
 }
