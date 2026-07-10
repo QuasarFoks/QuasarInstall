@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-setfont ter-v16n || echo "There might be issues with Cyrillic characters."
 sleep 3
 clear
 

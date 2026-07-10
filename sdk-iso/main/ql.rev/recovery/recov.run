@@ -1,2 +1,21 @@
-#!/bin/bash
-echo "В разработке"
+#!/bin/env bash
+
+list_snapshot() {
+	chroot /mnt timeshift --list
+	read "Continue? [Y/n]" VART
+	case "$VART" in 
+		y) recovery ;;
+		n) exit 0 ;;
+		Y) recovery ;;
+		*) clear && list_snapshot ;;
+	esac
+}
+recovery() {
+	chroot /mnt timeshift --restore
+}
+
+main() {
+	list_snapshot
+	recovery
+}
+main

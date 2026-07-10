@@ -80,7 +80,7 @@ WARNING_partition() {
         2>&1 >/dev/tty || exit 0
 }
 marking_disks() {
-    WARNING
+    	WARNING
 	clear
 	local DISK_OPT=$(dialog --title "$(_ "BIOS Bootloader Selection")" \
 	--ok-label "$(_ "Select")" \
@@ -133,9 +133,9 @@ MULTI_disk_settings() {
      if [ ${#disks[@]} -eq 0 ]; then
         echo "No disks provided!"
         return 1
-    fi
+     fi
     for disk_shoh in "${#disks[@]}"; do
-        lsblk "${disks}"
+        lsblk "/dev/${disks}"
     done
 
     read -p "$(_ "Enter root partition: ")" ROOT_PART
@@ -193,10 +193,9 @@ MULTI_disk_settings() {
     clear
     echo "╔════════════════════════════════════════════════════════════╗"
     echo "║                  Additional sections                       ║"
-
     echo "╚════════════════════════════════════════════════════════════╝"
     #[ ! -e "$BOOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$BOOT_PART" && exit 1
-
+	
 }
 MULTI_partition_system() {
     local disks=("$@")

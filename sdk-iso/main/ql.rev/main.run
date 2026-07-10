@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-setfont ter-v16n
+#fbterm -s 24
 export INTSALL_SCRIPT="/installer"
 export SDK_PLATFORM="/usr/local/sdk"
 
-VERSION="1.0"
+VERSION="1.1"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -97,7 +97,7 @@ main_menu() {
 	echo_m "-  ###      SDK function              ###            -"
 	echo_m "- [ 1 ] Chroot                                       -"
 	echo_m "- [ 2 ] Install QuasarLinux                          -"
-	echo_m "- [ 3 ] Recovery QuasarLinux                         -"
+	echo_m "- [ 3 ] Recovery System (Timeshift)                  -"
 	echo_m "- [ 4 ] Live system                                  -"
 	echo_m "-  ###      Power function            ###            -"
 	echo_m "- [ 5 ] Shutdown                                     -"
