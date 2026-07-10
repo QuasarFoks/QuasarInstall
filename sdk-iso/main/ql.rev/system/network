@@ -1,4 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
+export no_proxy="localhost,127.0.0.1,::1,10.0.0.0/8,192.168.0.0/16"
+
+configure_proxy() {
+	read -p "Your HTTP proxy [IP:port]:  " PROXY
+	read -p "Your Proxy Open? [y/n]: " var
+	case "$var" in
+		y) 
+			export https_proxy="http://$PROXY"
+			export http_proxy="$https_proxy"
+			export ftp_proxy="$https_proxy"
+			export all_proxy="$https_proxy"
+			;;
+		n)
+			read -p "Your login:password: " var_ps
+			export all_proxy="http://${var_ps}@${PROXY}"
+			export https_proxy="$all_proxy"
+			export http_proxy="$all_proxy"
+			export ftp_proxy="$all_proxy"
+		*) exit 0 ;;
+	esac
+}
 
 configure_dns() {
     echo "Select a DNS server:"
