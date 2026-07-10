@@ -22,10 +22,10 @@ fi
 
 base_system() {
     echo "$(_ "Installing base system...")"
-    basestrap /mnt terminus-font iptables-nft base base-devel mkinitcpio openrc dbus dbus-openrc elogind-openrc linux-firmware dialog \
+    basestrap /mnt terminus-font iptables base base-devel mkinitcpio openrc dbus dbus-openrc elogind-openrc linux-firmware dialog \
         acpid flatpak acpid-openrc chrony-openrc dash chrony linux-api-headers \
-        rsync lib32-udev networkmanager networkmanager-openrc
-    fast-chroot /mnt flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        rsync lib32-udev networkmanager networkmanager-openrc pacman-static
+    #fast-chroot /mnt flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
 linux_zen_base() {
@@ -73,7 +73,7 @@ ID=quasar
 BUILD_ID=rolling
 ANSI_COLOR="38;2;23;147;209"
 HOME_URL="https://quasarfoks.github.io/QuasarLinux"
-DOCUMENTATION_URL="https://github.com/b-e-n-z1342/QuasarLinux/wiki"
+DOCUMENTATION_URL="https://github.com/QuasaFoks/QuasarLinux/wiki"
 BUG_REPORT_URL="https://github.com/QuasarFoks/QuasarLinux/issues"
 PRIVACY_POLICY_URL="https://quasarfoks.github.io/policy"
 LOGO=quasarlogo
@@ -148,29 +148,38 @@ chroot /mnt locale-gen
 
 echo "$(_ "Activating services")"
 
-MEMSIZE=$(free -g | awk '/Mem:/ {print $2}')
-
-if [[ $MEMSIZE < 2 ]]; then
-
-
-
-
-
+#MEMSIZE=$(free -g | awk '/Mem:/ {print $2}')
 
 rm /mnt/etc/fstab
 fstabgen -U /mnt >> /mnt/etc/fstab
 
+fastzram_install() {
+# Читаем ОЗУ в МБ
+	RAM_MB=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
 
+	# 50% от физической рамы, но в рамках [1ГБ ; 16ГБ]
+	ZRAM_MB=$(( RAM_MB / 2 ))
+	[ $ZRAM_MB -lt 1024 ] && ZRAM_MB=1024
+	[ $ZRAM_MB -gt 16384 ] && ZRAM_MB=16384
 
-
+	git clone https://codeberg.org/QuasarFoks/FastZram.git && cd FastZram && make
+	cp fzram /mnt/usr/local/bin
+	mkdir -p /mnt/etc/fzram
+	printf '{\n  "size": "%s",\n  "algorithm": "lz4",\n  "swap-priority": "100"\n}\n' "$ZRAM_MB" > /mnt/etc/fzram/default.json
+	cp init.src/fzram.openrc /mnt/etc/init.d/FastZram
+	chmod +x /mnt/etc/init.d/FastZram
+}
+fastzram_install
 
 # Активация сервисов
 #   {service}       {runlevel}
 #
-#   1) UDEV         sysvinit
-#   2) DBUS         boot
-#   3) ELOGIND      boot
-#   4) ACPID        default
+#   1) UDEV         sysinit
+#   2) FASTZRAM     sysinit
+#   3) DBUS         boot
+#   4) ELOGIND      boot
+#   5) ACPID        default
+#
 #
 ######################################################################################
 #  udev
@@ -183,6 +192,17 @@ else
     echo "$(_ "Reinstalling ")udev..."
     chroot /mnt pacman -S udev lib32-udev || chroot /mnt pacman -S udev
     chroot /mnt rc-update add udev sysinit
+fi
+
+######################################################################################
+# fastzram
+
+if chroot /mnt rc-update add FastZram sysinit; then
+	echo "fastzram$(_ "added to autostart")"
+else
+	echo "$(_ "Reinstalling ")fastzram..."
+	fastzram_install;
+	chroot /mnt rc-update add FastZram sysinit
 fi
 
 ######################################################################################
@@ -249,12 +269,6 @@ if [ -f /installer/profiles/base/pacman.conf ]; then
 else
     echo "$(_ "Warning: ")pacman.conf $(_ "not found, using default")"
 fi
-
-
-
-#########################################################################################
-# Копирование post-инсталляционных скриптов
-
 
 #########################################################################################
 
@@ -339,7 +353,6 @@ cp systemctl /mnt/bin
 clear
 echo "$(_ "Installing branding")"
 
-chmod +x /mnt/usr/local/bin/post_install
 wget -O QuasarLinux.tar.bz2 "https://github.com/QuasarFoks/QuasarLinux/releases/download/REV-1.1-image/system-rev-1-1.tar.bz2" || {
     echo "$(_ "Error: download failed")"
     exit 1

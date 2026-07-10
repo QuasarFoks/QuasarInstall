@@ -25,7 +25,6 @@ chmod +x "$SCRIPT_DIR"
 express() {
     "$SCRIPT_DIR"/parted.sh
     "$SCRIPT_DIR"/basepack.sh
-    regions
     #"$SCRIPT_DIR"/mirrorconfig.sh
     "$SCRIPT_DIR"/users.sh
     "$SCRIPT_DIR"/inst_pack.sh
@@ -36,7 +35,6 @@ express() {
 
 regions() {
     cd "$SCRIPT_DIR"
-    ./region.sh
 }
 
 parted_menu() {
