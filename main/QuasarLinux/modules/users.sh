@@ -8,13 +8,16 @@ LANG_FOUND=0
 for lang in "${SUPPORTED_LANGS[@]}"; do
     [ "$SYSTEM_LANG" = "$lang" ] && LANG_FOUND=1 && break
 done
-[ $LANG_FOUND -eq 0 ] && export LANG="en_US.UTF-8" || export LANG="$SYSTEM_LANG.UTF-8"
-
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
 export TEXTDOMAIN="installer"
-export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+export TEXTDOMAINDIR="/usr/local/sdk/locale"
 
 if ! command -v gettext &> /dev/null; then
-    _() { echo "$1"; }
+    _() { printf '%s' "$1"; }  # Без \n
 else
     _() { gettext -s "$1"; }
 fi
@@ -186,10 +189,10 @@ setRootPassword() {
 
 # enableSudoGroup — включает группу wheel в sudo
 enableSudoGroup() {
-    echo "$(_ "Enabling wheel group in sudoers")"
+    _ "Enabling wheel group in sudoers"
 
     if ! runChroot sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers; then
-        printf "$(_ "Warning: failed to enable wheel group")\n" >&2
+        _ "Warning: failed to enable wheel group"
         return 1
     fi
 
@@ -198,9 +201,6 @@ enableSudoGroup() {
 
 main() {
     clear
-    echo "====================================="
-    echo "      $(_ "User Setup")"
-    echo "====================================="
 
     if ! mountChrootDirs; then
         exit 1
@@ -222,10 +222,6 @@ main() {
     fi
 
     clear
-    echo "\n====================================="
-    printf "  $(_ "User %s created successfully")\n" "$username"
-    echo "====================================="
-
     dialog --title "$(_ "Done")"  --msgbox "$(printf "$(_ "User %s created successfully\n\nUser: %s\nRoot password set")" "$username" "$username")" 10 50
 }
 

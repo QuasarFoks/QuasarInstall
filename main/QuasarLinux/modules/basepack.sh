@@ -8,24 +8,30 @@ LANG_FOUND=0
 for lang in "${SUPPORTED_LANGS[@]}"; do
     [ "$SYSTEM_LANG" = "$lang" ] && LANG_FOUND=1 && break
 done
-[ $LANG_FOUND -eq 0 ] && export LANG="en_US.UTF-8" || export LANG="$SYSTEM_LANG.UTF-8"
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
+
 
 export TEXTDOMAIN="installer"
-export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+export TEXTDOMAINDIR="/usr/local/sdk/locale"
 
 if ! command -v gettext &> /dev/null; then
-    _() { echo "$1"; }
+    _() { printf '%s' "$1"; }  # Без \n
 else
     _() { gettext -s "$1"; }
 fi
 # --- end gettext init ---
 
 base_system() {
-    echo "$(_ "Installing base system...")"
-    basestrap /mnt terminus-font iptables base base-devel mkinitcpio openrc dbus dbus-openrc elogind-openrc linux-firmware dialog \
+    _ "Installing base system..."
+    basestrap /mnt terminus-font iptables base base-devel \
+        mkinitcpio openrc dbus dbus-openrc elogind-openrc linux-firmware dialog \
         acpid flatpak acpid-openrc chrony-openrc dash chrony linux-api-headers \
         rsync lib32-udev networkmanager networkmanager-openrc pacman-static
-    #fast-chroot /mnt flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    fast-chroot /mnt flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
 linux_zen_base() {
@@ -42,7 +48,11 @@ linux_base() {
 }
 
 
-base_system_kernel=$(dialog --title "$(_ "Select kernel")" --menu "$(_ "Kernel")" 12 50 5     1 "$(_ "Zen kernel (optimized for desktop)")"     2 "$(_ "LTS kernel (long-term support)")"     3 "$(_ "Vanilla kernel")"     3>&1 1>&2 2>&3 3>&-)
+base_system_kernel=$(dialog --title "$(_ "Select kernel")" --menu "$(_ "Kernel")" 12 50 5  \
+    1 "$(_ "Zen kernel (optimized for desktop)")" \
+    2 "$(_ "LTS kernel (long-term support)")" \
+    3 "$(_ "Vanilla kernel")" \
+    3>&1 1>&2 2>&3 3>&-)
 
 case $? in
     0)
@@ -57,7 +67,7 @@ case $? in
         esac
         ;;
     *)
-        echo "$(_ "Operation cancelled")"
+        _ "Operation cancelled"
         exit 1
         ;;
 esac
@@ -129,7 +139,7 @@ config_system
 # Принудительная настройка issue
 echo "Quasar Linux \r \l" > /mnt/etc/issue
 echo "Quasar Linux" > /mnt/etc/issue.net
-echo "$(_ "Welcome to Quasar Linux!")" > /mnt/etc/motd
+echo "Welcome to Quasar Linux!" > /mnt/etc/motd
 cd /mnt/bin
 ln -sf dash sh
 cd
@@ -142,7 +152,19 @@ mount --rbind /sys /mnt/sys
 mount --rbind /dev /mnt/dev
 mount --rbind /run /mnt/run
 
-echo "$(_ "Configuring locale...")" >> /mnt/etc/locale.conf || echo "$LANG" >> /mnt/etc/locale.conf
+_ "Configuring locale..."
+if [ -n "$LANG" ]; then
+    # 2. Запись через подстановку: заменяем или добавляем
+    if grep -q "^LANG=" /mnt/etc/locale.conf 2>/dev/null; then
+        # Если строка уже есть — заменяем
+        sed -i "s/^LANG=.*/LANG=$LANG/" /mnt/etc/locale.conf
+    else
+        # Если нет — добавляем
+        echo "LANG=$LANG" >> /mnt/etc/locale.conf
+    fi
+else
+    echo "Ошибка: переменная LANG пустая!"
+fi
 chroot /mnt locale-gen
 
 
@@ -184,7 +206,7 @@ fastzram_install
 ######################################################################################
 #  udev
 
-echo "$(_ "Configuring services...")"
+_ "Configuring services..."
 
 if chroot /mnt rc-update add udev sysinit; then
     echo "udev$(_ " added to autostart")"
@@ -292,69 +314,24 @@ fi
 
 ###########################################################################################
 # Распаковка recovery образа
-recovery() {
-    echo "$(_ "Installing recovery...")"
-    # wget https://github.com/b-e-n-z1342/Recovery/releases/download/0.1/recovery-0.1.tar.xz -p /installer/image/recovery.tar.xz
-    # Проверяем существование recovery раздела
-    if mountpoint -q /mnt/recovery; then
-        echo "$(_ "Recovery partition mounted")"
+mkdir /mnt/tmp || true
+cd /mnt/tmp
 
-        # Проверяем существование recovery архива
-        if [ -f "/installer/image/recovery.tar.xz" ]; then
-            echo "$(_ "Found recovery archive")"
-
-            # Распаковываем с сохранением прав и перезаписью существующих файлов
-            tar -xJf "/installer/image/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
-
-            if [ $? -eq 0 ]; then
-                echo "$(_ "Recovery installed successfully")"
-
-                # Добавляем запись в fstab для автоматического монтирования recovery
-                if ! grep -q "/recovery" /mnt/etc/fstab; then
-                    RECOVERY_UUID=$(blkid -s UUID -o value "$(mount | grep '/mnt/recovery' | cut -d' ' -f1)")
-                    if [ -n "$RECOVERY_UUID" ]; then
-                        echo "# Recovery partition" >> /mnt/etc/fstab
-                        echo "UUID=$RECOVERY_UUID /recovery ext2 defaults,noatime 0 2" >> /mnt/etc/fstab
-                        echo "$(_ "Recovery added to fstab")"
-                    fi
-                fi
-            else
-                echo "$(_ "Error: failed to unpack recovery")"
-                exit 1
-            fi
-        else
-            echo "$(_ "Warning: ")recovery.tar.xz $(_ "not found at ")/installer/image/recovery.tar.xz"
-            echo ""
-            echo "$(_ "Searching for recovery archive in alternative locations...")"
-
-            # Поиск recovery архива в других возможных местах
-            if [ -f "/installer/recovery.tar.xz" ]; then
-                echo "$(_ "Found alternative recovery archive")"
-                tar -xJf "/installer/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
-
-            elif [ -f "/recovery.tar.xz" ]; then
-                echo "$(_ "Found /recovery.tar.xz, extracting...")"
-                tar -xJf "/recovery.tar.xz" -C /mnt/recovery --strip-components=1 --keep-newer-files
-
-            else
-                echo "$(_ "Recovery archive not found, skipping")"
-            fi
-        fi
-    else
-        echo "$(_ "Warning: recovery partition not mounted")"
-    fi
-}
 git clone https://github.com/QuasarFoks/Systemd-rc.git
 SRC_FILE="Systemd-rc/src/systemctl/openrc/systemctl.go"
 go build -o "systemctl" "$SRC_FILE"
 cp systemctl /mnt/bin
 
+git clone https://codeberg.org/QuasarFoks/QuasarLinux-service-rules.git
+cp QuasarLinux-service-rules/udev_rules/* /mnt/etc/udev/rules.d/
+chroot /mnt udevadm control --reload-rules
+chroot /mnt udevadm trigger
 
 clear
-echo "$(_ "Installing branding")"
+_ "Installing branding"
 
 wget -O QuasarLinux.tar.bz2 "https://github.com/QuasarFoks/QuasarLinux/releases/download/REV-1.1-image/system-rev-1-1.tar.bz2" || {
-    echo "$(_ "Error: download failed")"
+    _ "Error: download failed"
     exit 1
 }
 
@@ -362,7 +339,7 @@ downloaded_hash=$(sha256sum QuasarLinux.tar.bz2 | cut -d' ' -f1)
 expected_hash="ad19f72b38d020e72bf47756e85787687cd35bf711836e973e848dff8c8a5c78"
 
 if [ "$downloaded_hash" = "$expected_hash" ]; then
-    echo "$(_ "Hash check passed")"
+    _ "Hash check passed"
     tar -xf QuasarLinux.tar.bz2 -C /mnt/
     rm -f /mnt/README 2>/dev/null
 else
@@ -372,7 +349,7 @@ else
     exit 1
 fi
 
-echo "$(_ "Base installation completed!")"
+_ "Base installation completed!"
 
 unset expected_hash
 unset downloaded_hash

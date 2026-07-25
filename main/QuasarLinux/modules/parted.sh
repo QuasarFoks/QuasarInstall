@@ -8,13 +8,17 @@ LANG_FOUND=0
 for lang in "${SUPPORTED_LANGS[@]}"; do
     [ "$SYSTEM_LANG" = "$lang" ] && LANG_FOUND=1 && break
 done
-[ $LANG_FOUND -eq 0 ] && export LANG="en_US.UTF-8" || export LANG="$SYSTEM_LANG.UTF-8"
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
 
 export TEXTDOMAIN="installer"
-export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+export TEXTDOMAINDIR="/usr/local/sdk/locale"
 
 if ! command -v gettext &> /dev/null; then
-    _() { echo "$1"; }
+    _() { printf '%s' "$1"; }  # Без \n
 else
     _() { gettext -s "$1"; }
 fi
@@ -25,31 +29,6 @@ export LUKS_MODE=0
 [ -d /sys/firmware/efi ] && UEFI_MODE=1
 
 
-#   BEST_COMPRESS_SPEED
-BLANCE="balance"
-#   FAST_WEAKER_COMPRESSION
-#
-home_partition() {
-    read -p "$(_ "Enter Home partition: ")" HOOT_PART
-    export HOME_PART="/dev/$HOME_PART"
-    [ ! -e "$HOME_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$HOME_PART" && exit 1
-    fsgome=$(dialog --title "$(_ "Select filesystem")" --menu "$(_ "Choose filesystem:")" 15 70 5 \
-            1 "$(_ "ext4")" \
-            2 "$(_ "btrfs")" \
-            3 "$(_ "xfs")" 3>&1 1>&2 2>&3 3>&-)
-
-    if [ $? -ne 0 ]; then
-        echo "$(_ "Skipping...")"
-        exit 0
-    fi
-
-    case $fs in
-        1) formathm "ext" ;;
-        2) formathm "btrfs" ;;
-        3) formathm "xfs" ;;
-    esac
-    HOME_PART_ADD=1
-}
 WARNING() {
     dialog --clear \
         --title "ПРЕДУПРЕЖДЕНИЕ" \
@@ -64,7 +43,7 @@ WARNING() {
 
 Вы уверены, что хотите продолжить?" \
         12 60 \
-        2>&1 >/dev/tty || exit 0
+        >/dev/tty 2>&1 || exit 0
 }
 WARNING_partition() {
     dialog --clear \
@@ -77,43 +56,43 @@ WARNING_partition() {
 
 Вы уверены, что хотите продолжить?" \
         12 60 \
-        2>&1 >/dev/tty || exit 0
+        >/dev/tty 2>&1 || exit 0
 }
 marking_disks() {
-    	WARNING
-	clear
-	local DISK_OPT=$(dialog --title "$(_ "BIOS Bootloader Selection")" \
-	--ok-label "$(_ "Select")" \
-	--no-cancel \
-	--menu "$(_ "Choose bootloader:")" \
-	15 40 4 \
-	1 "$(_ "single disk")" \
-	2 "$(_ "multiple disks")" \
-	3>&1 1>&2 2>&3)
-	case $DISK_OPT in
-        1)  echo "$(_ "Select disk:")"
-            lsblk -d -o NAME,SIZE,MODEL,TYPE
+    WARNING
+    clear
+    local DISK_OPT
+    DISK_OPT=$(dialog --title "$(_ "Select a marking type: ")" \
+    --ok-label "$(_ "Select")" \
+    --no-cancel \
+    --menu "$(_ "Choose disks:")" \
+    15 40 4 \
+    1 "$(_ "single disk")" \
+    2 "$(_ "multiple disks (beta)")" \
+    3>&1 1>&2 2>&3)
 
-            read -p "$(_ "Enter disk name (e.g. sda): ")" DISK
+    case $DISK_OPT in
+        1)  _ "Select disk:"
+            lsblk -d -o NAME,SIZE,MODEL,TYPE
+            read -r -p "$(_ "Enter disk name (e.g. sda): ")" DISK
             export DISK="/dev/$DISK"
             if [ ! -e "$DISK" ]; then
-                printf "$(_ "Error: disk %s not found")\n" "$DISK"
+                printf '%s\n' "$(_ "Error: disk %s not found")" "$DISK"
                 exit 1
             fi
             WARNING
             SingleDisk
             ;;
-        2)  echo "$(_ "Select disks separated by a space:")"
+        2)  _ "Select disks separated by a space:"
             lsblk -d -o NAME,SIZE,MODEL,TYPE
-            read -p "$(_ "Enter disk name (e.g. sda vda): ")" -a DISKS
+            read  -r -p "$(_ "Enter disk name (e.g. sda vda): ")" -a DISKS
 
-            # БАГ ФИКС: в цикле было disk вместо chdisk
-            echo "DISKS: ${DISKS[@]}"
+            echo "DISKS: ${DISKS[*]}"
 
             # Проверка существования дисков
             for chdisk in "${DISKS[@]}"; do
                 if [ ! -e "/dev/${chdisk}" ]; then
-                    printf "$(_ "Error: disk /dev/%s not found\n")" "$chdisk"
+                    printf '%s\n' "$(_ "Error: disk /dev/%s not found")" "$chdisk"
                     exit 1
                 fi
             done
@@ -122,72 +101,55 @@ marking_disks() {
             for disk in "${DISKS[@]}"; do
                 cfdisk "/dev/${disk}"
             done
-
-            MULTI_disk_settings "${DISKS[@]}"
             ;;
     esac
-}
-MULTI_disk_settings() {
-     local disks=("$@")
 
-     if [ ${#disks[@]} -eq 0 ]; then
+    # Проверка только для варианта 2
+    if [ "$DISK_OPT" = "2" ] && [ ${#DISKS[@]} -eq 0 ]; then
         echo "No disks provided!"
         return 1
-     fi
-    for disk_shoh in "${#disks[@]}"; do
-        lsblk "/dev/${disks}"
-    done
-
-    read -p "$(_ "Enter root partition: ")" ROOT_PART
-    ROOT_PART="/dev/$ROOT_PART"
-    [ ! -e "$ROOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$ROOT_PART" && exit 1
-    fs=$(dialog --title "$(_ "Select filesystem")" --menu "$(_ "Choose filesystem:")" 15 70 5 \
-            1 "$(_ "ext4")" \
-            2 "$(_ "btrfs")" \
-            3 "$(_ "xfs")" 3>&1 1>&2 2>&3 3>&-)
-
-    if [ $? -ne 0 ]; then
-        echo "$(_ "Skipping...")"
-        exit 0
     fi
+
+    # Вывод информации о дисках (только для варианта 2)
+    if [ "$DISK_OPT" = "2" ]; then
+        for disk_shoh in "${DISKS[@]}"; do
+            lsblk "/dev/${disk_shoh}"
+        done
+    fi
+    read -r -p "$(_ "Enter root partition: ")" ROOT_PART
+    ROOT_PART="/dev/$ROOT_PART"
+    [ ! -e "$ROOT_PART" ] && printf '%s\n' "$(_ "Error: partition %s not found")" "$ROOT_PART" && exit 1
+    fs=$(dialog --title "$(_ "Select filesystem")" --menu "$(_ "Choose filesystem:")" 15 70 5 \
+        1 "$(_ "ext4")" \
+        2 "$(_ "btrfs")" \
+        3 "$(_ "xfs")" 3>&1 1>&2 2>&3 3>&-) || {
+            _ "Skipping..."
+            exit 0
+        }
 
     case $fs in
         1) format "ext" ;;
         2) format "btrfs" ;;
         3) format "xfs" ;;
     esac
-
-#    dialog --clear \
-#        --title "$(_ "HOME PARTITION")" \
-#        --yes-label "$(_ "Yes")" \
-#        --no-label "$(_ "No")" \
-#        --yesno "$(_ "Do you want to create a separate /home partition?")" \
-#        8 50 \
-#        2>&1 >/dev/tty
-#
-#    if [ $? -eq 0 ]; then
-#        home_partition
-#    else
-#        true
-#    fi
-
-    lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT $DISK
+    if [ "$DISK_OPT" = "2" ]; then
+        for disk_shoh in "${DISKS[@]}"; do
+            lsblk "/dev/${disk_shoh}"
+        done
+    fi
     if [ $UEFI_MODE -eq 1 ]; then
-        read -p "$(_ "Enter EFI partition: ")" BOOT_PART
-        echo "$(_ "Formatting EFI partition...")"
+        read -r -p "$(_ "Enter EFI partition: ")" BOOT_PART
+        _ "Formatting EFI partition..."
         export  BOOT_PART="/dev/$BOOT_PART"
-        [ ! -e "$BOOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$BOOT_PART" && exit 1
-        #mkdir -p /mnt/boot/efi
-        #mkfs.fat -F32 "$BOOT_PART"
-        #mount "$BOOT_PART" /mnt/boot/efi
+        [ ! -e "$BOOT_PART" ] && printf '%s\n' "$(_ "Error: partition %s not found")" "$BOOT_PART" && exit 1
+        mkfs.fat -F32 "$BOOT_PART"
+
     else
-        read -p "$(_ "Enter boot partition: ")" BOOT_PART
-        echo "$(_ "Formatting boot partition...")"
+        read -r -p "$(_ "Enter boot partition: ")" BOOT_PART
+        _ "Formatting boot partition..."
         BOOT_PART="/dev/$BOOT_PART"
-        [ ! -e "$BOOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$BOOT_PART" && exit 1
-        #mkdir -p /mnt/boot
-        #mkfs.ext2 -F "$BOOT_PART"
-        #mount "$BOOT_PART" /mnt/boot
+        [ ! -e "$BOOT_PART" ] && printf '%s\n' "$(_ "Error: partition %s not found")" "$BOOT_PART" && exit 1
+        mkfs.ext2 -F "$BOOT_PART"
     fi
     mount_partitions
     clear
@@ -196,21 +158,18 @@ MULTI_disk_settings() {
     echo "╚════════════════════════════════════════════════════════════╝"
     #[ ! -e "$BOOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$BOOT_PART" && exit 1
 	
-}
-MULTI_partition_system() {
-    local disks=("$@")
     local MULT_PART=()
     local MULT_MOUNT=()
 
     # Показываем разделы
-    for disk in "${disks[@]}"; do
+    for disk in "${DISKS[@]}"; do
         echo "--- /dev/${disk} ---"
         lsblk "/dev/${disk}"
     done
 
     # Выбираем разделы
     while true; do
-        read -p "Enter partitions (space separated): " -a MULT_PART
+        read -r -p "Enter partitions (space separated): " -a MULT_PART
         [ ${#MULT_PART[@]} -eq 0 ] && echo "No partitions!" && continue
 
         local valid=true
@@ -218,11 +177,13 @@ MULTI_partition_system() {
             [ ! -e "/dev/${part}" ] && echo "Error: /dev/${part} not found!" && valid=false
         done
         [ "$valid" = true ] && break
+
     done
+
 
     # Точки монтирования
     for part in "${MULT_PART[@]}"; do
-        read -p "Mount point for /dev/${part}: " mount
+        read  -r -p "Mount point for /dev/${part}: " mount
         MULT_MOUNT+=("${mount:-skip}")
     done
 
@@ -230,29 +191,45 @@ MULTI_partition_system() {
     echo ""
     for i in "${!MULT_PART[@]}"; do
         [ "${MULT_MOUNT[$i]}" = "skip" ] && continue
-        echo "Mounting /dev/${MULT_PART[$i]} -> ${MULT_MOUNT[$i]}"
-        mkdir -p "${MULT_MOUNT[$i]}"
-        mount "/dev/${MULT_PART[$i]}" "${MULT_MOUNT[$i]}"
+        echo "Mounting /dev/${MULT_PART[$i]} -> /mnt${MULT_MOUNT[$i]}"
+        mkdir -p "/mnt${MULT_MOUNT[$i]}"
+
+        fs=$(dialog --title "$(_ "Select filesystem")" --menu "$(_ "Choose filesystem:")" 15 70 5 \
+            1 "$(_ "ext4")" \
+            2 "$(_ "btrfs")" \
+            3 "$(_ "xfs")" 3>&1 1>&2 2>&3 3>&-) || {
+                _ "Skipping..."
+                exit 0
+            }
+
+        case $fs in
+            1) formathm "ext"  "/dev/${MULT_PART[$i]}" ;;
+            2) formathm "btrfs" "/dev/${MULT_PART[$i]}" ;;
+            3) formathm "xfs" "/dev/${MULT_PART[$i]}" ;;
+        esac
+
+        mount "/dev/${MULT_PART[$i]}" "/mnt${MULT_MOUNT[$i]}"
+        unset fs
     done
 
     echo "Done!"
-    df -h | grep -E "/dev/${MULT_PART[@]}"
+    df -h | grep -E "/dev/${MULT_PART[*]}"
 }
 
 old_os_backap() {
     fdisk -l "$DISK" | grep "^/dev"
-    read -p "$(_ "Enter root partition: ")" ROOT_PART
+    read -r -p "$(_ "Enter root partition: ")" ROOT_PART
     local ROOT_PART="/dev/$ROOT_PART"
     mount "$ROOT_PART" /mnt
 
     if [ $UEFI_MODE -eq 1 ]; then
-        read -p "$(_ "Enter EFI partition: ")" BOOT_PART
-        echo "$(_ "Formatting EFI partition...")"
+        read -r -p "$(_ "Enter EFI partition: ")" BOOT_PART
+        _ "Formatting EFI partition..."
         local BOOT_PART="/dev/$BOOT_PART"
         mount "$BOOT_PART" /mnt/boot/efi
     else
-        read -p "$(_ "Enter boot partition: ")" BOOT_PART
-        echo "$(_ "Formatting boot partition...")"
+        read -r -p "$(_ "Enter boot partition: ")" BOOT_PART
+        _ "Formatting boot partition..."
         local BOOT_PART="/dev/$BOOT_PART"
         mount "$BOOT_PART" /mnt/boot
     fi
@@ -267,7 +244,8 @@ old_os_backap() {
 
     for old_user in /mnt/home/*/; do
         [ -d "$old_user" ] || continue
-        local user=$(basename "$old_user")
+        local user
+        user=$(basename "$old_user")
 
         # Сохраняем в /mnt/old.os/home_backup/username/
         local backup_path="/mnt/old.os/home_backup/$user"
@@ -321,9 +299,9 @@ old_os_backap() {
         3 "tar.gz ($(_ "fast, weaker compression"))" 3>&1 1>&2 2>&3 3>&-)
 
     case "$old_os_back" in
-        1) tar $EXCLUDE -c /mnt | xz -9 > "/mnt/old.os/${OLD_OS_NAME}_backup.tar.xz" ;;
-        2) tar $EXCLUDE -c /mnt | zstd -19 -T0 > "/mnt/old.os/${OLD_OS_NAME}_backup.tar.zst" ;;
-        3) tar $EXCLUDE -c /mnt | pigz -c > "/mnt/old.os/${OLD_OS_NAME}_backup.tar.gz" ;;
+        1) tar "$EXCLUDE" -c /mnt | xz -9 > "/mnt/old.os/${OLD_OS_NAME}_backup.tar.xz" ;;
+        2) tar "$EXCLUDE" -c /mnt | zstd -19 -T0 > "/mnt/old.os/${OLD_OS_NAME}_backup.tar.zst" ;;
+        3) tar "$EXCLUDE" -c /mnt | pigz -c > "/mnt/old.os/${OLD_OS_NAME}_backup.tar.gz" ;;
     esac
 
     # 3. Удаляем всё кроме old.os и boot
@@ -351,33 +329,33 @@ old_os_backap() {
 # Функция авторазметки
 auto_partition() {
     WARNING
-    echo "$(_ "Auto-partitioning...")"
+    _ "Auto-partitioning..."
 
     # Получаем размер диска в GB
     DISK_SIZE=$(fdisk -l "$DISK" | grep "Disk $DISK" | awk '{print int($3)}')
-    printf "$(_ "Disk size: %s GB")\n" "$DISK_SIZE"
+    printf '%s\n' "$(_ "Disk size: %s GB")" "$DISK_SIZE"
 
     # Проверяем, достаточно ли места
     if [ "$DISK_SIZE" -lt 10 ]; then
-        echo "$(_ "Disk is too small (minimum 10 GB required)")"
+        _ "Disk is too small (minimum 10 GB required)"
         exit 1
     fi
 
     # Очищаем таблицу разделов
-    echo "$(_ "Cleaning partition table...")"
+    _ "Cleaning partition table..."
     sgdisk -Z "$DISK" 2>/dev/null || dd if=/dev/zero of="$DISK" bs=1M count=100
 
     # Создаем новую таблицу разделов
     if [ $UEFI_MODE -eq 1 ]; then
-        echo "$(_ "Creating GPT...")"
+        _ "Creating GPT..."
         parted -s "$DISK" mklabel gpt
     else
-        echo "$(_ "Creating MBR...")"
+        _ "Creating MBR..."
         parted -s "$DISK" mklabel msdos
     fi
 
     # Создаем разделы
-    echo "$(_ "Creating partitions...")"
+    _ "Creating partitions..."
 
     if [ $UEFI_MODE -eq 1 ]; then
         # UEFI: ESP + swap + root
@@ -406,25 +384,25 @@ auto_partition() {
     partprobe "$DISK"
     sleep 2
 
-    echo "$(_ "Created partitions:")"
+    _ "Created partitions:"
     fdisk -l "$DISK" | grep "^/dev"
     echo "========================="
 }
 # Функция форматирования разделов
 AUTO_format_partitions() {
-    echo "$(_ "Formatting partitions...")"
+    _ "Formatting partitions..."
 
     # Форматируем EFI/Boot раздел
     if [ $UEFI_MODE -eq 1 ]; then
-        echo "$(_ "Formatting EFI partition...")"
+        _ "Formatting EFI partition..."
         mkfs.fat -F32 "$BOOT_PART"
     else
-        echo "$(_ "Formatting boot partition...")"
+        _ "Formatting boot partition..."
         mkfs.ext2 -F "$BOOT_PART"
     fi
 
     # Форматируем корневой раздел (ext4)
-    echo "$(_ "Formatting root partition...")"
+    _ "Formatting root partition..."
     mkfs.ext4 -F  "$ROOT_PART"
 
     #btrfs subvolume create /mnt/@root
@@ -432,20 +410,20 @@ AUTO_format_partitions() {
     #btrfs subvolume create /mnt/@var
     #btrfs subvolume create /mnt/@timeshift
     # Форматируем recovery раздел (ext2)
-    # echo "$(_ "Formatting recovery partition...")"
+    # _ ""Formatting recovery partition...""
     # mkfs.ext2 -F "$RECOVERY_PART"
 
     # Создаем swap
-    echo "$(_ "Creating swap...")"
+    _ "Creating swap..."
     mkswap "$SWAP_PART"
     swapon "$SWAP_PART"
 
-    echo "$(_ "Formatting complete!")"
+    _ "Formatting complete!"
 }
 
 # Функция монтирования разделов
 mount_partitions() {
-    echo "$(_ "Mounting partitions...")"
+    _ "Mounting partitions..."
 
     # Монтируем корневой раздел
     mount "$ROOT_PART" /mnt
@@ -472,10 +450,10 @@ mount_partitions() {
     #mkdir -p /mnt/recovery
     #mount "$RECOVERY_PART" /mnt/recovery
 
-    echo "$(_ "Mounting complete!")"
+    _ "Mounting complete!"
 }
 luks_enable_root() {
-    echo "$(_ "LUKS encryption setup")"
+    _ "LUKS encryption setup"
     cryptsetup luksFormat --type luks2 --verify-passphrase "$ROOT_PART"
 
     # 2. Передаем пароль в cryptsetup
@@ -509,8 +487,9 @@ format() {
     esac
 }
 formathm() {
+    local PART="$2"
     case "$1" in
-        ext) mkfs.ext4 -F "$HOME_PART"
+        ext) mkfs.ext4 -F "$PART"
             ;;
 
         btrfs) mkfs.btrfs -f "$HOME_PART"
@@ -522,7 +501,7 @@ formathm() {
 }
 SingleDisk() {
     # Основное меню выбора режима разметки
-    echo "$(_ "Select partitioning mode:")"
+    _ "Select partitioning mode:"
     MODE=$(dialog --title "$(_ "Select mode")" --menu "$(_ "Choose partitioning mode:")" 15 60 3 \
         1 "$(_ "Auto")" \
         2 "$(_ "Manual")" \
@@ -533,20 +512,20 @@ SingleDisk() {
 
     case $MODE in
         1)
-            echo "$(_ "Auto mode selected")"
+            _ "Auto mode selected"
             auto_partition
             AUTO_format_partitions
             mount_partitions
             ;;
         2)
-            echo "$(_ "Manual mode selected")"
+            _ "Manual mode selected"
             WARNING
             # Оригинальный код для ручной разметки
             cfdisk "$DISK"
 
-            read -p "$(_ "Enter root partition: ")" ROOT_PART
+            read -r -p "$(_ "Enter root partition: ")" ROOT_PART
             ROOT_PART="/dev/$ROOT_PART"
-            [ ! -e "$ROOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$ROOT_PART" && exit 1
+            [ ! -e "$ROOT_PART" ] && printf '%s\n' "$(_ "Error: partition %s not found")" "$ROOT_PART" && exit 1
 
 
 
@@ -564,18 +543,17 @@ SingleDisk() {
             fs=$(dialog --title "$(_ "Select filesystem")" --menu "$(_ "Choose filesystem:")" 15 70 5 \
                 1 "$(_ "ext4")" \
                 2 "$(_ "btrfs")" \
-                3 "$(_ "xfs")" 3>&1 1>&2 2>&3 3>&-)
-
-            if [ $? -ne 0 ]; then
-                echo "$(_ "Skipping...")"
-                exit 0
-            fi
+                3 "$(_ "xfs")" 3>&1 1>&2 2>&3 3>&-) || {
+                    _ "Skipping..."
+                    exit 0
+                }
 
             case $fs in
                 1) format "ext" ;;
                 2) format "btrfs" ;;
                 3) format "xfs" ;;
             esac
+            unset fs
             clear
             if [ $LUKS_MODE -eq 1 ]; then
                 mount /dev/mapper/QuasarRoot /mnt
@@ -585,56 +563,45 @@ SingleDisk() {
 
 
 
-            lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT $DISK
+            lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT "$DISK"
             if [ $UEFI_MODE -eq 1 ]; then
-                read -p "$(_ "Enter EFI partition: ")" BOOT_PART
-                echo "$(_ "Formatting EFI partition...")"
+                read -r -p "$(_ "Enter EFI partition: ")" BOOT_PART
+                _ "Formatting EFI partition..."
                 export  BOOT_PART="/dev/$BOOT_PART"
                 mkdir -p /mnt/boot/efi
                 mkfs.fat -F32 "$BOOT_PART"
                 mount "$BOOT_PART" /mnt/boot/efi
             else
-                read -p "$(_ "Enter boot partition: ")" BOOT_PART
-                echo "$(_ "Formatting boot partition...")"
+                read -r -p "$(_ "Enter boot partition: ")" BOOT_PART
+                _ "Formatting boot partition..."
                 BOOT_PART="/dev/$BOOT_PART"
                 mkdir -p /mnt/boot
                 mkfs.ext2 -F "$BOOT_PART"
                 mount "$BOOT_PART" /mnt/boot
             fi
 
-            [ ! -e "$BOOT_PART" ] && printf "$(_ "Error: partition %s not found")\n" "$BOOT_PART" && exit 1
+            [ ! -e "$BOOT_PART" ] && printf '%s\n' "$(_ "Error: partition %s not found")" "$BOOT_PART" && exit 1
 
-            # Дополнительные опции для ручного режима
-            #read -p "$(_ "Create recovery partition? [y/N]: ")" CREATE_RECOVERY
-            #if [[ $CREATE_RECOVERY =~ ^[Yy]$ ]]; then
-            #    read -p "$(_ "Enter recovery partition: ")" RECOVERY_PART
-            #    echo "$(_ "Formatting recovery partition...")"
-            #    RECOVERY_PART="/dev/$RECOVERY_PART"
-            #    mkfs.ext2 -F "$RECOVERY_PART"
-            #    mkdir -p /mnt/recovery
-            #    mount "$RECOVERY_PART" /mnt/recovery
-            #fi
-
-            read -p "$(_ "Create swap partition? [y/N]: ")" CREATE_SWAP
+            read -r -p "$(_ "Create swap partition? [y/N]: ")" CREATE_SWAP
             if [[ $CREATE_SWAP =~ ^[Yy]$ ]]; then
-                read -p "$(_ "Enter swap partition: ")" SWAP_PART
+                read -r -p "$(_ "Enter swap partition: ")" SWAP_PART
                 SWAP_PART="/dev/$SWAP_PART"
                 mkswap "$SWAP_PART"
                 swapon "$SWAP_PART"
             fi
 
-            echo "$(_ "Final layout:")"
-            lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT $DISK
-            echo "$(_ "Partitioning complete!")"
+            _ "Final layout:"
+            lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT "$DISK"
+            _ "Partitioning complete!"
             ;;
         3) old_os_backap ;;
 
         4)
-            echo "$(_ "Exiting...")"
+            _ "Exiting..."
             exit 0
             ;;
         *)
-            echo "$(_ "Unknown choice")"
+            _ "Unknown choice"
             exit 1
             ;;
     esac
@@ -645,8 +612,8 @@ main() {
 }
 clear
 main
-echo "$(_ "Final layout:")"
-lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT "$DISK"
+_ "Final layout:"
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT
 echo "========================="
 echo ""
-echo "$(_ "Partitioning complete!")"
+_ "Partitioning complete!"

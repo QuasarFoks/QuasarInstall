@@ -1,57 +1,502 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: installer\n"
-"POT-Creation-Date: 2026-02-21 15:03+0300\n"
-"PO-Revision-Date: 2026-02-21 15:03+0300\n"
-"Last-Translator: Auto-generated\n"
-"Language-Team: Турецкий\n"
+"Project-Id-Version: Quasar Linux Installer 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 20:00+0300\n"
+"PO-Revision-Date: 2026-07-14 20:00+0300\n"
+"Last-Translator: Quasar Team <quasarfoks@github.com>\n"
+"Language-Team: tr_TR <quasarfoks@github.com>\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Select disk"
-msgstr ""
+msgid "Setting up EFISTUB..."
+msgstr "EFISTUB ayarlanıyor..."
 
-msgid "Enter disk name (e.g. sda/nvme0n1): "
-msgstr ""
+msgid "Asia"
+msgstr "Asya"
 
-msgid "Error: disk"
-msgstr ""
+msgid "balanced"
+msgstr "dengeli"
+
+msgid "xfs"
+msgstr "xfs"
+
+msgid "Cleaning partition table..."
+msgstr "Bölüm tablosu temizleniyor..."
+
+msgid "Selection cancelled"
+msgstr "Seçim iptal edildi"
+
+msgid "Setting up GRUB for BIOS..."
+msgstr "BIOS için GRUB ayarlanıyor..."
+
+msgid "Manual mode selected"
+msgstr "Manuel mod seçildi"
+
+msgid "User %s created successfully\n\nUser: %s\nRoot password set"
+msgstr "Kullanıcı %s başarıyla oluşturuldu\n\nKullanıcı: %s\nRoot şifresi ayarlandı"
+
+msgid "Choose disks:"
+msgstr "Diskleri seçin:"
+
+msgid "Done"
+msgstr "Tamam"
+
+msgid "Install packages"
+msgstr "Paketleri kur"
+
+msgid "LTS kernel (long-term support)"
+msgstr "LTS çekirdek (uzun süreli destek)"
+
+msgid "not found, using default"
+msgstr "bulunamadı, varsayılan kullanılıyor"
+
+msgid "Manual"
+msgstr "Manuel"
+
+msgid "User setup"
+msgstr "Kullanıcı ayarları"
+
+msgid "rEFInd installed"
+msgstr "rEFInd kuruldu"
+
+msgid "Wine"
+msgstr "Wine"
+
+msgid "Syslinux"
+msgstr "Syslinux"
+
+msgid "Set root password:"
+msgstr "Root şifresi ayarla:"
+
+msgid "Choose compression mode:"
+msgstr "Sıkıştırma modu seçin:"
+
+msgid "Auto-partitioning..."
+msgstr "Otomatik bölümleme..."
+
+msgid "User Setup"
+msgstr "Kullanıcı ayarları"
+
+msgid "QuasarLinux SE"
+msgstr "QuasarLinux SE"
+
+msgid "Replace OS"
+msgstr "İşletim sistemini değiştir"
+
+msgid "South America"
+msgstr "Güney Amerika"
+
+msgid "Creating swap..."
+msgstr "Swap oluşturuluyor..."
+
+msgid "Select Region"
+msgstr "Bölge seç"
+
+msgid "Error: kernel not found"
+msgstr "Hata: çekirdek bulunamadı"
+
+msgid "Set password for %s:"
+msgstr "%s için şifre ayarla:"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "Ayna listesi için coğrafi bölgenizi seçin:"
+
+msgid "Error: failed to set password"
+msgstr "Hata: şifre ayarlanamadı"
+
+msgid "Enable LUKS encryption for root partition?"
+msgstr "Kök bölümü için LUKS şifrelemesi etkinleştirilsin mi?"
+
+msgid "Select region:"
+msgstr "Bölge seçin:"
+
+msgid "Disk detected: "
+msgstr "Disk algılandı: "
+
+msgid "ext4"
+msgstr "ext4"
+
+msgid "User %s added to sudoers"
+msgstr "Kullanıcı %s sudoers'a eklendi"
+
+msgid "Auto mode selected"
+msgstr "Otomatik mod seçildi"
+
+msgid " to "
+msgstr " konumuna "
+
+msgid "Enabling wheel group in sudoers"
+msgstr "sudoers'da wheel grubu etkinleştiriliyor"
+
+msgid "Formatting partitions..."
+msgstr "Bölümler biçimlendiriliyor..."
+
+msgid "Expected: "
+msgstr "Beklenen: "
+
+msgid "Formatting complete!"
+msgstr "Biçimlendirme tamamlandı!"
+
+msgid "Skipping..."
+msgstr "Atlanıyor..."
+
+msgid "Setting up Syslinux..."
+msgstr "Syslinux ayarlanıyor..."
+
+msgid "Created partitions:"
+msgstr "Oluşturulan bölümler:"
+
+msgid "QuasarInstall"
+msgstr "QuasarInstall"
+
+msgid "Error"
+msgstr "Hata"
+
+msgid "Creating GPT..."
+msgstr "GPT oluşturuluyor..."
+
+msgid "Gaming prefix"
+msgstr "Oyun öneki"
+
+msgid "Install base system"
+msgstr "Temel sistemi kur"
+
+msgid "Express setup"
+msgstr "Hızlı kurulum"
+
+msgid "Setting up GRUB for UEFI..."
+msgstr "UEFI için GRUB ayarlanıyor..."
+
+msgid "Error: failed to create user"
+msgstr "Hata: kullanıcı oluşturulamadı"
+
+msgid "Partitioning"
+msgstr "Bölümleme"
+
+msgid "Oceania"
+msgstr "Okyanusya"
+
+msgid "Mounting partitions..."
+msgstr "Bölümler bağlanıyor..."
+
+msgid " added to autostart"
+msgstr " otomatik başlatmaya eklendi"
+
+msgid "rEFInd"
+msgstr "rEFInd"
+
+msgid "Hash check failed!"
+msgstr "Hash kontrolü başarısız oldu!"
+
+msgid "Select mode"
+msgstr "Mod seç"
+
+msgid "Choose filesystem:"
+msgstr "Dosya sistemi seçin:"
+
+msgid "North America"
+msgstr "Kuzey Amerika"
+
+msgid "Audio"
+msgstr "Ses"
+
+msgid "Enter boot partition: "
+msgstr "Önyükleme bölümü girin: "
+
+msgid "Configuring locale..."
+msgstr "Yerel ayarlar yapılandırılıyor..."
+
+msgid "Unknown choice"
+msgstr "Bilinmeyen seçim"
+
+msgid "Username cannot be empty!"
+msgstr "Kullanıcı adı boş olamaz!"
+
+msgid "Operation cancelled"
+msgstr "İşlem iptal edildi"
+
+msgid "Select option:"
+msgstr "Seçenek seçin:"
+
+msgid "Installing base system..."
+msgstr "Temel sistem kuruluyor..."
+
+msgid "Syslinux installed"
+msgstr "Syslinux kuruldu"
+
+msgid "Reinstalling "
+msgstr "Yeniden yükleniyor "
+
+msgid "Global (recommended)"
+msgstr "Küresel (önerilen)"
+
+msgid "Mounting complete!"
+msgstr "Bağlama tamamlandı!"
+
+msgid "Creating group %s"
+msgstr "%s grubu oluşturuluyor"
+
+msgid "UEFI Bootloader Selection"
+msgstr "UEFI önyükleyici seçimi"
+
+msgid "You can run 'sudo pacman -Syy' to update database."
+msgstr "Veritabanını güncellemek için 'sudo pacman -Syy' komutunu çalıştırabilirsiniz."
+
+msgid "Error: "
+msgstr "Hata: "
+
+msgid "Install bootloader"
+msgstr "Önyükleyiciyi kur"
+
+msgid "Filesystems unmounted"
+msgstr "Dosya sistemleri bağlantısı kesildi"
+
+msgid "Quasar-install"
+msgstr "Quasar kurulumu"
+
+msgid "Zen kernel (optimized for desktop)"
+msgstr "Zen çekirdek (masaüstü için optimize edilmiş)"
+
+msgid "Select kernel"
+msgstr "Çekirdek seç"
+
+msgid "Confirm root password:"
+msgstr "Root şifresini onayla:"
+
+msgid "Europe"
+msgstr "Avrupa"
+
+msgid "fast, weaker compression"
+msgstr "hızlı, daha zayıf sıkıştırma"
+
+msgid "No matching region found"
+msgstr "Eşleşen bölge bulunamadı"
+
+msgid "Error: download failed"
+msgstr "Hata: indirme başarısız oldu"
+
+msgid "Hash check passed"
+msgstr "Hash kontrolü geçti"
+
+msgid "added to autostart"
+msgstr "otomatik başlatmaya eklendi"
+
+msgid "Formatting root partition..."
+msgstr "Kök bölümü biçimlendiriliyor..."
+
+msgid "Auto"
+msgstr "Otomatik"
+
+msgid "Exiting..."
+msgstr "Çıkılıyor..."
+
+msgid "Select a marking type: "
+msgstr "İşaretleme türü seçin: "
+
+msgid "Partitioning complete!"
+msgstr "Bölümleme tamamlandı!"
+
+msgid "BIOS Bootloader Selection"
+msgstr "BIOS önyükleyici seçimi"
+
+msgid "EFISTUB"
+msgstr "EFISTUB"
+
+msgid "is not mounted. Exiting."
+msgstr "bağlı değil. Çıkılıyor."
+
+msgid "Formatting boot partition..."
+msgstr "Önyükleme bölümü biçimlendiriliyor..."
+
+msgid "Vanilla kernel"
+msgstr "Vanilla çekirdek"
+
+msgid "Saved user "
+msgstr "Kaydedilen kullanıcı "
+
+msgid "Got:      "
+msgstr "Alınan: "
+
+msgid "Passwords do not match! Try again."
+msgstr "Şifreler eşleşmiyor! Tekrar deneyin."
+
+msgid "QuasarLinux REV"
+msgstr "QuasarLinux REV"
+
+msgid "Disk size: %s GB"
+msgstr "Disk boyutu: %s GB"
+
+msgid "Disk is too small (minimum 10 GB required)"
+msgstr "Disk çok küçük (minimum 10 GB gerekli)"
+
+msgid "Enter root partition: "
+msgstr "Kök bölümü girin: "
+
+msgid "Error: partition %s not found"
+msgstr "Hata: %s bölümü bulunamadı"
+
+msgid "Creating user %s"
+msgstr "%s kullanıcısı oluşturuluyor"
+
+msgid "Select disks separated by a space:"
+msgstr "Diskleri boşlukla ayrılmış olarak girin:"
+
+msgid "Exit"
+msgstr "Çıkış"
+
+msgid "Enter username:"
+msgstr "Kullanıcı adı girin:"
+
+msgid "Username cannot be 'root'!"
+msgstr "Kullanıcı adı 'root' olamaz!"
+
+msgid "Error: disk /dev/%s not found"
+msgstr "Hata: /dev/%s diski bulunamadı"
+
+msgid "Creating partitions..."
+msgstr "Bölümler oluşturuluyor..."
+
+msgid "Filesystems mounted for chroot"
+msgstr "chroot için dosya sistemleri bağlandı"
+
+msgid "Installing branding"
+msgstr "Marka kuruluyor"
+
+msgid "Formatting EFI partition..."
+msgstr "EFI bölümü biçimlendiriliyor..."
+
+msgid "Custom"
+msgstr "Özel"
+
+msgid "Base installation completed!"
+msgstr "Temel kurulum tamamlandı!"
+
+msgid "No"
+msgstr "Hayır"
+
+msgid "Region"
+msgstr "Bölge"
+
+msgid "Select partitioning mode:"
+msgstr "Bölümleme modu seçin:"
+
+msgid "Office"
+msgstr "Ofis"
+
+msgid "LUKS encryption setup"
+msgstr "LUKS şifreleme kurulumu"
+
+msgid "GRUB installed for BIOS"
+msgstr "BIOS için GRUB kuruldu"
+
+msgid "Choose bootloader:"
+msgstr "Önyükleyici seçin:"
+
+msgid "Select"
+msgstr "Seç"
+
+msgid "Error: failed to set sudoers permissions"
+msgstr "Hata: sudoers izinleri ayarlanamadı"
+
+msgid "Error: failed to add sudoers entry"
+msgstr "Hata: sudoers girişi eklenemedi"
+
+msgid "Default prefix"
+msgstr "Varsayılan önek"
+
+msgid "best compression"
+msgstr "en iyi sıkıştırma"
+
+msgid "Setting up rEFInd..."
+msgstr "rEFInd ayarlanıyor..."
+
+msgid "AI prefix"
+msgstr "AI öneki"
+
+msgid "Select disk:"
+msgstr "Disk seçin:"
+
+msgid "Adding %s to sudoers"
+msgstr "%s sudoers'a ekleniyor"
+
+msgid "Select filesystem"
+msgstr "Dosya sistemi seç"
+
+msgid "Choose partitioning mode:"
+msgstr "Bölümleme modu seçin:"
+
+msgid "Error: disk %s not found"
+msgstr "Hata: %s diski bulunamadı"
+
+msgid "Encrypt root partition?"
+msgstr "Kök bölümü şifrelensin mi?"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "Seçilen bölge için ayna listesi yapılandırıldı!"
+
+msgid "btrfs"
+msgstr "btrfs"
 
 msgid "does not exist!"
-msgstr ""
+msgstr "mevcut değil!"
 
-msgid "Enter ROOT partition (e.g. sda2): "
-msgstr ""
+msgid "Yes"
+msgstr "Evet"
 
-msgid "Enter EFI partition (e.g. sda1): "
-msgstr ""
+msgid "Password cannot be empty!"
+msgstr "Şifre boş olamaz!"
 
-msgid "If no partition, leave empty"
-msgstr ""
+msgid "Enter EFI partition: "
+msgstr "EFI bölümü girin: "
 
-msgid "Enter BOOT partition (sda1/nvmen1p1): "
-msgstr ""
+msgid "Web browser"
+msgstr "Web tarayıcısı"
 
-msgid "skipping"
-msgstr ""
+msgid "Kernel"
+msgstr "Çekirdek"
 
-msgid "Separate /home partition? (y/n): "
-msgstr ""
+msgid "Confirm password:"
+msgstr "Şifreyi onayla:"
 
-msgid "Enter HOME partition (e.g. sda2): "
-msgstr ""
+msgid "Activating services"
+msgstr "Hizmetler etkinleştiriliyor"
 
-msgid "Separate /var partition? (y/n): "
-msgstr ""
+msgid "Bootloader installation complete!"
+msgstr "Önyükleyici kurulumu tamamlandı!"
 
-msgid "Enter /var partition (e.g. sda2): "
-msgstr ""
+msgid "Final layout:"
+msgstr "Son yerleşim:"
 
-msgid "Separate /usr partition? (y/n): "
-msgstr ""
+msgid "Creating MBR..."
+msgstr "MBR oluşturuluyor..."
 
-msgid "Enter /usr partition (e.g. sda2): "
-msgstr ""
+msgid "GRUB"
+msgstr "GRUB"
+
+msgid "multiple disks (beta)"
+msgstr "çoklu disk (beta)"
+
+msgid "EFISTUB configured"
+msgstr "EFISTUB yapılandırıldı"
+
+msgid "GRUB installed for UEFI"
+msgstr "UEFI için GRUB kuruldu"
+
+msgid "Error mounting %s"
+msgstr "%s bağlanırken hata"
+
+msgid "Enter swap partition: "
+msgstr "Swap bölümü girin: "
+
+msgid "Warning: "
+msgstr "Uyarı: "
+
+msgid "single disk"
+msgstr "tek disk"
+
+msgid "Warning: failed to enable wheel group"
+msgstr "Uyarı: wheel grubu etkinleştirilemedi"
+

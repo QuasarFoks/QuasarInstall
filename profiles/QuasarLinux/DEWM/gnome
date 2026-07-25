@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+main() {
+
+    chroot /mnt pacman -S --needed --noconfirm gnome-shell gnome nautilus gnome-control-center gnome-terminal wayland seatd
+    chroot /mnt pacman -S --needed gdm gdm-openrc --noconfirm
+    chroot /mnt rc-update add gdm default
+}
+extra() {
+    true
+}

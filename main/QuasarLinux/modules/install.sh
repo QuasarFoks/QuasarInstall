@@ -8,13 +8,16 @@ LANG_FOUND=0
 for lang in "${SUPPORTED_LANGS[@]}"; do
     [ "$SYSTEM_LANG" = "$lang" ] && LANG_FOUND=1 && break
 done
-[ $LANG_FOUND -eq 0 ] && export LANG="en_US.UTF-8" || export LANG="$SYSTEM_LANG.UTF-8"
-
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
 export TEXTDOMAIN="installer"
-export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+export TEXTDOMAINDIR="/usr/local/sdk/locale"
 
 if ! command -v gettext &> /dev/null; then
-    _() { echo "$1"; }
+    _() { printf '%s' "$1"; }  # Без \n
 else
     _() { gettext -s "$1"; }
 fi
@@ -73,38 +76,59 @@ backup_system() {
 clean_system() {
     "$SCRIPT_DIR"/userland/clean_full.sh
 }
+old() {
+    while true; do
+        seting=$(dialog --title "$(_ "Quasar-install")" --menu "$(_ "Select option:")" 15 70 7 \
+        1 "$(_ "Express setup")" \
+        2 "$(_ "Partitioning")" \
+        3 "$(_ "Install base system")" \
+        4 "$(_ "Install packages")" \
+        5 "$(_ "User setup")" \
+        6 "$(_ "Install bootloader")" \
+        7 "$(_ "Audio")" \
+        8 "$(_ "Wine")" \
+        9 "$(_ "Web browser")" \
+        10 "$(_ "Region")" \
+        11 "$(_ "Office")" \
+        12 "$(_ "Exit")" \
+        3>&1 1>&2 2>&3 3>&-)
 
+        [ $? -ne 0 ] && break   # если жмём ESC/Cancel → выход
 
-while true; do
-    seting=$(dialog --title "$(_ "Quasar-install")" --menu "$(_ "Select option:")" 15 70 7 \
-    1 "$(_ "Express setup")" \
-    2 "$(_ "Partitioning")" \
-    3 "$(_ "Install base system")" \
-    4 "$(_ "Install packages")" \
-    5 "$(_ "User setup")" \
-    6 "$(_ "Install bootloader")" \
-    7 "$(_ "Audio")" \
-    8 "$(_ "Wine")" \
-    9 "$(_ "Web browser")" \
-    10 "$(_ "Region")" \
-    11 "$(_ "Office")" \
-    12 "$(_ "Exit")" \
-    3>&1 1>&2 2>&3 3>&-)
-
-    [ $? -ne 0 ] && break   # если жмём ESC/Cancel → выход
-
-    case $seting in
-        1) express ;;
-        2) parted_menu ;;
-        3) "$SCRIPT_DIR/basepack.sh" ;;
-        4) "$SCRIPT_DIR/inst_pack.sh" ;;
-        5) user ;;
-        6) "$SCRIPT_DIR/bootloader.sh" ;;
-        7) audio_config ;;
-        8) wine_install ;;
-        9) browser_install ;;
-        10) region ;;
-        11) office_install ;;
-        12) break ;;
-    esac
-done
+        case $seting in
+            1) express ;;
+            2) parted_menu ;;
+            3) "$SCRIPT_DIR/basepack.sh" ;;
+            4) "$SCRIPT_DIR/inst_pack.sh" ;;
+            5) user ;;
+            6) "$SCRIPT_DIR/bootloader.sh" ;;
+            7) audio_config ;;
+            8) wine_install ;;
+            9) browser_install ;;
+            10) region ;;
+            11) office_install ;;
+            12) break ;;
+        esac
+    done
+}
+revision() {
+    old
+}
+se() {
+    /installer/distro/SecondEdition/install
+}
+main() {
+    while true; do
+        while true; do
+            seting=$(dialog --title "$(_ "QuasarInstall")" --menu "$(_ "Select option:")" 15 70 7 \
+            1 "QuasarLinux REV" \
+            2 "QuasarLinux SE" \
+            3>&1 1>&2 2>&3 3>&-)
+            [ $? -ne 0 ] && break
+            case $seting in
+                1) revision ;;
+                2) se ;;
+            esac
+    done
+}
+old

@@ -8,13 +8,16 @@ LANG_FOUND=0
 for lang in "${SUPPORTED_LANGS[@]}"; do
     [ "$SYSTEM_LANG" = "$lang" ] && LANG_FOUND=1 && break
 done
-[ $LANG_FOUND -eq 0 ] && export LANG="en_US.UTF-8" || export LANG="$SYSTEM_LANG.UTF-8"
-
+if [ $LANG_FOUND -eq 0 ]; then
+    export LANG="en_US.UTF-8"
+else
+    export LANG="$SYSTEM_LANG.UTF-8"
+fi
 export TEXTDOMAIN="installer"
-export TEXTDOMAINDIR="/usr/local/sdk/global/locale"
+export TEXTDOMAINDIR="/usr/local/sdk/locale"
 
 if ! command -v gettext &> /dev/null; then
-    _() { echo "$1"; }
+    _() { printf '%s' "$1"; }  # Без \n
 else
     _() { gettext -s "$1"; }
 fi

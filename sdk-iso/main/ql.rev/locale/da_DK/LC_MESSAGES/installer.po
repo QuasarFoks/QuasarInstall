@@ -1,0 +1,502 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Quasar Linux Installer 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 20:00+0300\n"
+"PO-Revision-Date: 2026-07-14 20:00+0300\n"
+"Last-Translator: Quasar Team <quasarfoks@github.com>\n"
+"Language-Team: da_DK <quasarfoks@github.com>\n"
+"Language: da_DK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Setting up EFISTUB..."
+msgstr "Настройка EFISTUB..."
+
+msgid "Asia"
+msgstr "Азия"
+
+msgid "balanced"
+msgstr "сбалансированное"
+
+msgid "xfs"
+msgstr "xfs"
+
+msgid "Cleaning partition table..."
+msgstr "Очистка таблицы разделов..."
+
+msgid "Selection cancelled"
+msgstr "Выбор отменён"
+
+msgid "Setting up GRUB for BIOS..."
+msgstr "Настройка GRUB для BIOS..."
+
+msgid "Manual mode selected"
+msgstr "Выбран ручной режим"
+
+msgid "User %s created successfully\n\nUser: %s\nRoot password set"
+msgstr "Пользователь %s успешно создан\n\nПользователь: %s\nПароль root установлен"
+
+msgid "Choose disks:"
+msgstr "Выберите диски:"
+
+msgid "Done"
+msgstr "Готово"
+
+msgid "Install packages"
+msgstr "Установка пакетов"
+
+msgid "LTS kernel (long-term support)"
+msgstr "Ядро LTS (долгосрочная поддержка)"
+
+msgid "not found, using default"
+msgstr "не найден, используется по умолчанию"
+
+msgid "Manual"
+msgstr "Вручную"
+
+msgid "User setup"
+msgstr "Настройка пользователя"
+
+msgid "rEFInd installed"
+msgstr "rEFInd установлен"
+
+msgid "Wine"
+msgstr "Wine"
+
+msgid "Syslinux"
+msgstr "Syslinux"
+
+msgid "Set root password:"
+msgstr "Установите пароль root:"
+
+msgid "Choose compression mode:"
+msgstr "Выберите режим сжатия:"
+
+msgid "Auto-partitioning..."
+msgstr "Автоматическая разметка..."
+
+msgid "User Setup"
+msgstr "Настройка пользователя"
+
+msgid "QuasarLinux SE"
+msgstr "QuasarLinux SE"
+
+msgid "Replace OS"
+msgstr "Заменить ОС"
+
+msgid "South America"
+msgstr "Южная Америка"
+
+msgid "Creating swap..."
+msgstr "Создание раздела подкачки..."
+
+msgid "Select Region"
+msgstr "Выберите регион"
+
+msgid "Error: kernel not found"
+msgstr "Ошибка: ядро не найдено"
+
+msgid "Set password for %s:"
+msgstr "Установите пароль для %s:"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "Выберите ваш географический регион для списка зеркал:"
+
+msgid "Error: failed to set password"
+msgstr "Ошибка: не удалось установить пароль"
+
+msgid "Enable LUKS encryption for root partition?"
+msgstr "Включить шифрование LUKS для корневого раздела?"
+
+msgid "Select region:"
+msgstr "Выберите регион:"
+
+msgid "Disk detected: "
+msgstr "Обнаружен диск: "
+
+msgid "ext4"
+msgstr "ext4"
+
+msgid "User %s added to sudoers"
+msgstr "Пользователь %s добавлен в sudoers"
+
+msgid "Auto mode selected"
+msgstr "Выбран автоматический режим"
+
+msgid " to "
+msgstr " в "
+
+msgid "Enabling wheel group in sudoers"
+msgstr "Включение группы wheel в sudoers"
+
+msgid "Formatting partitions..."
+msgstr "Форматирование разделов..."
+
+msgid "Expected: "
+msgstr "Ожидалось: "
+
+msgid "Formatting complete!"
+msgstr "Форматирование завершено!"
+
+msgid "Skipping..."
+msgstr "Пропуск..."
+
+msgid "Setting up Syslinux..."
+msgstr "Настройка Syslinux..."
+
+msgid "Created partitions:"
+msgstr "Созданные разделы:"
+
+msgid "QuasarInstall"
+msgstr "QuasarInstall"
+
+msgid "Error"
+msgstr "Ошибка"
+
+msgid "Creating GPT..."
+msgstr "Создание GPT..."
+
+msgid "Gaming prefix"
+msgstr "Игровой префикс"
+
+msgid "Install base system"
+msgstr "Установка базовой системы"
+
+msgid "Express setup"
+msgstr "Экспресс-установка"
+
+msgid "Setting up GRUB for UEFI..."
+msgstr "Настройка GRUB для UEFI..."
+
+msgid "Error: failed to create user"
+msgstr "Ошибка: не удалось создать пользователя"
+
+msgid "Partitioning"
+msgstr "Разметка диска"
+
+msgid "Oceania"
+msgstr "Океания"
+
+msgid "Mounting partitions..."
+msgstr "Монтирование разделов..."
+
+msgid " added to autostart"
+msgstr " добавлен в автозапуск"
+
+msgid "rEFInd"
+msgstr "rEFInd"
+
+msgid "Hash check failed!"
+msgstr "Проверка хеша не пройдена!"
+
+msgid "Select mode"
+msgstr "Выберите режим"
+
+msgid "Choose filesystem:"
+msgstr "Выберите файловую систему:"
+
+msgid "North America"
+msgstr "Северная Америка"
+
+msgid "Audio"
+msgstr "Аудио"
+
+msgid "Enter boot partition: "
+msgstr "Введите загрузочный раздел: "
+
+msgid "Configuring locale..."
+msgstr "Настройка локали..."
+
+msgid "Unknown choice"
+msgstr "Неизвестный выбор"
+
+msgid "Username cannot be empty!"
+msgstr "Имя пользователя не может быть пустым!"
+
+msgid "Operation cancelled"
+msgstr "Операция отменена"
+
+msgid "Select option:"
+msgstr "Выберите опцию:"
+
+msgid "Installing base system..."
+msgstr "Установка базовой системы..."
+
+msgid "Syslinux installed"
+msgstr "Syslinux установлен"
+
+msgid "Reinstalling "
+msgstr "Переустановка "
+
+msgid "Global (recommended)"
+msgstr "Глобальный (рекомендуется)"
+
+msgid "Mounting complete!"
+msgstr "Монтирование завершено!"
+
+msgid "Creating group %s"
+msgstr "Создание группы %s"
+
+msgid "UEFI Bootloader Selection"
+msgstr "Выбор загрузчика UEFI"
+
+msgid "You can run 'sudo pacman -Syy' to update database."
+msgstr "Вы можете выполнить 'sudo pacman -Syy' для обновления базы данных."
+
+msgid "Error: "
+msgstr "Ошибка: "
+
+msgid "Install bootloader"
+msgstr "Установка загрузчика"
+
+msgid "Filesystems unmounted"
+msgstr "Файловые системы отмонтированы"
+
+msgid "Quasar-install"
+msgstr "Quasar-install"
+
+msgid "Zen kernel (optimized for desktop)"
+msgstr "Ядро Zen (оптимизировано для десктопа)"
+
+msgid "Select kernel"
+msgstr "Vælg kerne"
+
+msgid "Confirm root password:"
+msgstr "Подтвердите пароль root:"
+
+msgid "Europe"
+msgstr "Европа"
+
+msgid "fast, weaker compression"
+msgstr "быстрое, слабое сжатие"
+
+msgid "No matching region found"
+msgstr "Совпадающий регион не найден"
+
+msgid "Error: download failed"
+msgstr "Ошибка: загрузка не удалась"
+
+msgid "Hash check passed"
+msgstr "Проверка хеша пройдена"
+
+msgid "added to autostart"
+msgstr "добавлен в автозапуск"
+
+msgid "Formatting root partition..."
+msgstr "Форматирование корневого раздела..."
+
+msgid "Auto"
+msgstr "Автоматически"
+
+msgid "Exiting..."
+msgstr "Выход..."
+
+msgid "Select a marking type: "
+msgstr "Выберите тип разметки: "
+
+msgid "Partitioning complete!"
+msgstr "Разметка завершена!"
+
+msgid "BIOS Bootloader Selection"
+msgstr "Выбор загрузчика BIOS"
+
+msgid "EFISTUB"
+msgstr "EFISTUB"
+
+msgid "is not mounted. Exiting."
+msgstr "не примонтирован. Выход."
+
+msgid "Formatting boot partition..."
+msgstr "Форматирование загрузочного раздела..."
+
+msgid "Vanilla kernel"
+msgstr "Обычное ядро (Vanilla)"
+
+msgid "Saved user "
+msgstr "Сохранён пользователь "
+
+msgid "Got:      "
+msgstr "Получено: "
+
+msgid "Passwords do not match! Try again."
+msgstr "Пароли не совпадают! Попробуйте снова."
+
+msgid "QuasarLinux REV"
+msgstr "QuasarLinux REV"
+
+msgid "Disk size: %s GB"
+msgstr "Размер диска: %s ГБ"
+
+msgid "Disk is too small (minimum 10 GB required)"
+msgstr "Диск слишком мал (требуется минимум 10 ГБ)"
+
+msgid "Enter root partition: "
+msgstr "Введите корневой раздел: "
+
+msgid "Error: partition %s not found"
+msgstr "Ошибка: раздел %s не найден"
+
+msgid "Creating user %s"
+msgstr "Создание пользователя %s"
+
+msgid "Select disks separated by a space:"
+msgstr "Введите диски через пробел:"
+
+msgid "Exit"
+msgstr "Выход"
+
+msgid "Enter username:"
+msgstr "Введите имя пользователя:"
+
+msgid "Username cannot be 'root'!"
+msgstr "Имя пользователя не может быть 'root'!"
+
+msgid "Error: disk /dev/%s not found"
+msgstr "Ошибка: диск /dev/%s не найден"
+
+msgid "Creating partitions..."
+msgstr "Создание разделов..."
+
+msgid "Filesystems mounted for chroot"
+msgstr "Файловые системы примонтированы для chroot"
+
+msgid "Installing branding"
+msgstr "Установка брендинга"
+
+msgid "Formatting EFI partition..."
+msgstr "Форматирование раздела EFI..."
+
+msgid "Custom"
+msgstr "Пользовательская"
+
+msgid "Base installation completed!"
+msgstr "Базовая установка завершена!"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "Region"
+msgstr "Регион"
+
+msgid "Select partitioning mode:"
+msgstr "Выберите режим разметки:"
+
+msgid "Office"
+msgstr "Офис"
+
+msgid "LUKS encryption setup"
+msgstr "Настройка шифрования LUKS"
+
+msgid "GRUB installed for BIOS"
+msgstr "GRUB установлен для BIOS"
+
+msgid "Choose bootloader:"
+msgstr "Выберите загрузчик:"
+
+msgid "Select"
+msgstr "Выбрать"
+
+msgid "Error: failed to set sudoers permissions"
+msgstr "Ошибка: не удалось установить права для sudoers"
+
+msgid "Error: failed to add sudoers entry"
+msgstr "Ошибка: не удалось добавить запись в sudoers"
+
+msgid "Default prefix"
+msgstr "Префикс по умолчанию"
+
+msgid "best compression"
+msgstr "лучшее сжатие"
+
+msgid "Setting up rEFInd..."
+msgstr "Настройка rEFInd..."
+
+msgid "AI prefix"
+msgstr "Префикс AI"
+
+msgid "Select disk:"
+msgstr "Выберите диск:"
+
+msgid "Adding %s to sudoers"
+msgstr "Добавление %s в sudoers"
+
+msgid "Select filesystem"
+msgstr "Выберите файловую систему"
+
+msgid "Choose partitioning mode:"
+msgstr "Выберите режим разметки:"
+
+msgid "Error: disk %s not found"
+msgstr "Ошибка: диск %s не найден"
+
+msgid "Encrypt root partition?"
+msgstr "Зашифровать корневой раздел?"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "Список зеркал настроен для выбранного региона!"
+
+msgid "btrfs"
+msgstr "btrfs"
+
+msgid "does not exist!"
+msgstr "не существует!"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "Password cannot be empty!"
+msgstr "Пароль не может быть пустым!"
+
+msgid "Enter EFI partition: "
+msgstr "Введите раздел EFI: "
+
+msgid "Web browser"
+msgstr "Веб-браузер"
+
+msgid "Kernel"
+msgstr "Kerne"
+
+msgid "Confirm password:"
+msgstr "Подтвердите пароль:"
+
+msgid "Activating services"
+msgstr "Активация служб"
+
+msgid "Bootloader installation complete!"
+msgstr "Установка загрузчика завершена!"
+
+msgid "Final layout:"
+msgstr "Итоговая разметка:"
+
+msgid "Creating MBR..."
+msgstr "Создание MBR..."
+
+msgid "GRUB"
+msgstr "GRUB"
+
+msgid "multiple disks (beta)"
+msgstr "несколько дисков (бета)"
+
+msgid "EFISTUB configured"
+msgstr "EFISTUB настроен"
+
+msgid "GRUB installed for UEFI"
+msgstr "GRUB установлен для UEFI"
+
+msgid "Error mounting %s"
+msgstr "Ошибка монтирования %s"
+
+msgid "Enter swap partition: "
+msgstr "Введите раздел подкачки: "
+
+msgid "Warning: "
+msgstr "Предупреждение: "
+
+msgid "single disk"
+msgstr "один диск"
+
+msgid "Warning: failed to enable wheel group"
+msgstr "Предупреждение: не удалось включить группу wheel"
+

@@ -1,57 +1,502 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: installer\n"
-"POT-Creation-Date: 2026-02-21 15:03+0300\n"
-"PO-Revision-Date: 2026-02-21 15:03+0300\n"
-"Last-Translator: Auto-generated\n"
-"Language-Team: Китайский (упрощенный)\n"
+"Project-Id-Version: Quasar Linux Installer 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 20:00+0300\n"
+"PO-Revision-Date: 2026-07-14 20:00+0300\n"
+"Last-Translator: Quasar Team <quasarfoks@github.com>\n"
+"Language-Team: zh_CN <quasarfoks@github.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Select disk"
-msgstr ""
+msgid "Setting up EFISTUB..."
+msgstr "正在设置 EFISTUB..."
 
-msgid "Enter disk name (e.g. sda/nvme0n1): "
-msgstr ""
+msgid "Asia"
+msgstr "亚洲"
 
-msgid "Error: disk"
-msgstr ""
+msgid "balanced"
+msgstr "平衡"
+
+msgid "xfs"
+msgstr "xfs"
+
+msgid "Cleaning partition table..."
+msgstr "正在清理分区表..."
+
+msgid "Selection cancelled"
+msgstr "选择已取消"
+
+msgid "Setting up GRUB for BIOS..."
+msgstr "正在为 BIOS 设置 GRUB..."
+
+msgid "Manual mode selected"
+msgstr "已选择手动模式"
+
+msgid "User %s created successfully\n\nUser: %s\nRoot password set"
+msgstr "用户 %s 已成功创建\n\n用户: %s\nRoot 密码已设置"
+
+msgid "Choose disks:"
+msgstr "选择磁盘:"
+
+msgid "Done"
+msgstr "完成"
+
+msgid "Install packages"
+msgstr "安装软件包"
+
+msgid "LTS kernel (long-term support)"
+msgstr "LTS 内核 (长期支持)"
+
+msgid "not found, using default"
+msgstr "未找到，使用默认值"
+
+msgid "Manual"
+msgstr "手动"
+
+msgid "User setup"
+msgstr "用户设置"
+
+msgid "rEFInd installed"
+msgstr "rEFInd 已安装"
+
+msgid "Wine"
+msgstr "Wine"
+
+msgid "Syslinux"
+msgstr "Syslinux"
+
+msgid "Set root password:"
+msgstr "设置 root 密码:"
+
+msgid "Choose compression mode:"
+msgstr "选择压缩模式:"
+
+msgid "Auto-partitioning..."
+msgstr "自动分区..."
+
+msgid "User Setup"
+msgstr "用户设置"
+
+msgid "QuasarLinux SE"
+msgstr "QuasarLinux SE"
+
+msgid "Replace OS"
+msgstr "替换操作系统"
+
+msgid "South America"
+msgstr "南美洲"
+
+msgid "Creating swap..."
+msgstr "正在创建交换空间..."
+
+msgid "Select Region"
+msgstr "选择地区"
+
+msgid "Error: kernel not found"
+msgstr "错误: 未找到内核"
+
+msgid "Set password for %s:"
+msgstr "为 %s 设置密码:"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "为镜像列表选择您的地理区域:"
+
+msgid "Error: failed to set password"
+msgstr "错误: 无法设置密码"
+
+msgid "Enable LUKS encryption for root partition?"
+msgstr "为根分区启用 LUKS 加密?"
+
+msgid "Select region:"
+msgstr "选择地区:"
+
+msgid "Disk detected: "
+msgstr "检测到磁盘: "
+
+msgid "ext4"
+msgstr "ext4"
+
+msgid "User %s added to sudoers"
+msgstr "用户 %s 已添加到 sudoers"
+
+msgid "Auto mode selected"
+msgstr "已选择自动模式"
+
+msgid " to "
+msgstr " 到 "
+
+msgid "Enabling wheel group in sudoers"
+msgstr "正在 sudoers 中启用 wheel 组"
+
+msgid "Formatting partitions..."
+msgstr "正在格式化分区..."
+
+msgid "Expected: "
+msgstr "预期值: "
+
+msgid "Formatting complete!"
+msgstr "格式化完成!"
+
+msgid "Skipping..."
+msgstr "正在跳过..."
+
+msgid "Setting up Syslinux..."
+msgstr "正在设置 Syslinux..."
+
+msgid "Created partitions:"
+msgstr "已创建分区:"
+
+msgid "QuasarInstall"
+msgstr "QuasarInstall"
+
+msgid "Error"
+msgstr "错误"
+
+msgid "Creating GPT..."
+msgstr "正在创建 GPT..."
+
+msgid "Gaming prefix"
+msgstr "游戏前缀"
+
+msgid "Install base system"
+msgstr "安装基础系统"
+
+msgid "Express setup"
+msgstr "快速设置"
+
+msgid "Setting up GRUB for UEFI..."
+msgstr "正在为 UEFI 设置 GRUB..."
+
+msgid "Error: failed to create user"
+msgstr "错误: 无法创建用户"
+
+msgid "Partitioning"
+msgstr "分区"
+
+msgid "Oceania"
+msgstr "大洋洲"
+
+msgid "Mounting partitions..."
+msgstr "正在挂载分区..."
+
+msgid " added to autostart"
+msgstr " 已添加到自动启动"
+
+msgid "rEFInd"
+msgstr "rEFInd"
+
+msgid "Hash check failed!"
+msgstr "哈希检查失败!"
+
+msgid "Select mode"
+msgstr "选择模式"
+
+msgid "Choose filesystem:"
+msgstr "选择文件系统:"
+
+msgid "North America"
+msgstr "北美洲"
+
+msgid "Audio"
+msgstr "音频"
+
+msgid "Enter boot partition: "
+msgstr "输入引导分区: "
+
+msgid "Configuring locale..."
+msgstr "正在配置区域设置..."
+
+msgid "Unknown choice"
+msgstr "未知选择"
+
+msgid "Username cannot be empty!"
+msgstr "用户名不能为空!"
+
+msgid "Operation cancelled"
+msgstr "操作已取消"
+
+msgid "Select option:"
+msgstr "选择选项:"
+
+msgid "Installing base system..."
+msgstr "正在安装基础系统..."
+
+msgid "Syslinux installed"
+msgstr "Syslinux 已安装"
+
+msgid "Reinstalling "
+msgstr "正在重新安装 "
+
+msgid "Global (recommended)"
+msgstr "全球 (推荐)"
+
+msgid "Mounting complete!"
+msgstr "挂载完成!"
+
+msgid "Creating group %s"
+msgstr "正在创建组 %s"
+
+msgid "UEFI Bootloader Selection"
+msgstr "UEFI 引导程序选择"
+
+msgid "You can run 'sudo pacman -Syy' to update database."
+msgstr "您可以运行 'sudo pacman -Syy' 来更新数据库。"
+
+msgid "Error: "
+msgstr "错误: "
+
+msgid "Install bootloader"
+msgstr "安装引导程序"
+
+msgid "Filesystems unmounted"
+msgstr "已卸载文件系统"
+
+msgid "Quasar-install"
+msgstr "Quasar 安装"
+
+msgid "Zen kernel (optimized for desktop)"
+msgstr "Zen 内核 (为桌面优化)"
+
+msgid "Select kernel"
+msgstr "选择内核"
+
+msgid "Confirm root password:"
+msgstr "确认 root 密码:"
+
+msgid "Europe"
+msgstr "欧洲"
+
+msgid "fast, weaker compression"
+msgstr "快速，较弱压缩"
+
+msgid "No matching region found"
+msgstr "未找到匹配的地区"
+
+msgid "Error: download failed"
+msgstr "错误: 下载失败"
+
+msgid "Hash check passed"
+msgstr "哈希检查通过"
+
+msgid "added to autostart"
+msgstr "已添加到自动启动"
+
+msgid "Formatting root partition..."
+msgstr "正在格式化根分区..."
+
+msgid "Auto"
+msgstr "自动"
+
+msgid "Exiting..."
+msgstr "正在退出..."
+
+msgid "Select a marking type: "
+msgstr "选择标记类型: "
+
+msgid "Partitioning complete!"
+msgstr "分区完成!"
+
+msgid "BIOS Bootloader Selection"
+msgstr "BIOS 引导程序选择"
+
+msgid "EFISTUB"
+msgstr "EFISTUB"
+
+msgid "is not mounted. Exiting."
+msgstr "未挂载。正在退出。"
+
+msgid "Formatting boot partition..."
+msgstr "正在格式化引导分区..."
+
+msgid "Vanilla kernel"
+msgstr "原生内核"
+
+msgid "Saved user "
+msgstr "已保存用户 "
+
+msgid "Got:      "
+msgstr "获取值: "
+
+msgid "Passwords do not match! Try again."
+msgstr "密码不匹配! 请重试。"
+
+msgid "QuasarLinux REV"
+msgstr "QuasarLinux REV"
+
+msgid "Disk size: %s GB"
+msgstr "磁盘大小: %s GB"
+
+msgid "Disk is too small (minimum 10 GB required)"
+msgstr "磁盘太小 (至少需要 10 GB)"
+
+msgid "Enter root partition: "
+msgstr "输入根分区: "
+
+msgid "Error: partition %s not found"
+msgstr "错误: 未找到分区 %s"
+
+msgid "Creating user %s"
+msgstr "正在创建用户 %s"
+
+msgid "Select disks separated by a space:"
+msgstr "用空格分隔输入磁盘:"
+
+msgid "Exit"
+msgstr "退出"
+
+msgid "Enter username:"
+msgstr "输入用户名:"
+
+msgid "Username cannot be 'root'!"
+msgstr "用户名不能是 'root'!"
+
+msgid "Error: disk /dev/%s not found"
+msgstr "错误: 未找到磁盘 /dev/%s"
+
+msgid "Creating partitions..."
+msgstr "正在创建分区..."
+
+msgid "Filesystems mounted for chroot"
+msgstr "已为 chroot 挂载文件系统"
+
+msgid "Installing branding"
+msgstr "正在安装品牌标识"
+
+msgid "Formatting EFI partition..."
+msgstr "正在格式化 EFI 分区..."
+
+msgid "Custom"
+msgstr "自定义"
+
+msgid "Base installation completed!"
+msgstr "基础安装完成!"
+
+msgid "No"
+msgstr "否"
+
+msgid "Region"
+msgstr "地区"
+
+msgid "Select partitioning mode:"
+msgstr "选择分区模式:"
+
+msgid "Office"
+msgstr "办公"
+
+msgid "LUKS encryption setup"
+msgstr "LUKS 加密设置"
+
+msgid "GRUB installed for BIOS"
+msgstr "已为 BIOS 安装 GRUB"
+
+msgid "Choose bootloader:"
+msgstr "选择引导程序:"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "Error: failed to set sudoers permissions"
+msgstr "错误: 无法设置 sudoers 权限"
+
+msgid "Error: failed to add sudoers entry"
+msgstr "错误: 无法添加 sudoers 条目"
+
+msgid "Default prefix"
+msgstr "默认前缀"
+
+msgid "best compression"
+msgstr "最佳压缩"
+
+msgid "Setting up rEFInd..."
+msgstr "正在设置 rEFInd..."
+
+msgid "AI prefix"
+msgstr "AI 前缀"
+
+msgid "Select disk:"
+msgstr "选择磁盘:"
+
+msgid "Adding %s to sudoers"
+msgstr "正在将 %s 添加到 sudoers"
+
+msgid "Select filesystem"
+msgstr "选择文件系统"
+
+msgid "Choose partitioning mode:"
+msgstr "选择分区模式:"
+
+msgid "Error: disk %s not found"
+msgstr "错误: 未找到磁盘 %s"
+
+msgid "Encrypt root partition?"
+msgstr "加密根分区?"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "镜像列表已为所选地区配置!"
+
+msgid "btrfs"
+msgstr "btrfs"
 
 msgid "does not exist!"
-msgstr ""
+msgstr "不存在!"
 
-msgid "Enter ROOT partition (e.g. sda2): "
-msgstr ""
+msgid "Yes"
+msgstr "是"
 
-msgid "Enter EFI partition (e.g. sda1): "
-msgstr ""
+msgid "Password cannot be empty!"
+msgstr "密码不能为空!"
 
-msgid "If no partition, leave empty"
-msgstr ""
+msgid "Enter EFI partition: "
+msgstr "输入 EFI 分区: "
 
-msgid "Enter BOOT partition (sda1/nvmen1p1): "
-msgstr ""
+msgid "Web browser"
+msgstr "网页浏览器"
 
-msgid "skipping"
-msgstr ""
+msgid "Kernel"
+msgstr "内核"
 
-msgid "Separate /home partition? (y/n): "
-msgstr ""
+msgid "Confirm password:"
+msgstr "确认密码:"
 
-msgid "Enter HOME partition (e.g. sda2): "
-msgstr ""
+msgid "Activating services"
+msgstr "正在激活服务"
 
-msgid "Separate /var partition? (y/n): "
-msgstr ""
+msgid "Bootloader installation complete!"
+msgstr "引导程序安装完成!"
 
-msgid "Enter /var partition (e.g. sda2): "
-msgstr ""
+msgid "Final layout:"
+msgstr "最终布局:"
 
-msgid "Separate /usr partition? (y/n): "
-msgstr ""
+msgid "Creating MBR..."
+msgstr "正在创建 MBR..."
 
-msgid "Enter /usr partition (e.g. sda2): "
-msgstr ""
+msgid "GRUB"
+msgstr "GRUB"
+
+msgid "multiple disks (beta)"
+msgstr "多磁盘 (测试版)"
+
+msgid "EFISTUB configured"
+msgstr "EFISTUB 已配置"
+
+msgid "GRUB installed for UEFI"
+msgstr "已为 UEFI 安装 GRUB"
+
+msgid "Error mounting %s"
+msgstr "挂载 %s 时出错"
+
+msgid "Enter swap partition: "
+msgstr "输入交换分区: "
+
+msgid "Warning: "
+msgstr "警告: "
+
+msgid "single disk"
+msgstr "单磁盘"
+
+msgid "Warning: failed to enable wheel group"
+msgstr "警告: 无法启用 wheel 组"
+

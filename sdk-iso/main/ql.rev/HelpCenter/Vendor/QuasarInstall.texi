@@ -1,0 +1,460 @@
+\input texinfo   @c -*-texinfo-*-
+@setfilename QuasarInstall.info
+@settitle QuasarLinux Installer Documentation
+@afourpaper
+@documentencoding UTF-8
+@defcodeindex op
+@syncodeindex vr op
+
+@titlepage
+@title QuasarLinux Installer
+@subtitle Полное руководство по установке
+@author QuasarLinux Team
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2026 QuasarLinux Team
+
+Это руководство описывает установку QuasarLinux с помощью интерактивного установщика.
+@end titlepage
+
+@contents
+
+@node Top
+@top QuasarLinux Installer
+
+Это руководство описывает процесс установки QuasarLinux с использованием установщика на базе Artix Linux (OpenRC).
+
+@menu
+* Введение::               Что такое QuasarLinux Installer
+* Запуск установщика::     Как начать установку
+* Разметка дисков::        Разбивка дисков (parted.sh)
+* Установка базовой системы:: Установка ядра и пакетов (basepack.sh)
+* Настройка зеркал::       Выбор региона для зеркал (mirrorconfig.sh)
+* Дополнительные пакеты::  Установка профилей (inst_pack.sh)
+* Настройка пользователя:: Создание пользователя и пароли (users.sh)
+* Установка загрузчика::   Настройка загрузчика (bootloader.sh)
+* Часовой пояс::           Выбор региона (region.sh)
+* Экспресс-установка::     Быстрая установка (express)
+* Устранение проблем::     Частые ошибки и решения
+* Лицензия::               Лицензия GNU GPL
+* Указатель::              Алфавитный указатель
+@end menu
+
+@node Введение
+@chapter Введение
+
+QuasarLinux Installer — это интерактивный установщик для операционной системы QuasarLinux, основанной на Artix Linux с OpenRC.
+
+@cartouche
+@b{Важно:} Установщик предназначен для опытных пользователей, но имеет дружественный интерфейс на основе @code{dialog}. Все опасные операции сопровождаются предупреждениями.
+@end cartouche
+
+Основные возможности:
+@itemize
+@item Выбор диска и режима разметки (авто/ручная)
+@item Поддержка UEFI и BIOS
+@item Выбор ядра: Zen, LTS, Vanilla
+@item Шифрование диска (LUKS)
+@item Настройка файловой системы (ext4, btrfs, xfs)
+@item Установка дополнительных профилей (AI, Gaming, Default)
+@item Создание пользователя и настройка sudo
+@item Установка загрузчика (GRUB, EFISTUB, rEFInd, Syslinux)
+@end itemize
+
+@node Запуск установщика
+@chapter Запуск установщика
+
+После загрузки с Live-носителя выполните команду:
+
+@example
+QuasarInstall
+@end example
+
+Появится главное меню:
+
+@example
+╔════════════════════════════════════════════════╗
+║  ###      SDK function              ###        ║
+║ [ 1 ] Chroot                                   ║
+║ [ 2 ] Install QuasarLinux                      ║
+║ [ 3 ] Recovery System (Timeshift)              ║
+║ [ 4 ] Live system                              ║
+║ [ 5 ] Support                                  ║
+║ [ i ] Info                                    ║
+║  ###      Power function            ###        ║
+║ [ 6 ] Shutdown                                 ║
+║ [ 7 ] Restart                                  ║
+╚════════════════════════════════════════════════╝
+@end example
+
+Выберите пункт @code{2} или @code{Install QuasarLinux}, чтобы начать установку.
+
+@node Разметка дисков
+@chapter Разметка дисков (parted.sh)
+
+При выборе установки открывается меню разметки. Вам будет предложено выбрать режим:
+
+@menu
+* Выбор диска::             Single или Multiple
+* Автоматическая разметка:: Авто-режим
+* Ручная разметка::         Ручной режим с cfdisk
+* Замена системы::          Сохранение /home и удаление старой системы
+* Шифрование LUKS::         Настройка LUKS
+* Форматирование разделов:: Создание файловых систем
+* Монтирование::            Монтирование разделов в /mnt
+@end menu
+
+@node Выбор диска
+@section Выбор диска
+
+В начале вам предложат:
+
+@example
+Select disk:
+lsblk -d -o NAME,SIZE,MODEL,TYPE
+Enter disk name (e.g. sda):
+@end example
+
+Или для нескольких дисков:
+
+@example
+Select disks separated by a space:
+lsblk -d -o NAME,SIZE,MODEL,TYPE
+Enter disk name (e.g. sda vda):
+@end example
+
+После выбора диска отображается предупреждение @code{WARNING} о потере данных.
+
+@node Автоматическая разметка
+@section Автоматическая разметка
+
+В автоматическом режиме создаётся следующая структура (для UEFI):
+
+@example
+/dev/sda1 - EFI   (512M, fat32, ESP)
+/dev/sda2 - Swap  (4G, swap)
+/dev/sda3 - Root  (остальное, ext4)
+@end example
+
+Для BIOS:
+
+@example
+/dev/sda1 - Boot  (512M, ext2, boot)
+/dev/sda2 - Swap  (4G, swap)
+/dev/sda3 - Root  (остальное, ext4)
+@end example
+
+@node Ручная разметка
+@section Ручная разметка
+
+В ручном режиме запускается @code{cfdisk} для выбранного диска. После создания разделов вам будет предложено указать:
+
+@itemize
+@item Корневой раздел (root) — обязателен.
+@item (Опционально) раздел /home, если создан отдельно.
+@item Раздел EFI (для UEFI) или /boot (для BIOS).
+@item Раздел swap (если есть).
+@end itemize
+
+Затем выбирается файловая система для root (@code{ext4}, @code{btrfs}, @code{xfs}) и применяется LUKS при необходимости.
+
+@node Замена системы
+@section Замена системы
+
+Режим @code{Replace OS} (бета) выполняет:
+
+@enumerate
+@item Монтирует старую систему в /mnt.
+@item Создаёт резервную копию домашних каталогов (исключая кэши, историю, ключи) в /mnt/old.os/home_backup.
+@item Архивирует всю систему (исключая /home, /var/cache, /run, /tmp и другие) в архив (tar.xz/tar.zst/tar.gz) в /mnt/old.os.
+@item Удаляет все файлы, кроме old.os и boot.
+@end enumerate
+
+Это позволяет сохранить пользовательские данные и установить новую систему поверх.
+
+@node Шифрование LUKS
+@section Шифрование LUKS
+
+При ручной разметке можно включить шифрование корневого раздела:
+
+@example
+Encrypt root partition?
+1) Yes
+2) No
+@end example
+
+После выбора @code{Yes} выполняется @code{cryptsetup luksFormat} и открывается как @code{/dev/mapper/QuasarRoot}. Все последующие операции с root проводятся через этот маппер.
+
+@node Форматирование разделов
+@section Форматирование разделов
+
+После выбора файловой системы выполняется форматирование:
+
+@itemize
+@item FAT32 для EFI
+@item ext2 для /boot (BIOS)
+@item ext4/btrfs/xfs для root (и home, если отделён)
+@item mkswap и swapon для swap
+@end itemize
+
+@node Монтирование
+@section Монтирование
+
+Корневой раздел монтируется в @code{/mnt}, затем:
+
+@itemize
+@item EFI → /mnt/boot/efi (UEFI) или /boot → /mnt/boot (BIOS)
+@item /home (если есть) → /mnt/home
+@end itemize
+
+После монтирования выводится итоговая схема через @code{lsblk}.
+
+@node Установка базовой системы
+@chapter Установка базовой системы (basepack.sh)
+
+После разметки устанавливается базовая система.
+
+@menu
+* Выбор ядра::          Zen, LTS, Vanilla
+* Установка пакетов::   basestrap
+* Настройка OpenRC::    Конфигурация rc.conf
+* Сервисы OpenRC::      Добавление сервисов в runlevels
+* Брендинг::            OS-release, issue, motd
+* Recovery::            Установка recovery-образа
+@end menu
+
+@node Выбор ядра
+@section Выбор ядра
+
+Диалог:
+
+@example
+Select kernel:
+1) Zen kernel (optimized for desktop)
+2) LTS kernel (long-term support)
+3) Vanilla kernel
+@end example
+
+После выбора вызывается соответствующая функция (@code{linux_zen_base}, @code{linux_lts_base}, @code{linux_base}), которая устанавливает базовую систему (@code{base_system}) и добавляет ядро.
+
+@node Установка пакетов
+@section Установка пакетов
+
+Функция @code{base_system} выполняет:
+
+@example
+basestrap /mnt terminus-font iptables base base-devel mkinitcpio openrc \
+  dbus dbus-openrc elogind-openrc linux-firmware dialog acpid flatpak \
+  acpid-openrc chrony-openrc dash chrony linux-api-headers rsync \
+  lib32-udev networkmanager networkmanager-openrc pacman-static
+@end example
+
+@node Настройка OpenRC
+@section Настройка OpenRC
+
+Создаются файлы @code{/mnt/etc/rc.conf} и @code{/mnt/etc/conf.d/rc} с оптимизированными параметрами:
+
+@example
+rc_parallel="YES"
+rc_logger="YES"
+unicode="YES"
+RC_PARALLEL_STARTUP="yes"
+@end example
+
+@node Сервисы OpenRC
+@section Сервисы OpenRC
+
+Все сервисы добавляются в соответствующие runlevels:
+
+@multitable @columnfractions .3 .3 .4
+@headitem Сервис @tab Runlevel @tab Действие
+@item udev @tab sysinit @tab Обработка устройств
+@item FastZram @tab sysinit @tab Быстрый zram (размер = 50% RAM, но не менее 1ГБ и не более 16ГБ)
+@item dbus @tab boot @tab Системная шина
+@item elogind @tab boot @tab Управление сессиями
+@item acpid @tab default @tab Управление питанием
+@item NetworkManager @tab default @tab Сеть
+@item chrony @tab default @tab Синхронизация времени
+@end multitable
+
+Если сервис не найден, он переустанавливается через pacman.
+
+@node Брендинг
+@section Брендинг
+
+Создаются файлы:
+
+@itemize
+@item @code{/mnt/usr/lib/os-release} — с информацией о дистрибутиве.
+@item @code{/mnt/etc/lsb-release} — для совместимости.
+@item @code{/mnt/etc/issue} и @code{/mnt/etc/issue.net} — приветствие.
+@item @code{/mnt/etc/motd} — сообщение дня.
+@item Копируется @code{pacman.conf} из профиля.
+@item Устанавливаются пиктограммы (@code{pixmaps}) из профиля.
+@end itemize
+
+@node Recovery
+@section Recovery
+
+Если смонтирован раздел @code{/mnt/recovery}, то извлекается архив @code{/installer/image/recovery.tar.xz} или ищется в альтернативных местах. После распаковки добавляется запись в @code{fstab} для автоматического монтирования.
+
+@node Настройка зеркал
+@chapter Настройка зеркал (mirrorconfig.sh)
+
+Диалог выбора региона:
+
+@example
+Select Region:
+1) Europe
+2) Asia
+3) North America
+4) South America
+5) Oceania
+6) Global (recommended)
+@end example
+
+Выбранный регион создаёт файл @code{/mnt/etc/pacman.d/mirrorlist} с соответствующими зеркалами Artix Linux.
+
+@node Дополнительные пакеты
+@chapter Дополнительные пакеты (inst_pack.sh)
+
+После установки базы запускается установка дополнительных пакетов.
+
+@example
+Select option:
+1) Custom
+2) AI prefix
+3) Gaming prefix
+4) Default prefix
+@end example
+
+@itemize
+@item @code{Custom} — запускает @code{profiles/custom/custom.sh}
+@item @code{AI prefix} — @code{profiles/ai/ai.sh}
+@item @code{Gaming prefix} — @code{profiles/gaming/gaming.sh}
+@item @code{Default prefix} — @code{profiles/default/default.sh}
+@end itemize
+
+Эти скрипты устанавливают соответствующие наборы программ.
+
+@node Настройка пользователя
+@chapter Настройка пользователя (users.sh)
+
+Диалоги:
+
+@enumerate
+@item Ввод имени пользователя.
+@item Ввод пароля (дважды).
+@item Установка пароля root (дважды).
+@end enumerate
+
+Пользователь добавляется в группу @code{wheel} и в @code{sudoers} с правами ALL. Группа @code{wheel} активируется в @code{/etc/sudoers}.
+
+После успешного создания выводится подтверждение.
+
+@node Установка загрузчика
+@chapter Установка загрузчика (bootloader.sh)
+
+Скрипт определяет режим загрузки (UEFI/BIOS) и предлагает соответствующие загрузчики.
+
+@menu
+* UEFI режим::              GRUB, EFISTUB, rEFInd
+* BIOS режим::              GRUB, Syslinux
+@end menu
+
+@node UEFI режим
+@section UEFI режим
+
+Диалог:
+
+@example
+UEFI Bootloader Selection:
+1) GRUB
+2) EFISTUB
+3) rEFInd
+@end example
+
+@itemize
+@item @b{GRUB}: устанавливается пакет @code{grub}, @code{efibootmgr}, выполняется @code{grub-install --target=x86_64-efi}, генерируется конфиг.
+@item @b{EFISTUB}: создаются копии ядра и initramfs в @code{/boot/efi}, добавляется запись в @code{efibootmgr} с параметрами root=UUID и initrd.
+@item @b{rEFInd}: устанавливается @code{refind} и запускается @code{refind-install}.
+@end itemize
+
+@node BIOS режим
+@section BIOS режим
+
+Диалог:
+
+@example
+BIOS Bootloader Selection:
+1) GRUB
+2) Syslinux
+@end example
+
+@itemize
+@item @b{GRUB}: устанавливается @code{grub}, выполняется @code{grub-install --target=i386-pc} на диск, генерируется конфиг.
+@item @b{Syslinux}: устанавливается @code{syslinux}, устанавливается загрузчик в MBR (@code{dd if=... of=...}), создаётся конфиг @code{syslinux.cfg} с указанием ядра и UUID root.
+@end itemize
+
+@node Часовой пояс
+@chapter Часовой пояс (region.sh)
+
+Скрипт @code{region.sh} позволяет выбрать часовой пояс из списка регионов (Europe, Asia, US, Africa, Antarctica, Arctic, Atlantic, Australia, Brazil, Canada, Etc). Выбранный регион создаёт симлинк @code{/mnt/etc/localtime} на соответствующий файл в @code{/usr/share/zoneinfo}.
+
+@node Экспресс-установка
+@chapter Экспресс-установка (express)
+
+В главном меню установщика есть пункт @code{Express setup}, который последовательно выполняет все шаги:
+
+@enumerate
+@item Разметка дисков (parted.sh)
+@item Установка базы (basepack.sh)
+@item Настройка зеркал (mirrorconfig.sh) — закомментирована, можно включить
+@item Создание пользователя (users.sh)
+@item Установка пакетов (inst_pack.sh)
+@item Установка загрузчика (bootloader.sh)
+@end enumerate
+
+Этот режим удобен для опытных пользователей, желающих автоматизировать установку.
+
+@node Устранение проблем
+@chapter Устранение проблем
+
+@menu
+* Не монтируется root::     Проверка разделов
+* Ошибка загрузчика::       Проверка UEFI/BIOS
+* Сбой сети::               Настройка NetworkManager
+* Проблемы с графикой::     Драйверы
+@end menu
+
+@node Не монтируется root
+@section Не монтируется root
+
+Проверьте правильность указания раздела. Используйте @code{lsblk} и @code{fdisk -l}. Убедитесь, что раздел отформатирован.
+
+@node Ошибка загрузчика
+@section Ошибка загрузчика
+
+Убедитесь, что для UEFI установлен пакет @code{efibootmgr} и система загружена в UEFI-режиме. Для BIOS проверьте установку MBR.
+
+@node Сбой сети
+@section Сбой сети
+
+Проверьте статус NetworkManager: @code{rc-service NetworkManager status}. При необходимости перезапустите: @code{rc-service NetworkManager restart}.
+
+@node Проблемы с графикой
+@section Проблемы с графикой
+
+Установите необходимые драйверы (например, @code{xf86-video-*}) через @code{pacman -S} в chroot.
+
+@node Лицензия
+@chapter Лицензия
+
+QuasarLinux Installer распространяется под лицензией GNU GPL v3+. Полный текст лицензии доступен на сайте Free Software Foundation.
+
+@node Указатель
+@chapter Указатель
+
+@printindex cp
+
+@bye

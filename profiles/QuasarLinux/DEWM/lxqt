@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+main() {
+
+    chroot /mnt pacman -S lxqt sddm dolphin kate  xorg sddm-openrc --noconfirm
+    chroot /mnt rc-update add sddm default
+}

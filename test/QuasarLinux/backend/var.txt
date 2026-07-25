@@ -1,0 +1,2 @@
+chmod +x /installer/profiles/DEWM/plasma
+    /installer/profiles/DEWM/plasma

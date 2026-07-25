@@ -1,57 +1,502 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: installer\n"
-"POT-Creation-Date: 2026-02-21 15:03+0300\n"
-"PO-Revision-Date: 2026-02-21 15:03+0300\n"
-"Last-Translator: Auto-generated\n"
-"Language-Team: Немецкий\n"
+"Project-Id-Version: Quasar Linux Installer 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 20:00+0300\n"
+"PO-Revision-Date: 2026-07-14 20:00+0300\n"
+"Last-Translator: Quasar Team <quasarfoks@github.com>\n"
+"Language-Team: de_DE <quasarfoks@github.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Select disk"
-msgstr ""
+msgid "Setting up EFISTUB..."
+msgstr "EFISTUB einrichten..."
 
-msgid "Enter disk name (e.g. sda/nvme0n1): "
-msgstr ""
+msgid "Asia"
+msgstr "Asien"
 
-msgid "Error: disk"
-msgstr ""
+msgid "balanced"
+msgstr "Ausgewogen"
+
+msgid "xfs"
+msgstr "xfs"
+
+msgid "Cleaning partition table..."
+msgstr "Partitionstabelle wird bereinigt..."
+
+msgid "Selection cancelled"
+msgstr "Auswahl abgebrochen"
+
+msgid "Setting up GRUB for BIOS..."
+msgstr "GRUB für BIOS einrichten..."
+
+msgid "Manual mode selected"
+msgstr "Manueller Modus ausgewählt"
+
+msgid "User %s created successfully\n\nUser: %s\nRoot password set"
+msgstr "Benutzer %s erfolgreich erstellt\n\nBenutzer: %s\nRoot-Passwort festgelegt"
+
+msgid "Choose disks:"
+msgstr "Datenträger wählen:"
+
+msgid "Done"
+msgstr "Fertig"
+
+msgid "Install packages"
+msgstr "Pakete installieren"
+
+msgid "LTS kernel (long-term support)"
+msgstr "LTS-Kernel (Langzeitunterstützung)"
+
+msgid "not found, using default"
+msgstr "nicht gefunden, Standard wird verwendet"
+
+msgid "Manual"
+msgstr "Manuell"
+
+msgid "User setup"
+msgstr "Benutzer einrichten"
+
+msgid "rEFInd installed"
+msgstr "rEFInd installiert"
+
+msgid "Wine"
+msgstr "Wine"
+
+msgid "Syslinux"
+msgstr "Syslinux"
+
+msgid "Set root password:"
+msgstr "Root-Passwort festlegen:"
+
+msgid "Choose compression mode:"
+msgstr "Komprimierungsmodus wählen:"
+
+msgid "Auto-partitioning..."
+msgstr "Automatische Partitionierung..."
+
+msgid "User Setup"
+msgstr "Benutzereinrichtung"
+
+msgid "QuasarLinux SE"
+msgstr "QuasarLinux SE"
+
+msgid "Replace OS"
+msgstr "Betriebssystem ersetzen"
+
+msgid "South America"
+msgstr "Südamerika"
+
+msgid "Creating swap..."
+msgstr "Swap wird erstellt..."
+
+msgid "Select Region"
+msgstr "Region wählen"
+
+msgid "Error: kernel not found"
+msgstr "Fehler: Kernel nicht gefunden"
+
+msgid "Set password for %s:"
+msgstr "Passwort für %s festlegen:"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "Geografische Region für Mirrorliste wählen:"
+
+msgid "Error: failed to set password"
+msgstr "Fehler: Passwort konnte nicht festgelegt werden"
+
+msgid "Enable LUKS encryption for root partition?"
+msgstr "LUKS-Verschlüsselung für Root-Partition aktivieren?"
+
+msgid "Select region:"
+msgstr "Region wählen:"
+
+msgid "Disk detected: "
+msgstr "Datenträger erkannt: "
+
+msgid "ext4"
+msgstr "ext4"
+
+msgid "User %s added to sudoers"
+msgstr "Benutzer %s zu sudoers hinzugefügt"
+
+msgid "Auto mode selected"
+msgstr "Automatischer Modus ausgewählt"
+
+msgid " to "
+msgstr " nach "
+
+msgid "Enabling wheel group in sudoers"
+msgstr "Wheel-Gruppe in sudoers aktivieren"
+
+msgid "Formatting partitions..."
+msgstr "Partitionen werden formatiert..."
+
+msgid "Expected: "
+msgstr "Erwartet: "
+
+msgid "Formatting complete!"
+msgstr "Formatierung abgeschlossen!"
+
+msgid "Skipping..."
+msgstr "Überspringen..."
+
+msgid "Setting up Syslinux..."
+msgstr "Syslinux einrichten..."
+
+msgid "Created partitions:"
+msgstr "Erstellte Partitionen:"
+
+msgid "QuasarInstall"
+msgstr "QuasarInstall"
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Creating GPT..."
+msgstr "GPT wird erstellt..."
+
+msgid "Gaming prefix"
+msgstr "Gaming-Präfix"
+
+msgid "Install base system"
+msgstr "Basis-System installieren"
+
+msgid "Express setup"
+msgstr "Express-Einrichtung"
+
+msgid "Setting up GRUB for UEFI..."
+msgstr "GRUB für UEFI einrichten..."
+
+msgid "Error: failed to create user"
+msgstr "Fehler: Benutzer konnte nicht erstellt werden"
+
+msgid "Partitioning"
+msgstr "Partitionierung"
+
+msgid "Oceania"
+msgstr "Ozeanien"
+
+msgid "Mounting partitions..."
+msgstr "Partitionen werden eingehängt..."
+
+msgid " added to autostart"
+msgstr " zum Autostart hinzugefügt"
+
+msgid "rEFInd"
+msgstr "rEFInd"
+
+msgid "Hash check failed!"
+msgstr "Hash-Prüfung fehlgeschlagen!"
+
+msgid "Select mode"
+msgstr "Modus wählen"
+
+msgid "Choose filesystem:"
+msgstr "Dateisystem wählen:"
+
+msgid "North America"
+msgstr "Nordamerika"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Enter boot partition: "
+msgstr "Boot-Partition eingeben: "
+
+msgid "Configuring locale..."
+msgstr "Locale wird konfiguriert..."
+
+msgid "Unknown choice"
+msgstr "Unbekannte Auswahl"
+
+msgid "Username cannot be empty!"
+msgstr "Benutzername darf nicht leer sein!"
+
+msgid "Operation cancelled"
+msgstr "Vorgang abgebrochen"
+
+msgid "Select option:"
+msgstr "Option wählen:"
+
+msgid "Installing base system..."
+msgstr "Basis-System wird installiert..."
+
+msgid "Syslinux installed"
+msgstr "Syslinux installiert"
+
+msgid "Reinstalling "
+msgstr "Neuinstallation "
+
+msgid "Global (recommended)"
+msgstr "Global (empfohlen)"
+
+msgid "Mounting complete!"
+msgstr "Einhängen abgeschlossen!"
+
+msgid "Creating group %s"
+msgstr "Gruppe %s wird erstellt"
+
+msgid "UEFI Bootloader Selection"
+msgstr "UEFI-Bootloader-Auswahl"
+
+msgid "You can run 'sudo pacman -Syy' to update database."
+msgstr "Sie können 'sudo pacman -Syy' ausführen, um die Datenbank zu aktualisieren."
+
+msgid "Error: "
+msgstr "Fehler: "
+
+msgid "Install bootloader"
+msgstr "Bootloader installieren"
+
+msgid "Filesystems unmounted"
+msgstr "Dateisysteme ausgehängt"
+
+msgid "Quasar-install"
+msgstr "Quasar-Installation"
+
+msgid "Zen kernel (optimized for desktop)"
+msgstr "Zen-Kernel (für Desktop optimiert)"
+
+msgid "Select kernel"
+msgstr "Kernel auswählen"
+
+msgid "Confirm root password:"
+msgstr "Root-Passwort bestätigen:"
+
+msgid "Europe"
+msgstr "Europa"
+
+msgid "fast, weaker compression"
+msgstr "Schnell, schwächere Komprimierung"
+
+msgid "No matching region found"
+msgstr "Keine passende Region gefunden"
+
+msgid "Error: download failed"
+msgstr "Fehler: Download fehlgeschlagen"
+
+msgid "Hash check passed"
+msgstr "Hash-Prüfung bestanden"
+
+msgid "added to autostart"
+msgstr "zum Autostart hinzugefügt"
+
+msgid "Formatting root partition..."
+msgstr "Root-Partition wird formatiert..."
+
+msgid "Auto"
+msgstr "Automatisch"
+
+msgid "Exiting..."
+msgstr "Beende..."
+
+msgid "Select a marking type: "
+msgstr "Markierungstyp wählen: "
+
+msgid "Partitioning complete!"
+msgstr "Partitionierung abgeschlossen!"
+
+msgid "BIOS Bootloader Selection"
+msgstr "BIOS-Bootloader-Auswahl"
+
+msgid "EFISTUB"
+msgstr "EFISTUB"
+
+msgid "is not mounted. Exiting."
+msgstr "ist nicht eingehängt. Beende."
+
+msgid "Formatting boot partition..."
+msgstr "Boot-Partition wird formatiert..."
+
+msgid "Vanilla kernel"
+msgstr "Vanilla-Kernel"
+
+msgid "Saved user "
+msgstr "Benutzer gespeichert "
+
+msgid "Got:      "
+msgstr "Erhalten: "
+
+msgid "Passwords do not match! Try again."
+msgstr "Passwörter stimmen nicht überein! Versuchen Sie es erneut."
+
+msgid "QuasarLinux REV"
+msgstr "QuasarLinux REV"
+
+msgid "Disk size: %s GB"
+msgstr "Datenträgergröße: %s GB"
+
+msgid "Disk is too small (minimum 10 GB required)"
+msgstr "Datenträger zu klein (mindestens 10 GB erforderlich)"
+
+msgid "Enter root partition: "
+msgstr "Root-Partition eingeben: "
+
+msgid "Error: partition %s not found"
+msgstr "Fehler: Partition %s nicht gefunden"
+
+msgid "Creating user %s"
+msgstr "Benutzer %s wird erstellt"
+
+msgid "Select disks separated by a space:"
+msgstr "Datenträger durch Leerzeichen getrennt eingeben:"
+
+msgid "Exit"
+msgstr "Beenden"
+
+msgid "Enter username:"
+msgstr "Benutzernamen eingeben:"
+
+msgid "Username cannot be 'root'!"
+msgstr "Benutzername darf nicht 'root' sein!"
+
+msgid "Error: disk /dev/%s not found"
+msgstr "Fehler: Datenträger /dev/%s nicht gefunden"
+
+msgid "Creating partitions..."
+msgstr "Partitionen werden erstellt..."
+
+msgid "Filesystems mounted for chroot"
+msgstr "Dateisysteme für chroot eingehängt"
+
+msgid "Installing branding"
+msgstr "Branding wird installiert"
+
+msgid "Formatting EFI partition..."
+msgstr "EFI-Partition wird formatiert..."
+
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+msgid "Base installation completed!"
+msgstr "Basisinstallation abgeschlossen!"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Region"
+msgstr "Region"
+
+msgid "Select partitioning mode:"
+msgstr "Partitionierungsmodus wählen:"
+
+msgid "Office"
+msgstr "Büro"
+
+msgid "LUKS encryption setup"
+msgstr "LUKS-Verschlüsselung einrichten"
+
+msgid "GRUB installed for BIOS"
+msgstr "GRUB für BIOS installiert"
+
+msgid "Choose bootloader:"
+msgstr "Bootloader wählen:"
+
+msgid "Select"
+msgstr "Auswählen"
+
+msgid "Error: failed to set sudoers permissions"
+msgstr "Fehler: sudoers-Berechtigungen konnten nicht gesetzt werden"
+
+msgid "Error: failed to add sudoers entry"
+msgstr "Fehler: sudoers-Eintrag konnte nicht hinzugefügt werden"
+
+msgid "Default prefix"
+msgstr "Standard-Präfix"
+
+msgid "best compression"
+msgstr "Beste Komprimierung"
+
+msgid "Setting up rEFInd..."
+msgstr "rEFInd einrichten..."
+
+msgid "AI prefix"
+msgstr "AI-Präfix"
+
+msgid "Select disk:"
+msgstr "Datenträger wählen:"
+
+msgid "Adding %s to sudoers"
+msgstr "%s zu sudoers hinzufügen"
+
+msgid "Select filesystem"
+msgstr "Dateisystem wählen"
+
+msgid "Choose partitioning mode:"
+msgstr "Partitionierungsmodus wählen:"
+
+msgid "Error: disk %s not found"
+msgstr "Fehler: Datenträger %s nicht gefunden"
+
+msgid "Encrypt root partition?"
+msgstr "Root-Partition verschlüsseln?"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "Mirrorliste für ausgewählte Region konfiguriert!"
+
+msgid "btrfs"
+msgstr "btrfs"
 
 msgid "does not exist!"
-msgstr ""
+msgstr "existiert nicht!"
 
-msgid "Enter ROOT partition (e.g. sda2): "
-msgstr ""
+msgid "Yes"
+msgstr "Ja"
 
-msgid "Enter EFI partition (e.g. sda1): "
-msgstr ""
+msgid "Password cannot be empty!"
+msgstr "Passwort darf nicht leer sein!"
 
-msgid "If no partition, leave empty"
-msgstr ""
+msgid "Enter EFI partition: "
+msgstr "EFI-Partition eingeben: "
 
-msgid "Enter BOOT partition (sda1/nvmen1p1): "
-msgstr ""
+msgid "Web browser"
+msgstr "Webbrowser"
 
-msgid "skipping"
-msgstr ""
+msgid "Kernel"
+msgstr "Kernel"
 
-msgid "Separate /home partition? (y/n): "
-msgstr ""
+msgid "Confirm password:"
+msgstr "Passwort bestätigen:"
 
-msgid "Enter HOME partition (e.g. sda2): "
-msgstr ""
+msgid "Activating services"
+msgstr "Dienste werden aktiviert"
 
-msgid "Separate /var partition? (y/n): "
-msgstr ""
+msgid "Bootloader installation complete!"
+msgstr "Bootloader-Installation abgeschlossen!"
 
-msgid "Enter /var partition (e.g. sda2): "
-msgstr ""
+msgid "Final layout:"
+msgstr "Endgültiges Layout:"
 
-msgid "Separate /usr partition? (y/n): "
-msgstr ""
+msgid "Creating MBR..."
+msgstr "MBR wird erstellt..."
 
-msgid "Enter /usr partition (e.g. sda2): "
-msgstr ""
+msgid "GRUB"
+msgstr "GRUB"
+
+msgid "multiple disks (beta)"
+msgstr "Mehrere Datenträger (Beta)"
+
+msgid "EFISTUB configured"
+msgstr "EFISTUB konfiguriert"
+
+msgid "GRUB installed for UEFI"
+msgstr "GRUB für UEFI installiert"
+
+msgid "Error mounting %s"
+msgstr "Fehler beim Einhängen von %s"
+
+msgid "Enter swap partition: "
+msgstr "Swap-Partition eingeben: "
+
+msgid "Warning: "
+msgstr "Warnung: "
+
+msgid "single disk"
+msgstr "Einzelner Datenträger"
+
+msgid "Warning: failed to enable wheel group"
+msgstr "Warnung: Wheel-Gruppe konnte nicht aktiviert werden"
+

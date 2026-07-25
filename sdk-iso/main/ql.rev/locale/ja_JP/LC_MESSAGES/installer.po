@@ -1,57 +1,502 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: installer\n"
-"POT-Creation-Date: 2026-02-21 15:03+0300\n"
-"PO-Revision-Date: 2026-02-21 15:03+0300\n"
-"Last-Translator: Auto-generated\n"
-"Language-Team: Японский\n"
+"Project-Id-Version: Quasar Linux Installer 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 20:00+0300\n"
+"PO-Revision-Date: 2026-07-14 20:00+0300\n"
+"Last-Translator: Quasar Team <quasarfoks@github.com>\n"
+"Language-Team: ja_JP <quasarfoks@github.com>\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Select disk"
-msgstr ""
+msgid "Setting up EFISTUB..."
+msgstr "EFISTUBを設定中..."
 
-msgid "Enter disk name (e.g. sda/nvme0n1): "
-msgstr ""
+msgid "Asia"
+msgstr "アジア"
 
-msgid "Error: disk"
-msgstr ""
+msgid "balanced"
+msgstr "バランス"
+
+msgid "xfs"
+msgstr "xfs"
+
+msgid "Cleaning partition table..."
+msgstr "パーティションテーブルをクリーンアップ中..."
+
+msgid "Selection cancelled"
+msgstr "選択がキャンセルされました"
+
+msgid "Setting up GRUB for BIOS..."
+msgstr "BIOS用GRUBを設定中..."
+
+msgid "Manual mode selected"
+msgstr "手動モードが選択されました"
+
+msgid "User %s created successfully\n\nUser: %s\nRoot password set"
+msgstr "ユーザー %s が正常に作成されました\n\nユーザー: %s\nrootパスワードが設定されました"
+
+msgid "Choose disks:"
+msgstr "ディスクを選択:"
+
+msgid "Done"
+msgstr "完了"
+
+msgid "Install packages"
+msgstr "パッケージをインストール"
+
+msgid "LTS kernel (long-term support)"
+msgstr "LTSカーネル (長期サポート)"
+
+msgid "not found, using default"
+msgstr "見つかりません。デフォルトを使用します"
+
+msgid "Manual"
+msgstr "手動"
+
+msgid "User setup"
+msgstr "ユーザー設定"
+
+msgid "rEFInd installed"
+msgstr "rEFIndがインストールされました"
+
+msgid "Wine"
+msgstr "Wine"
+
+msgid "Syslinux"
+msgstr "Syslinux"
+
+msgid "Set root password:"
+msgstr "rootパスワードを設定:"
+
+msgid "Choose compression mode:"
+msgstr "圧縮モードを選択:"
+
+msgid "Auto-partitioning..."
+msgstr "自動パーティショニング中..."
+
+msgid "User Setup"
+msgstr "ユーザー設定"
+
+msgid "QuasarLinux SE"
+msgstr "QuasarLinux SE"
+
+msgid "Replace OS"
+msgstr "OSを置き換え"
+
+msgid "South America"
+msgstr "南アメリカ"
+
+msgid "Creating swap..."
+msgstr "スワップを作成中..."
+
+msgid "Select Region"
+msgstr "地域を選択"
+
+msgid "Error: kernel not found"
+msgstr "エラー: カーネルが見つかりません"
+
+msgid "Set password for %s:"
+msgstr "%sのパスワードを設定:"
+
+msgid "Choose your geographical region for mirrorlist:"
+msgstr "ミラーリストの地理的地域を選択:"
+
+msgid "Error: failed to set password"
+msgstr "エラー: パスワードの設定に失敗しました"
+
+msgid "Enable LUKS encryption for root partition?"
+msgstr "ルートパーティションにLUKS暗号化を有効にしますか?"
+
+msgid "Select region:"
+msgstr "地域を選択:"
+
+msgid "Disk detected: "
+msgstr "ディスクが検出されました: "
+
+msgid "ext4"
+msgstr "ext4"
+
+msgid "User %s added to sudoers"
+msgstr "ユーザー %s がsudoersに追加されました"
+
+msgid "Auto mode selected"
+msgstr "自動モードが選択されました"
+
+msgid " to "
+msgstr " へ "
+
+msgid "Enabling wheel group in sudoers"
+msgstr "sudoersでwheelグループを有効化中"
+
+msgid "Formatting partitions..."
+msgstr "パーティションをフォーマット中..."
+
+msgid "Expected: "
+msgstr "期待値: "
+
+msgid "Formatting complete!"
+msgstr "フォーマット完了!"
+
+msgid "Skipping..."
+msgstr "スキップ中..."
+
+msgid "Setting up Syslinux..."
+msgstr "Syslinuxを設定中..."
+
+msgid "Created partitions:"
+msgstr "作成されたパーティション:"
+
+msgid "QuasarInstall"
+msgstr "QuasarInstall"
+
+msgid "Error"
+msgstr "エラー"
+
+msgid "Creating GPT..."
+msgstr "GPTを作成中..."
+
+msgid "Gaming prefix"
+msgstr "ゲームプリフィックス"
+
+msgid "Install base system"
+msgstr "ベースシステムをインストール"
+
+msgid "Express setup"
+msgstr "エクスプレスセットアップ"
+
+msgid "Setting up GRUB for UEFI..."
+msgstr "UEFI用GRUBを設定中..."
+
+msgid "Error: failed to create user"
+msgstr "エラー: ユーザーの作成に失敗しました"
+
+msgid "Partitioning"
+msgstr "パーティショニング"
+
+msgid "Oceania"
+msgstr "オセアニア"
+
+msgid "Mounting partitions..."
+msgstr "パーティションをマウント中..."
+
+msgid " added to autostart"
+msgstr " 自動起動に追加されました"
+
+msgid "rEFInd"
+msgstr "rEFInd"
+
+msgid "Hash check failed!"
+msgstr "ハッシュチェックに失敗しました!"
+
+msgid "Select mode"
+msgstr "モードを選択"
+
+msgid "Choose filesystem:"
+msgstr "ファイルシステムを選択:"
+
+msgid "North America"
+msgstr "北アメリカ"
+
+msgid "Audio"
+msgstr "オーディオ"
+
+msgid "Enter boot partition: "
+msgstr "ブートパーティションを入力: "
+
+msgid "Configuring locale..."
+msgstr "ロケールを設定中..."
+
+msgid "Unknown choice"
+msgstr "不明な選択"
+
+msgid "Username cannot be empty!"
+msgstr "ユーザー名は空にできません!"
+
+msgid "Operation cancelled"
+msgstr "操作がキャンセルされました"
+
+msgid "Select option:"
+msgstr "オプションを選択:"
+
+msgid "Installing base system..."
+msgstr "ベースシステムをインストール中..."
+
+msgid "Syslinux installed"
+msgstr "Syslinuxがインストールされました"
+
+msgid "Reinstalling "
+msgstr "再インストール中 "
+
+msgid "Global (recommended)"
+msgstr "グローバル (推奨)"
+
+msgid "Mounting complete!"
+msgstr "マウント完了!"
+
+msgid "Creating group %s"
+msgstr "グループ %s を作成中"
+
+msgid "UEFI Bootloader Selection"
+msgstr "UEFIブートローダーの選択"
+
+msgid "You can run 'sudo pacman -Syy' to update database."
+msgstr "データベースを更新するには 'sudo pacman -Syy' を実行してください。"
+
+msgid "Error: "
+msgstr "エラー: "
+
+msgid "Install bootloader"
+msgstr "ブートローダーをインストール"
+
+msgid "Filesystems unmounted"
+msgstr "ファイルシステムがアンマウントされました"
+
+msgid "Quasar-install"
+msgstr "Quasarインストール"
+
+msgid "Zen kernel (optimized for desktop)"
+msgstr "Zenカーネル (デスクトップ最適化)"
+
+msgid "Select kernel"
+msgstr "カーネルを選択"
+
+msgid "Confirm root password:"
+msgstr "rootパスワードを確認:"
+
+msgid "Europe"
+msgstr "ヨーロッパ"
+
+msgid "fast, weaker compression"
+msgstr "高速、弱い圧縮"
+
+msgid "No matching region found"
+msgstr "一致する地域が見つかりません"
+
+msgid "Error: download failed"
+msgstr "エラー: ダウンロードに失敗しました"
+
+msgid "Hash check passed"
+msgstr "ハッシュチェックに合格しました"
+
+msgid "added to autostart"
+msgstr "自動起動に追加されました"
+
+msgid "Formatting root partition..."
+msgstr "ルートパーティションをフォーマット中..."
+
+msgid "Auto"
+msgstr "自動"
+
+msgid "Exiting..."
+msgstr "終了中..."
+
+msgid "Select a marking type: "
+msgstr "マーキングタイプを選択: "
+
+msgid "Partitioning complete!"
+msgstr "パーティショニング完了!"
+
+msgid "BIOS Bootloader Selection"
+msgstr "BIOSブートローダーの選択"
+
+msgid "EFISTUB"
+msgstr "EFISTUB"
+
+msgid "is not mounted. Exiting."
+msgstr "マウントされていません。終了します。"
+
+msgid "Formatting boot partition..."
+msgstr "ブートパーティションをフォーマット中..."
+
+msgid "Vanilla kernel"
+msgstr "バニラカーネル"
+
+msgid "Saved user "
+msgstr "保存されたユーザー "
+
+msgid "Got:      "
+msgstr "取得値: "
+
+msgid "Passwords do not match! Try again."
+msgstr "パスワードが一致しません! もう一度試してください。"
+
+msgid "QuasarLinux REV"
+msgstr "QuasarLinux REV"
+
+msgid "Disk size: %s GB"
+msgstr "ディスクサイズ: %s GB"
+
+msgid "Disk is too small (minimum 10 GB required)"
+msgstr "ディスクが小さすぎます (10 GB以上必要)"
+
+msgid "Enter root partition: "
+msgstr "ルートパーティションを入力: "
+
+msgid "Error: partition %s not found"
+msgstr "エラー: パーティション %s が見つかりません"
+
+msgid "Creating user %s"
+msgstr "ユーザー %s を作成中"
+
+msgid "Select disks separated by a space:"
+msgstr "スペースで区切ってディスクを入力:"
+
+msgid "Exit"
+msgstr "終了"
+
+msgid "Enter username:"
+msgstr "ユーザー名を入力:"
+
+msgid "Username cannot be 'root'!"
+msgstr "ユーザー名は 'root' にできません!"
+
+msgid "Error: disk /dev/%s not found"
+msgstr "エラー: ディスク /dev/%s が見つかりません"
+
+msgid "Creating partitions..."
+msgstr "パーティションを作成中..."
+
+msgid "Filesystems mounted for chroot"
+msgstr "chroot用にファイルシステムがマウントされました"
+
+msgid "Installing branding"
+msgstr "ブランディングをインストール中"
+
+msgid "Formatting EFI partition..."
+msgstr "EFIパーティションをフォーマット中..."
+
+msgid "Custom"
+msgstr "カスタム"
+
+msgid "Base installation completed!"
+msgstr "ベースインストールが完了しました!"
+
+msgid "No"
+msgstr "いいえ"
+
+msgid "Region"
+msgstr "地域"
+
+msgid "Select partitioning mode:"
+msgstr "パーティショニングモードを選択:"
+
+msgid "Office"
+msgstr "オフィス"
+
+msgid "LUKS encryption setup"
+msgstr "LUKS暗号化セットアップ"
+
+msgid "GRUB installed for BIOS"
+msgstr "BIOS用GRUBがインストールされました"
+
+msgid "Choose bootloader:"
+msgstr "ブートローダーを選択:"
+
+msgid "Select"
+msgstr "選択"
+
+msgid "Error: failed to set sudoers permissions"
+msgstr "エラー: sudoers権限の設定に失敗しました"
+
+msgid "Error: failed to add sudoers entry"
+msgstr "エラー: sudoersエントリの追加に失敗しました"
+
+msgid "Default prefix"
+msgstr "デフォルトプリフィックス"
+
+msgid "best compression"
+msgstr "最高圧縮"
+
+msgid "Setting up rEFInd..."
+msgstr "rEFIndを設定中..."
+
+msgid "AI prefix"
+msgstr "AIプリフィックス"
+
+msgid "Select disk:"
+msgstr "ディスクを選択:"
+
+msgid "Adding %s to sudoers"
+msgstr "%sをsudoersに追加中"
+
+msgid "Select filesystem"
+msgstr "ファイルシステムを選択"
+
+msgid "Choose partitioning mode:"
+msgstr "パーティショニングモードを選択:"
+
+msgid "Error: disk %s not found"
+msgstr "エラー: ディスク %s が見つかりません"
+
+msgid "Encrypt root partition?"
+msgstr "ルートパーティションを暗号化しますか?"
+
+msgid "Mirrorlist has been configured for selected region!"
+msgstr "選択された地域にミラーリストが設定されました!"
+
+msgid "btrfs"
+msgstr "btrfs"
 
 msgid "does not exist!"
-msgstr ""
+msgstr "存在しません!"
 
-msgid "Enter ROOT partition (e.g. sda2): "
-msgstr ""
+msgid "Yes"
+msgstr "はい"
 
-msgid "Enter EFI partition (e.g. sda1): "
-msgstr ""
+msgid "Password cannot be empty!"
+msgstr "パスワードは空にできません!"
 
-msgid "If no partition, leave empty"
-msgstr ""
+msgid "Enter EFI partition: "
+msgstr "EFIパーティションを入力: "
 
-msgid "Enter BOOT partition (sda1/nvmen1p1): "
-msgstr ""
+msgid "Web browser"
+msgstr "ウェブブラウザ"
 
-msgid "skipping"
-msgstr ""
+msgid "Kernel"
+msgstr "カーネル"
 
-msgid "Separate /home partition? (y/n): "
-msgstr ""
+msgid "Confirm password:"
+msgstr "パスワードを確認:"
 
-msgid "Enter HOME partition (e.g. sda2): "
-msgstr ""
+msgid "Activating services"
+msgstr "サービスをアクティブ化中"
 
-msgid "Separate /var partition? (y/n): "
-msgstr ""
+msgid "Bootloader installation complete!"
+msgstr "ブートローダーのインストールが完了しました!"
 
-msgid "Enter /var partition (e.g. sda2): "
-msgstr ""
+msgid "Final layout:"
+msgstr "最終レイアウト:"
 
-msgid "Separate /usr partition? (y/n): "
-msgstr ""
+msgid "Creating MBR..."
+msgstr "MBRを作成中..."
 
-msgid "Enter /usr partition (e.g. sda2): "
-msgstr ""
+msgid "GRUB"
+msgstr "GRUB"
+
+msgid "multiple disks (beta)"
+msgstr "マルチディスク (ベータ)"
+
+msgid "EFISTUB configured"
+msgstr "EFISTUBが設定されました"
+
+msgid "GRUB installed for UEFI"
+msgstr "UEFI用GRUBがインストールされました"
+
+msgid "Error mounting %s"
+msgstr "%sのマウントエラー"
+
+msgid "Enter swap partition: "
+msgstr "スワップパーティションを入力: "
+
+msgid "Warning: "
+msgstr "警告: "
+
+msgid "single disk"
+msgstr "シングルディスク"
+
+msgid "Warning: failed to enable wheel group"
+msgstr "警告: wheelグループの有効化に失敗しました"
+

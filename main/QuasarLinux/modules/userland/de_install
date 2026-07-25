@@ -4,6 +4,7 @@ de="$1"
 
 plasma() {
 
+    chmod +x /installer/profiles/DEWM/plasma
     /installer/profiles/DEWM/plasma
 
 }
