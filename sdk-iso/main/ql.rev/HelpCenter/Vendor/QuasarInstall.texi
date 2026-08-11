@@ -79,11 +79,12 @@ QuasarInstall
 ║ [ 2 ] Install QuasarLinux                      ║
 ║ [ 3 ] Recovery System (Timeshift)              ║
 ║ [ 4 ] Live system                              ║
-║ [ 5 ] Support                                  ║
-║ [ i ] Info                                    ║
+║ [ 5 ] Language                                 ║
+║ [ 5 ] Network                                  ║
+║ [ 6 ] Support                                  ║
 ║  ###      Power function            ###        ║
-║ [ 6 ] Shutdown                                 ║
-║ [ 7 ] Restart                                  ║
+║ [ 8 ] Shutdown                                 ║
+║ [ 9 ] Restart                                  ║
 ╚════════════════════════════════════════════════╝
 @end example
 

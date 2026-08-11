@@ -38,21 +38,24 @@ int main(int argc, char *argv[]) {
     textdomain("installer");
     prepart();
 
-    // Help
-    if (argc > 1 && (std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h")) {
-        std::cout << "Usage: " << argv[0] << " [init] [kernel] [zram]" << std::endl;
-        std::cout << "  init: openrc (default), systemd (beta)" << std::endl;
-        std::cout << "  kernel: linux-lts (default), linux, linux-zen" << std::endl;
-        std::cout << "  zram: zram_on (default: no zram)" << std::endl;
-        std::cout << "Example: " << argv[0] << " openrc linux-zen zram_on" << std::endl;
-        return 0;
+    // Проверка количества аргументов
+    if (argc < 5 && argc > 1) {
+        cout << "Error: not enough arguments!" << endl;
+        cout << "Usage: " << argv[0] << " [init] [kernel] [zram]" << endl;
+        return 1;
     }
 
-    std::string revision = argv[1];
-    std::string init = argv[2];
-    std::string kernel = argv[3];
-    std::string zram_flag = argv[4];
+    // Help
+    if (argc < 5 && argc != 2) {  // 2 аргумента — это --help
+    cout << "Error: not enough arguments!" << endl;
+    return 1;
+    }
 
+    
+    string revision = argv[1];
+    string init = argv[2];
+    string kernel = argv[3];
+    string zram_flag = argv[4];
     // basepack REV openrc linux zram_on
     log("debug", "Starting setup: init=" + init + " kernel=" + kernel + " zram=" + zram_flag);
 

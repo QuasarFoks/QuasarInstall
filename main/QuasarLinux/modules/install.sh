@@ -119,16 +119,15 @@ se() {
 }
 main() {
     while true; do
-        while true; do
-            seting=$(dialog --title "$(_ "QuasarInstall")" --menu "$(_ "Select option:")" 15 70 7 \
+        seting=$(dialog --title "$(_ "QuasarInstall")" --menu "$(_ "Select option:")" 15 70 7 \
             1 "QuasarLinux REV" \
             2 "QuasarLinux SE" \
             3>&1 1>&2 2>&3 3>&-)
-            [ $? -ne 0 ] && break
-            case $seting in
-                1) revision ;;
-                2) se ;;
-            esac
+        [ $? -ne 0 ] && break
+        case $seting in
+            1) revision ;;
+            2) se ;;
+        esac
     done
 }
 old

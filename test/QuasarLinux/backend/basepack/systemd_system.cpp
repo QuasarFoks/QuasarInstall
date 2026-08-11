@@ -1,6 +1,6 @@
 #include "basepack.hpp"
 void systemd_base_system(string kernel) {
-    log("debug", "Installe base system openrc");
+    log("debug", "Installe base system systemd");
     string cmd = "basestrap /mnt terminus-font iptables-nft base base-devel mkinitcpio "
              " dbus linux-firmware dialog acpid flatpak "
              " dash chrony linux-api-headers rsync lib32-udev "

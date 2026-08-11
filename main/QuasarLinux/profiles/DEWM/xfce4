@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-runpacman() {
-    chroot /mnt pacman -Sy --needed --noconfirm "$@"
-}
-main() {
-    runpacman xfce4 thunar xorg lightdm lightdm-openrc lightdm-gtk-greeter lightdm-gtk-greeter-settings
-    chroot /mnt rc-update add lightdm default
-}

@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 #include <libintl.h>
 #include <locale.h>
+#include <string>
 #include <curl/curl.h>
 #include <sys/mount.h>
 

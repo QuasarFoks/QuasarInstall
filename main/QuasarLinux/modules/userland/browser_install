@@ -32,6 +32,14 @@ function option8() {
     chroot /mnt  flatpak install flathub org.kde.falkon -y
 }
 
+function ZenInstall() {
+    chroot /mnt  flatpak install flathub app.zen_browser.zen -y
+}
+
+function OperaInstall() {
+    chroot /mnt  flatpak install flathub com.opera.Opera -y
+}
+
 main() {
     local web="$1"
     if [ -z "$web" ]; then
@@ -48,6 +56,8 @@ main() {
         torbrowser) option6 ;;
         yandex) option7 ;;
         falkon) option8 ;;
+        zen) ZenInstall ;;
+        opera) OperaInstall ;;
         *) echo "Неверный выбор" ;;
     esac
 }

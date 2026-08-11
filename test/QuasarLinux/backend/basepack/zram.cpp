@@ -27,9 +27,9 @@ void zram_enable_systemd() {
     const char* zram_systemd_path = "/mnt/etc/systemd/zram-generator.conf";
     ofstream out_zram(zram_systemd_path);
     if (out_zram.is_open()) {
-        out_zram << "[zram0]";
-        out_zram << "zram-size = ram / 2 ";
-        out_zram << "compression-algorithm = zstd";
+        out_zram << "[zram0]\n";
+        out_zram << "zram-size = ram / 2 \n";
+        out_zram << "compression-algorithm = zstd\n";
         out_zram.close();
     } else {
         log("fixme", "zram init error");

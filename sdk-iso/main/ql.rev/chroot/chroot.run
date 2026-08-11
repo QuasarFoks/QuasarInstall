@@ -44,7 +44,7 @@ mount_vfs() {
     mount --bind /dev "$rootdir"/dev
     mount --bind /run "$rootdir"/run
     mount --bind /sys "$rootdir"/sys
-    echo "nameserver 8.8.8.8" >> "$rootdir"/etc/resolv.conf
+    echo "nameserver 9.9.9.9" >> "$rootdir"/etc/resolv.conf
 }
 
 mount_parted() {

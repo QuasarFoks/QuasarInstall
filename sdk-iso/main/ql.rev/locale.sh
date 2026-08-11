@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ========================
-# Список всех 30 локалей
+# 1. Список всех локалей
 # ========================
 LOCALES=(
     "de_DE" "en_US" "es_ES" "fr_FR" "it_IT" "ja_JP" "pt_BR" "ru_RU"
@@ -12,526 +12,209 @@ LOCALES=(
 )
 
 # ========================
-# Базовый английский (оригинал)
-# ========================
-declare -A EN
-EN["Installing base system..."]="Installing base system..."
-EN["Select kernel"]="Select kernel"
-EN["Kernel"]="Kernel"
-EN["Zen kernel (optimized for desktop)"]="Zen kernel (optimized for desktop)"
-EN["LTS kernel (long-term support)"]="LTS kernel (long-term support)"
-EN["Vanilla kernel"]="Vanilla kernel"
-EN["Error"]="Error"
-EN["Unknown choice"]="Unknown choice"
-EN["Operation cancelled"]="Operation cancelled"
-EN["Configuring locale..."]="Configuring locale..."
-EN["Activating services"]="Activating services"
-EN[" added to autostart"]=" added to autostart"
-EN["Reinstalling "]="Reinstalling "
-EN["added to autostart"]="added to autostart"
-EN["Warning: "]="Warning: "
-EN["not found, using default"]="not found, using default"
-EN["Installing branding"]="Installing branding"
-EN["Error: download failed"]="Error: download failed"
-EN["Hash check passed"]="Hash check passed"
-EN["Hash check failed!"]="Hash check failed!"
-EN["Expected: "]="Expected: "
-EN["Got:      "]="Got:      "
-EN["Base installation completed!"]="Base installation completed!"
-EN["Disk detected: "]="Disk detected: "
-EN["Setting up GRUB for UEFI..."]="Setting up GRUB for UEFI..."
-EN["GRUB installed for UEFI"]="GRUB installed for UEFI"
-EN["Setting up EFISTUB..."]="Setting up EFISTUB..."
-EN["Error: kernel not found"]="Error: kernel not found"
-EN["EFISTUB configured"]="EFISTUB configured"
-EN["Setting up rEFInd..."]="Setting up rEFInd..."
-EN["rEFInd installed"]="rEFInd installed"
-EN["UEFI Bootloader Selection"]="UEFI Bootloader Selection"
-EN["Select"]="Select"
-EN["Choose bootloader:"]="Choose bootloader:"
-EN["GRUB"]="GRUB"
-EN["EFISTUB"]="EFISTUB"
-EN["rEFInd"]="rEFInd"
-EN["Setting up GRUB for BIOS..."]="Setting up GRUB for BIOS..."
-EN["GRUB installed for BIOS"]="GRUB installed for BIOS"
-EN["Setting up Syslinux..."]="Setting up Syslinux..."
-EN["Syslinux installed"]="Syslinux installed"
-EN["BIOS Bootloader Selection"]="BIOS Bootloader Selection"
-EN["Syslinux"]="Syslinux"
-EN["Bootloader installation complete!"]="Bootloader installation complete!"
-EN["Quasar-install"]="Quasar-install"
-EN["Select option:"]="Select option:"
-EN["Custom"]="Custom"
-EN["AI prefix"]="AI prefix"
-EN["Gaming prefix"]="Gaming prefix"
-EN["Default prefix"]="Default prefix"
-EN["Express setup"]="Express setup"
-EN["Partitioning"]="Partitioning"
-EN["Install base system"]="Install base system"
-EN["Install packages"]="Install packages"
-EN["User setup"]="User setup"
-EN["Install bootloader"]="Install bootloader"
-EN["Audio"]="Audio"
-EN["Wine"]="Wine"
-EN["Web browser"]="Web browser"
-EN["Region"]="Region"
-EN["Office"]="Office"
-EN["Exit"]="Exit"
-EN["QuasarInstall"]="QuasarInstall"
-EN["QuasarLinux REV"]="QuasarLinux REV"
-EN["QuasarLinux SE"]="QuasarLinux SE"
-EN["Select Region"]="Select Region"
-EN["Choose your geographical region for mirrorlist:"]="Choose your geographical region for mirrorlist:"
-EN["Europe"]="Europe"
-EN["Asia"]="Asia"
-EN["North America"]="North America"
-EN["South America"]="South America"
-EN["Oceania"]="Oceania"
-EN["Global (recommended)"]="Global (recommended)"
-EN["Selection cancelled"]="Selection cancelled"
-EN["Mirrorlist has been configured for selected region!"]="Mirrorlist has been configured for selected region!"
-EN["You can run 'sudo pacman -Syy' to update database."]="You can run 'sudo pacman -Syy' to update database."
-EN["Select a marking type: "]="Select a marking type: "
-EN["Choose disks:"]="Choose disks:"
-EN["single disk"]="single disk"
-EN["multiple disks (beta)"]="multiple disks (beta)"
-EN["Select disk:"]="Select disk:"
-EN["Error: disk %s not found"]="Error: disk %s not found"
-EN["Select disks separated by a space:"]="Select disks separated by a space:"
-EN["Error: disk /dev/%s not found"]="Error: disk /dev/%s not found"
-EN["Enter root partition: "]="Enter root partition: "
-EN["Error: partition %s not found"]="Error: partition %s not found"
-EN["Select filesystem"]="Select filesystem"
-EN["Choose filesystem:"]="Choose filesystem:"
-EN["ext4"]="ext4"
-EN["btrfs"]="btrfs"
-EN["xfs"]="xfs"
-EN["Skipping..."]="Skipping..."
-EN["Enter EFI partition: "]="Enter EFI partition: "
-EN["Formatting EFI partition..."]="Formatting EFI partition..."
-EN["Enter boot partition: "]="Enter boot partition: "
-EN["Formatting boot partition..."]="Formatting boot partition..."
-EN["Saved user "]="Saved user "
-EN[" to "]=" to "
-EN["Select mode"]="Select mode"
-EN["Choose compression mode:"]="Choose compression mode:"
-EN["best compression"]="best compression"
-EN["balanced"]="balanced"
-EN["fast, weaker compression"]="fast, weaker compression"
-EN["Error: "]="Error: "
-EN["is not mounted. Exiting."]="is not mounted. Exiting."
-EN["does not exist!"]="does not exist!"
-EN["Auto-partitioning..."]="Auto-partitioning..."
-EN["Disk size: %s GB"]="Disk size: %s GB"
-EN["Disk is too small (minimum 10 GB required)"]="Disk is too small (minimum 10 GB required)"
-EN["Cleaning partition table..."]="Cleaning partition table..."
-EN["Creating GPT..."]="Creating GPT..."
-EN["Creating MBR..."]="Creating MBR..."
-EN["Creating partitions..."]="Creating partitions..."
-EN["Created partitions:"]="Created partitions:"
-EN["Formatting partitions..."]="Formatting partitions..."
-EN["Formatting root partition..."]="Formatting root partition..."
-EN["Creating swap..."]="Creating swap..."
-EN["Formatting complete!"]="Formatting complete!"
-EN["Mounting partitions..."]="Mounting partitions..."
-EN["Mounting complete!"]="Mounting complete!"
-EN["LUKS encryption setup"]="LUKS encryption setup"
-EN["Select partitioning mode:"]="Select partitioning mode:"
-EN["Choose partitioning mode:"]="Choose partitioning mode:"
-EN["Auto"]="Auto"
-EN["Manual"]="Manual"
-EN["Replace OS"]="Replace OS"
-EN["Auto mode selected"]="Auto mode selected"
-EN["Manual mode selected"]="Manual mode selected"
-EN["Encrypt root partition?"]="Encrypt root partition?"
-EN["Enable LUKS encryption for root partition?"]="Enable LUKS encryption for root partition?"
-EN["Yes"]="Yes"
-EN["No"]="No"
-EN["Enter swap partition: "]="Enter swap partition: "
-EN["Final layout:"]="Final layout:"
-EN["Partitioning complete!"]="Partitioning complete!"
-EN["Exiting..."]="Exiting..."
-EN["Select region:"]="Select region:"
-EN["No matching region found"]="No matching region found"
-EN["Error mounting %s"]="Error mounting %s"
-EN["Filesystems mounted for chroot"]="Filesystems mounted for chroot"
-EN["Filesystems unmounted"]="Filesystems unmounted"
-EN["Adding %s to sudoers"]="Adding %s to sudoers"
-EN["Error: failed to add sudoers entry"]="Error: failed to add sudoers entry"
-EN["Error: failed to set sudoers permissions"]="Error: failed to set sudoers permissions"
-EN["User %s added to sudoers"]="User %s added to sudoers"
-EN["User Setup"]="User Setup"
-EN["Enter username:"]="Enter username:"
-EN["Username cannot be empty!"]="Username cannot be empty!"
-EN["Username cannot be 'root'!"]="Username cannot be 'root'!"
-EN["Creating group %s"]="Creating group %s"
-EN["Creating user %s"]="Creating user %s"
-EN["Error: failed to create user"]="Error: failed to create user"
-EN["Set password for %s:"]="Set password for %s:"
-EN["Confirm password:"]="Confirm password:"
-EN["Password cannot be empty!"]="Password cannot be empty!"
-EN["Passwords do not match! Try again."]="Passwords do not match! Try again."
-EN["Error: failed to set password"]="Error: failed to set password"
-EN["Set root password:"]="Set root password:"
-EN["Confirm root password:"]="Confirm root password:"
-EN["Enabling wheel group in sudoers"]="Enabling wheel group in sudoers"
-EN["Warning: failed to enable wheel group"]="Warning: failed to enable wheel group"
-EN["Done"]="Done"
-EN["User %s created successfully\n\nUser: %s\nRoot password set"]="User %s created successfully\n\nUser: %s\nRoot password set"
-
-# ========================
-# Русский перевод
+# 2. Русский перевод (базовый)
 # ========================
 declare -A RU
-for key in "${!EN[@]}"; do
-    case "$key" in
-        "Installing base system...") RU[$key]="Установка базовой системы..." ;;
-        "Select kernel") RU[$key]="Выберите ядро" ;;
-        "Kernel") RU[$key]="Ядро" ;;
-        "Zen kernel (optimized for desktop)") RU[$key]="Ядро Zen (оптимизировано для десктопа)" ;;
-        "LTS kernel (long-term support)") RU[$key]="Ядро LTS (долгосрочная поддержка)" ;;
-        "Vanilla kernel") RU[$key]="Обычное ядро (Vanilla)" ;;
-        "Error") RU[$key]="Ошибка" ;;
-        "Unknown choice") RU[$key]="Неизвестный выбор" ;;
-        "Operation cancelled") RU[$key]="Операция отменена" ;;
-        "Configuring locale...") RU[$key]="Настройка локали..." ;;
-        "Activating services") RU[$key]="Активация служб" ;;
-        " added to autostart") RU[$key]=" добавлен в автозапуск" ;;
-        "Reinstalling ") RU[$key]="Переустановка " ;;
-        "added to autostart") RU[$key]="добавлен в автозапуск" ;;
-        "Warning: ") RU[$key]="Предупреждение: " ;;
-        "not found, using default") RU[$key]="не найден, используется по умолчанию" ;;
-        "Installing branding") RU[$key]="Установка брендинга" ;;
-        "Error: download failed") RU[$key]="Ошибка: загрузка не удалась" ;;
-        "Hash check passed") RU[$key]="Проверка хеша пройдена" ;;
-        "Hash check failed!") RU[$key]="Проверка хеша не пройдена!" ;;
-        "Expected: ") RU[$key]="Ожидалось: " ;;
-        "Got:      ") RU[$key]="Получено: " ;;
-        "Base installation completed!") RU[$key]="Базовая установка завершена!" ;;
-        "Disk detected: ") RU[$key]="Обнаружен диск: " ;;
-        "Setting up GRUB for UEFI...") RU[$key]="Настройка GRUB для UEFI..." ;;
-        "GRUB installed for UEFI") RU[$key]="GRUB установлен для UEFI" ;;
-        "Setting up EFISTUB...") RU[$key]="Настройка EFISTUB..." ;;
-        "Error: kernel not found") RU[$key]="Ошибка: ядро не найдено" ;;
-        "EFISTUB configured") RU[$key]="EFISTUB настроен" ;;
-        "Setting up rEFInd...") RU[$key]="Настройка rEFInd..." ;;
-        "rEFInd installed") RU[$key]="rEFInd установлен" ;;
-        "UEFI Bootloader Selection") RU[$key]="Выбор загрузчика UEFI" ;;
-        "Select") RU[$key]="Выбрать" ;;
-        "Choose bootloader:") RU[$key]="Выберите загрузчик:" ;;
-        "GRUB") RU[$key]="GRUB" ;;
-        "EFISTUB") RU[$key]="EFISTUB" ;;
-        "rEFInd") RU[$key]="rEFInd" ;;
-        "Setting up GRUB for BIOS...") RU[$key]="Настройка GRUB для BIOS..." ;;
-        "GRUB installed for BIOS") RU[$key]="GRUB установлен для BIOS" ;;
-        "Setting up Syslinux...") RU[$key]="Настройка Syslinux..." ;;
-        "Syslinux installed") RU[$key]="Syslinux установлен" ;;
-        "BIOS Bootloader Selection") RU[$key]="Выбор загрузчика BIOS" ;;
-        "Syslinux") RU[$key]="Syslinux" ;;
-        "Bootloader installation complete!") RU[$key]="Установка загрузчика завершена!" ;;
-        "Quasar-install") RU[$key]="Quasar-install" ;;
-        "Select option:") RU[$key]="Выберите опцию:" ;;
-        "Custom") RU[$key]="Пользовательская" ;;
-        "AI prefix") RU[$key]="Префикс AI" ;;
-        "Gaming prefix") RU[$key]="Игровой префикс" ;;
-        "Default prefix") RU[$key]="Префикс по умолчанию" ;;
-        "Express setup") RU[$key]="Экспресс-установка" ;;
-        "Partitioning") RU[$key]="Разметка диска" ;;
-        "Install base system") RU[$key]="Установка базовой системы" ;;
-        "Install packages") RU[$key]="Установка пакетов" ;;
-        "User setup") RU[$key]="Настройка пользователя" ;;
-        "Install bootloader") RU[$key]="Установка загрузчика" ;;
-        "Audio") RU[$key]="Аудио" ;;
-        "Wine") RU[$key]="Wine" ;;
-        "Web browser") RU[$key]="Веб-браузер" ;;
-        "Region") RU[$key]="Регион" ;;
-        "Office") RU[$key]="Офис" ;;
-        "Exit") RU[$key]="Выход" ;;
-        "QuasarInstall") RU[$key]="QuasarInstall" ;;
-        "QuasarLinux REV") RU[$key]="QuasarLinux REV" ;;
-        "QuasarLinux SE") RU[$key]="QuasarLinux SE" ;;
-        "Select Region") RU[$key]="Выберите регион" ;;
-        "Choose your geographical region for mirrorlist:") RU[$key]="Выберите ваш географический регион для списка зеркал:" ;;
-        "Europe") RU[$key]="Европа" ;;
-        "Asia") RU[$key]="Азия" ;;
-        "North America") RU[$key]="Северная Америка" ;;
-        "South America") RU[$key]="Южная Америка" ;;
-        "Oceania") RU[$key]="Океания" ;;
-        "Global (recommended)") RU[$key]="Глобальный (рекомендуется)" ;;
-        "Selection cancelled") RU[$key]="Выбор отменён" ;;
-        "Mirrorlist has been configured for selected region!") RU[$key]="Список зеркал настроен для выбранного региона!" ;;
-        "You can run 'sudo pacman -Syy' to update database.") RU[$key]="Вы можете выполнить 'sudo pacman -Syy' для обновления базы данных." ;;
-        "Select a marking type: ") RU[$key]="Выберите тип разметки: " ;;
-        "Choose disks:") RU[$key]="Выберите диски:" ;;
-        "single disk") RU[$key]="один диск" ;;
-        "multiple disks (beta)") RU[$key]="несколько дисков (бета)" ;;
-        "Select disk:") RU[$key]="Выберите диск:" ;;
-        "Error: disk %s not found") RU[$key]="Ошибка: диск %s не найден" ;;
-        "Select disks separated by a space:") RU[$key]="Введите диски через пробел:" ;;
-        "Error: disk /dev/%s not found") RU[$key]="Ошибка: диск /dev/%s не найден" ;;
-        "Enter root partition: ") RU[$key]="Введите корневой раздел: " ;;
-        "Error: partition %s not found") RU[$key]="Ошибка: раздел %s не найден" ;;
-        "Select filesystem") RU[$key]="Выберите файловую систему" ;;
-        "Choose filesystem:") RU[$key]="Выберите файловую систему:" ;;
-        "ext4") RU[$key]="ext4" ;;
-        "btrfs") RU[$key]="btrfs" ;;
-        "xfs") RU[$key]="xfs" ;;
-        "Skipping...") RU[$key]="Пропуск..." ;;
-        "Enter EFI partition: ") RU[$key]="Введите раздел EFI: " ;;
-        "Formatting EFI partition...") RU[$key]="Форматирование раздела EFI..." ;;
-        "Enter boot partition: ") RU[$key]="Введите загрузочный раздел: " ;;
-        "Formatting boot partition...") RU[$key]="Форматирование загрузочного раздела..." ;;
-        "Saved user ") RU[$key]="Сохранён пользователь " ;;
-        " to ") RU[$key]=" в " ;;
-        "Select mode") RU[$key]="Выберите режим" ;;
-        "Choose compression mode:") RU[$key]="Выберите режим сжатия:" ;;
-        "best compression") RU[$key]="лучшее сжатие" ;;
-        "balanced") RU[$key]="сбалансированное" ;;
-        "fast, weaker compression") RU[$key]="быстрое, слабое сжатие" ;;
-        "Error: ") RU[$key]="Ошибка: " ;;
-        "is not mounted. Exiting.") RU[$key]="не примонтирован. Выход." ;;
-        "does not exist!") RU[$key]="не существует!" ;;
-        "Auto-partitioning...") RU[$key]="Автоматическая разметка..." ;;
-        "Disk size: %s GB") RU[$key]="Размер диска: %s ГБ" ;;
-        "Disk is too small (minimum 10 GB required)") RU[$key]="Диск слишком мал (требуется минимум 10 ГБ)" ;;
-        "Cleaning partition table...") RU[$key]="Очистка таблицы разделов..." ;;
-        "Creating GPT...") RU[$key]="Создание GPT..." ;;
-        "Creating MBR...") RU[$key]="Создание MBR..." ;;
-        "Creating partitions...") RU[$key]="Создание разделов..." ;;
-        "Created partitions:") RU[$key]="Созданные разделы:" ;;
-        "Formatting partitions...") RU[$key]="Форматирование разделов..." ;;
-        "Formatting root partition...") RU[$key]="Форматирование корневого раздела..." ;;
-        "Creating swap...") RU[$key]="Создание раздела подкачки..." ;;
-        "Formatting complete!") RU[$key]="Форматирование завершено!" ;;
-        "Mounting partitions...") RU[$key]="Монтирование разделов..." ;;
-        "Mounting complete!") RU[$key]="Монтирование завершено!" ;;
-        "LUKS encryption setup") RU[$key]="Настройка шифрования LUKS" ;;
-        "Select partitioning mode:") RU[$key]="Выберите режим разметки:" ;;
-        "Choose partitioning mode:") RU[$key]="Выберите режим разметки:" ;;
-        "Auto") RU[$key]="Автоматически" ;;
-        "Manual") RU[$key]="Вручную" ;;
-        "Replace OS") RU[$key]="Заменить ОС" ;;
-        "Auto mode selected") RU[$key]="Выбран автоматический режим" ;;
-        "Manual mode selected") RU[$key]="Выбран ручной режим" ;;
-        "Encrypt root partition?") RU[$key]="Зашифровать корневой раздел?" ;;
-        "Enable LUKS encryption for root partition?") RU[$key]="Включить шифрование LUKS для корневого раздела?" ;;
-        "Yes") RU[$key]="Да" ;;
-        "No") RU[$key]="Нет" ;;
-        "Enter swap partition: ") RU[$key]="Введите раздел подкачки: " ;;
-        "Final layout:") RU[$key]="Итоговая разметка:" ;;
-        "Partitioning complete!") RU[$key]="Разметка завершена!" ;;
-        "Exiting...") RU[$key]="Выход..." ;;
-        "Select region:") RU[$key]="Выберите регион:" ;;
-        "No matching region found") RU[$key]="Совпадающий регион не найден" ;;
-        "Error mounting %s") RU[$key]="Ошибка монтирования %s" ;;
-        "Filesystems mounted for chroot") RU[$key]="Файловые системы примонтированы для chroot" ;;
-        "Filesystems unmounted") RU[$key]="Файловые системы отмонтированы" ;;
-        "Adding %s to sudoers") RU[$key]="Добавление %s в sudoers" ;;
-        "Error: failed to add sudoers entry") RU[$key]="Ошибка: не удалось добавить запись в sudoers" ;;
-        "Error: failed to set sudoers permissions") RU[$key]="Ошибка: не удалось установить права для sudoers" ;;
-        "User %s added to sudoers") RU[$key]="Пользователь %s добавлен в sudoers" ;;
-        "User Setup") RU[$key]="Настройка пользователя" ;;
-        "Enter username:") RU[$key]="Введите имя пользователя:" ;;
-        "Username cannot be empty!") RU[$key]="Имя пользователя не может быть пустым!" ;;
-        "Username cannot be 'root'!") RU[$key]="Имя пользователя не может быть 'root'!" ;;
-        "Creating group %s") RU[$key]="Создание группы %s" ;;
-        "Creating user %s") RU[$key]="Создание пользователя %s" ;;
-        "Error: failed to create user") RU[$key]="Ошибка: не удалось создать пользователя" ;;
-        "Set password for %s:") RU[$key]="Установите пароль для %s:" ;;
-        "Confirm password:") RU[$key]="Подтвердите пароль:" ;;
-        "Password cannot be empty!") RU[$key]="Пароль не может быть пустым!" ;;
-        "Passwords do not match! Try again.") RU[$key]="Пароли не совпадают! Попробуйте снова." ;;
-        "Error: failed to set password") RU[$key]="Ошибка: не удалось установить пароль" ;;
-        "Set root password:") RU[$key]="Установите пароль root:" ;;
-        "Confirm root password:") RU[$key]="Подтвердите пароль root:" ;;
-        "Enabling wheel group in sudoers") RU[$key]="Включение группы wheel в sudoers" ;;
-        "Warning: failed to enable wheel group") RU[$key]="Предупреждение: не удалось включить группу wheel" ;;
-        "Done") RU[$key]="Готово" ;;
-        "User %s created successfully\n\nUser: %s\nRoot password set") RU[$key]="Пользователь %s успешно создан\n\nПользователь: %s\nПароль root установлен" ;;
-        *) RU[$key]="${EN[$key]}" ;;
-    esac
-done
+RU["Installing base system..."]="Установка базовой системы..."
+RU["Select kernel"]="Выберите ядро"
+RU["Kernel"]="Ядро"
+RU["Zen kernel (optimized for desktop)"]="Ядро Zen (оптимизировано для десктопа)"
+RU["LTS kernel (long-term support)"]="Ядро LTS (долгосрочная поддержка)"
+RU["Vanilla kernel"]="Обычное ядро (Vanilla)"
+RU["Error"]="Ошибка"
+RU["Unknown choice"]="Неизвестный выбор"
+RU["Operation cancelled"]="Операция отменена"
+RU["Configuring locale..."]="Настройка локали..."
+RU["Activating services"]="Активация служб"
+RU[" added to autostart"]=" добавлен в автозапуск"
+RU["Reinstalling "]="Переустановка "
+RU["added to autostart"]="добавлен в автозапуск"
+RU["Warning: "]="Предупреждение: "
+RU["not found, using default"]="не найден, используется по умолчанию"
+RU["Installing branding"]="Установка брендинга"
+RU["Error: download failed"]="Ошибка: загрузка не удалась"
+RU["Hash check passed"]="Проверка хеша пройдена"
+RU["Hash check failed!"]="Проверка хеша не пройдена!"
+RU["Expected: "]="Ожидалось: "
+RU["Got:      "]="Получено: "
+RU["Base installation completed!"]="Базовая установка завершена!"
+RU["Disk detected: "]="Обнаружен диск: "
+RU["Setting up GRUB for UEFI..."]="Настройка GRUB для UEFI..."
+RU["GRUB installed for UEFI"]="GRUB установлен для UEFI"
+RU["Setting up EFISTUB..."]="Настройка EFISTUB..."
+RU["Error: kernel not found"]="Ошибка: ядро не найдено"
+RU["EFISTUB configured"]="EFISTUB настроен"
+RU["Setting up rEFInd..."]="Настройка rEFInd..."
+RU["rEFInd installed"]="rEFInd установлен"
+RU["UEFI Bootloader Selection"]="Выбор загрузчика UEFI"
+RU["Select"]="Выбрать"
+RU["Choose bootloader:"]="Выберите загрузчик:"
+RU["GRUB"]="GRUB"
+RU["EFISTUB"]="EFISTUB"
+RU["rEFInd"]="rEFInd"
+RU["Setting up GRUB for BIOS..."]="Настройка GRUB для BIOS..."
+RU["GRUB installed for BIOS"]="GRUB установлен для BIOS"
+RU["Setting up Syslinux..."]="Настройка Syslinux..."
+RU["Syslinux installed"]="Syslinux установлен"
+RU["BIOS Bootloader Selection"]="Выбор загрузчика BIOS"
+RU["Syslinux"]="Syslinux"
+RU["Bootloader installation complete!"]="Установка загрузчика завершена!"
+RU["Quasar-install"]="Quasar-install"
+RU["Select option:"]="Выберите опцию:"
+RU["Custom"]="Пользовательская"
+RU["AI prefix"]="Префикс AI"
+RU["Gaming prefix"]="Игровой префикс"
+RU["Default prefix"]="Префикс по умолчанию"
+RU["Express setup"]="Экспресс-установка"
+RU["Partitioning"]="Разметка диска"
+RU["Install base system"]="Установка базовой системы"
+RU["Install packages"]="Установка пакетов"
+RU["User setup"]="Настройка пользователя"
+RU["Install bootloader"]="Установка загрузчика"
+RU["Audio"]="Аудио"
+RU["Wine"]="Wine"
+RU["Web browser"]="Веб-браузер"
+RU["Region"]="Регион"
+RU["Office"]="Офис"
+RU["Exit"]="Выход"
+RU["QuasarInstall"]="QuasarInstall"
+RU["QuasarLinux REV"]="QuasarLinux REV"
+RU["QuasarLinux SE"]="QuasarLinux SE"
+RU["Select Region"]="Выберите регион"
+RU["Choose your geographical region for mirrorlist:"]="Выберите ваш географический регион для списка зеркал:"
+RU["Europe"]="Европа"
+RU["Asia"]="Азия"
+RU["North America"]="Северная Америка"
+RU["South America"]="Южная Америка"
+RU["Oceania"]="Океания"
+RU["Global (recommended)"]="Глобальный (рекомендуется)"
+RU["Selection cancelled"]="Выбор отменён"
+RU["Mirrorlist has been configured for selected region!"]="Список зеркал настроен для выбранного региона!"
+RU["You can run 'sudo pacman -Syy' to update database."]="Вы можете выполнить 'sudo pacman -Syy' для обновления базы данных."
+RU["Select a marking type: "]="Выберите тип разметки: "
+RU["Choose disks:"]="Выберите диски:"
+RU["single disk"]="один диск"
+RU["multiple disks (beta)"]="несколько дисков (бета)"
+RU["Select disk:"]="Выберите диск:"
+RU["Error: disk %s not found"]="Ошибка: диск %s не найден"
+RU["Select disks separated by a space:"]="Введите диски через пробел:"
+RU["Error: disk /dev/%s not found"]="Ошибка: диск /dev/%s не найден"
+RU["Enter root partition: "]="Введите корневой раздел: "
+RU["Error: partition %s not found"]="Ошибка: раздел %s не найден"
+RU["Select filesystem"]="Выберите файловую систему"
+RU["Choose filesystem:"]="Выберите файловую систему:"
+RU["ext4"]="ext4"
+RU["btrfs"]="btrfs"
+RU["xfs"]="xfs"
+RU["Skipping..."]="Пропуск..."
+RU["Enter EFI partition: "]="Введите раздел EFI: "
+RU["Formatting EFI partition..."]="Форматирование раздела EFI..."
+RU["Enter boot partition: "]="Введите загрузочный раздел: "
+RU["Formatting boot partition..."]="Форматирование загрузочного раздела..."
+RU["Saved user "]="Сохранён пользователь "
+RU[" to "]=" в "
+RU["Select mode"]="Выберите режим"
+RU["Choose compression mode:"]="Выберите режим сжатия:"
+RU["best compression"]="лучшее сжатие"
+RU["balanced"]="сбалансированное"
+RU["fast, weaker compression"]="быстрое, слабое сжатие"
+RU["Error: "]="Ошибка: "
+RU["is not mounted. Exiting."]="не примонтирован. Выход."
+RU["does not exist!"]="не существует!"
+RU["Auto-partitioning..."]="Автоматическая разметка..."
+RU["Disk size: %s GB"]="Размер диска: %s ГБ"
+RU["Disk is too small (minimum 10 GB required)"]="Диск слишком мал (требуется минимум 10 ГБ)"
+RU["Cleaning partition table..."]="Очистка таблицы разделов..."
+RU["Creating GPT..."]="Создание GPT..."
+RU["Creating MBR..."]="Создание MBR..."
+RU["Creating partitions..."]="Создание разделов..."
+RU["Created partitions:"]="Созданные разделы:"
+RU["Formatting partitions..."]="Форматирование разделов..."
+RU["Formatting root partition..."]="Форматирование корневого раздела..."
+RU["Creating swap..."]="Создание раздела подкачки..."
+RU["Formatting complete!"]="Форматирование завершено!"
+RU["Mounting partitions..."]="Монтирование разделов..."
+RU["Mounting complete!"]="Монтирование завершено!"
+RU["LUKS encryption setup"]="Настройка шифрования LUKS"
+RU["Select partitioning mode:"]="Выберите режим разметки:"
+RU["Choose partitioning mode:"]="Выберите режим разметки:"
+RU["Auto"]="Автоматически"
+RU["Manual"]="Вручную"
+RU["Replace OS"]="Заменить ОС"
+RU["Auto mode selected"]="Выбран автоматический режим"
+RU["Manual mode selected"]="Выбран ручной режим"
+RU["Encrypt root partition?"]="Зашифровать корневой раздел?"
+RU["Enable LUKS encryption for root partition?"]="Включить шифрование LUKS для корневого раздела?"
+RU["Yes"]="Да"
+RU["No"]="Нет"
+RU["Enter swap partition: "]="Введите раздел подкачки: "
+RU["Final layout:"]="Итоговая разметка:"
+RU["Partitioning complete!"]="Разметка завершена!"
+RU["Exiting..."]="Выход..."
+RU["Select region:"]="Выберите регион:"
+RU["No matching region found"]="Совпадающий регион не найден"
+RU["Error mounting %s"]="Ошибка монтирования %s"
+RU["Filesystems mounted for chroot"]="Файловые системы примонтированы для chroot"
+RU["Filesystems unmounted"]="Файловые системы отмонтированы"
+RU["Adding %s to sudoers"]="Добавление %s в sudoers"
+RU["Error: failed to add sudoers entry"]="Ошибка: не удалось добавить запись в sudoers"
+RU["Error: failed to set sudoers permissions"]="Ошибка: не удалось установить права для sudoers"
+RU["User %s added to sudoers"]="Пользователь %s добавлен в sudoers"
+RU["User Setup"]="Настройка пользователя"
+RU["Enter username:"]="Введите имя пользователя:"
+RU["Username cannot be empty!"]="Имя пользователя не может быть пустым!"
+RU["Username cannot be 'root'!"]="Имя пользователя не может быть 'root'!"
+RU["Creating group %s"]="Создание группы %s"
+RU["Creating user %s"]="Создание пользователя %s"
+RU["Error: failed to create user"]="Ошибка: не удалось создать пользователя"
+RU["Set password for %s:"]="Установите пароль для %s:"
+RU["Confirm password:"]="Подтвердите пароль:"
+RU["Password cannot be empty!"]="Пароль не может быть пустым!"
+RU["Passwords do not match! Try again."]="Пароли не совпадают! Попробуйте снова."
+RU["Error: failed to set password"]="Ошибка: не удалось установить пароль"
+RU["Set root password:"]="Установите пароль root:"
+RU["Confirm root password:"]="Подтвердите пароль root:"
+RU["Enabling wheel group in sudoers"]="Включение группы wheel в sudoers"
+RU["Warning: failed to enable wheel group"]="Предупреждение: не удалось включить группу wheel"
+RU["Done"]="Готово"
+RU["User %s created successfully\n\nUser: %s\nRoot password set"]="Пользователь %s успешно создан\n\nПользователь: %s\nПароль root установлен"
+
 
 # ========================
-# Румынский перевод
-# ========================
-declare -A RO
-for key in "${!EN[@]}"; do
-    case "$key" in
-        "Installing base system...") RO[$key]="Instalare sistem de bază..." ;;
-        "Select kernel") RO[$key]="Selectați kernel-ul" ;;
-        "Kernel") RO[$key]="Kernel" ;;
-        "Zen kernel (optimized for desktop)") RO[$key]="Kernel Zen (optimizat pentru desktop)" ;;
-        "LTS kernel (long-term support)") RO[$key]="Kernel LTS (suport pe termen lung)" ;;
-        "Vanilla kernel") RO[$key]="Kernel Vanilla" ;;
-        "Error") RO[$key]="Eroare" ;;
-        "Unknown choice") RO[$key]="Alegere necunoscută" ;;
-        "Operation cancelled") RO[$key]="Operație anulată" ;;
-        "Configuring locale...") RO[$key]="Configurare localizare..." ;;
-        "Activating services") RO[$key]="Activare servicii" ;;
-        " added to autostart") RO[$key]=" adăugat la autostart" ;;
-        "Reinstalling ") RO[$key]="Reinstalare " ;;
-        "added to autostart") RO[$key]="adăugat la autostart" ;;
-        "Warning: ") RO[$key]="Avertisment: " ;;
-        "not found, using default") RO[$key]="nu a fost găsit, se utilizează implicit" ;;
-        "Installing branding") RO[$key]="Instalare branding" ;;
-        "Error: download failed") RO[$key]="Eroare: descărcare eșuată" ;;
-        "Hash check passed") RO[$key]="Verificare hash reușită" ;;
-        "Hash check failed!") RO[$key]="Verificare hash eșuată!" ;;
-        "Expected: ") RO[$key]="Așteptat: " ;;
-        "Got:      ") RO[$key]="Obținut: " ;;
-        "Base installation completed!") RO[$key]="Instalare de bază finalizată!" ;;
-        "Disk detected: ") RO[$key]="Disc detectat: " ;;
-        "Setting up GRUB for UEFI...") RO[$key]="Configurare GRUB pentru UEFI..." ;;
-        "GRUB installed for UEFI") RO[$key]="GRUB instalat pentru UEFI" ;;
-        "Setting up EFISTUB...") RO[$key]="Configurare EFISTUB..." ;;
-        "Error: kernel not found") RO[$key]="Eroare: kernel-ul nu a fost găsit" ;;
-        "EFISTUB configured") RO[$key]="EFISTUB configurat" ;;
-        "Setting up rEFInd...") RO[$key]="Configurare rEFInd..." ;;
-        "rEFInd installed") RO[$key]="rEFInd instalat" ;;
-        "UEFI Bootloader Selection") RO[$key]="Selecție încărcător de pornire UEFI" ;;
-        "Select") RO[$key]="Selectează" ;;
-        "Choose bootloader:") RO[$key]="Alege încărcătorul de pornire:" ;;
-        "GRUB") RO[$key]="GRUB" ;;
-        "EFISTUB") RO[$key]="EFISTUB" ;;
-        "rEFInd") RO[$key]="rEFInd" ;;
-        "Setting up GRUB for BIOS...") RO[$key]="Configurare GRUB pentru BIOS..." ;;
-        "GRUB installed for BIOS") RO[$key]="GRUB instalat pentru BIOS" ;;
-        "Setting up Syslinux...") RO[$key]="Configurare Syslinux..." ;;
-        "Syslinux installed") RO[$key]="Syslinux instalat" ;;
-        "BIOS Bootloader Selection") RO[$key]="Selecție încărcător de pornire BIOS" ;;
-        "Syslinux") RO[$key]="Syslinux" ;;
-        "Bootloader installation complete!") RO[$key]="Instalare încărcător de pornire finalizată!" ;;
-        "Quasar-install") RO[$key]="Instalare Quasar" ;;
-        "Select option:") RO[$key]="Selectează opțiunea:" ;;
-        "Custom") RO[$key]="Personalizat" ;;
-        "AI prefix") RO[$key]="Prefix AI" ;;
-        "Gaming prefix") RO[$key]="Prefix Gaming" ;;
-        "Default prefix") RO[$key]="Prefix implicit" ;;
-        "Express setup") RO[$key]="Configurare expres" ;;
-        "Partitioning") RO[$key]="Partiționare" ;;
-        "Install base system") RO[$key]="Instalează sistemul de bază" ;;
-        "Install packages") RO[$key]="Instalează pachete" ;;
-        "User setup") RO[$key]="Configurare utilizator" ;;
-        "Install bootloader") RO[$key]="Instalează încărcătorul de pornire" ;;
-        "Audio") RO[$key]="Audio" ;;
-        "Wine") RO[$key]="Wine" ;;
-        "Web browser") RO[$key]="Browser web" ;;
-        "Region") RO[$key]="Regiune" ;;
-        "Office") RO[$key]="Birou" ;;
-        "Exit") RO[$key]="Ieșire" ;;
-        "QuasarInstall") RO[$key]="QuasarInstall" ;;
-        "QuasarLinux REV") RO[$key]="QuasarLinux REV" ;;
-        "QuasarLinux SE") RO[$key]="QuasarLinux SE" ;;
-        "Select Region") RO[$key]="Selectează regiunea" ;;
-        "Choose your geographical region for mirrorlist:") RO[$key]="Alege regiunea ta geografică pentru lista de oglinzi:" ;;
-        "Europe") RO[$key]="Europa" ;;
-        "Asia") RO[$key]="Asia" ;;
-        "North America") RO[$key]="America de Nord" ;;
-        "South America") RO[$key]="America de Sud" ;;
-        "Oceania") RO[$key]="Oceania" ;;
-        "Global (recommended)") RO[$key]="Global (recomandat)" ;;
-        "Selection cancelled") RO[$key]="Selecție anulată" ;;
-        "Mirrorlist has been configured for selected region!") RO[$key]="Lista de oglinzi a fost configurată pentru regiunea selectată!" ;;
-        "You can run 'sudo pacman -Syy' to update database.") RO[$key]="Poți rula 'sudo pacman -Syy' pentru a actualiza baza de date." ;;
-        "Select a marking type: ") RO[$key]="Selectează un tip de marcare: " ;;
-        "Choose disks:") RO[$key]="Alege discurile:" ;;
-        "single disk") RO[$key]="disc unic" ;;
-        "multiple disks (beta)") RO[$key]="discuri multiple (beta)" ;;
-        "Select disk:") RO[$key]="Selectează discul:" ;;
-        "Error: disk %s not found") RO[$key]="Eroare: discul %s nu a fost găsit" ;;
-        "Select disks separated by a space:") RO[$key]="Introduceți discurile separate printr-un spațiu:" ;;
-        "Error: disk /dev/%s not found") RO[$key]="Eroare: discul /dev/%s nu a fost găsit" ;;
-        "Enter root partition: ") RO[$key]="Introduceți partiția rădăcină: " ;;
-        "Error: partition %s not found") RO[$key]="Eroare: partiția %s nu a fost găsită" ;;
-        "Select filesystem") RO[$key]="Selectează sistemul de fișiere" ;;
-        "Choose filesystem:") RO[$key]="Alege sistemul de fișiere:" ;;
-        "ext4") RO[$key]="ext4" ;;
-        "btrfs") RO[$key]="btrfs" ;;
-        "xfs") RO[$key]="xfs" ;;
-        "Skipping...") RO[$key]="Se sare..." ;;
-        "Enter EFI partition: ") RO[$key]="Introduceți partiția EFI: " ;;
-        "Formatting EFI partition...") RO[$key]="Formatare partiție EFI..." ;;
-        "Enter boot partition: ") RO[$key]="Introduceți partiția de pornire: " ;;
-        "Formatting boot partition...") RO[$key]="Formatare partiție de pornire..." ;;
-        "Saved user ") RO[$key]="Utilizator salvat " ;;
-        " to ") RO[$key]=" în " ;;
-        "Select mode") RO[$key]="Selectează modul" ;;
-        "Choose compression mode:") RO[$key]="Alege modul de compresie:" ;;
-        "best compression") RO[$key]="cea mai bună compresie" ;;
-        "balanced") RO[$key]="echilibrat" ;;
-        "fast, weaker compression") RO[$key]="rapid, compresie mai slabă" ;;
-        "Error: ") RO[$key]="Eroare: " ;;
-        "is not mounted. Exiting.") RO[$key]="nu este montat. Se iese." ;;
-        "does not exist!") RO[$key]="nu există!" ;;
-        "Auto-partitioning...") RO[$key]="Partiționare automată..." ;;
-        "Disk size: %s GB") RO[$key]="Dimensiune disc: %s GB" ;;
-        "Disk is too small (minimum 10 GB required)") RO[$key]="Discul este prea mic (sunt necesari minim 10 GB)" ;;
-        "Cleaning partition table...") RO[$key]="Curățare tabel de partiții..." ;;
-        "Creating GPT...") RO[$key]="Creare GPT..." ;;
-        "Creating MBR...") RO[$key]="Creare MBR..." ;;
-        "Creating partitions...") RO[$key]="Creare partiții..." ;;
-        "Created partitions:") RO[$key]="Partiții create:" ;;
-        "Formatting partitions...") RO[$key]="Formatare partiții..." ;;
-        "Formatting root partition...") RO[$key]="Formatare partiție rădăcină..." ;;
-        "Creating swap...") RO[$key]="Creare swap..." ;;
-        "Formatting complete!") RO[$key]="Formatare finalizată!" ;;
-        "Mounting partitions...") RO[$key]="Montare partiții..." ;;
-        "Mounting complete!") RO[$key]="Montare finalizată!" ;;
-        "LUKS encryption setup") RO[$key]="Configurare criptare LUKS" ;;
-        "Select partitioning mode:") RO[$key]="Selectează modul de partiționare:" ;;
-        "Choose partitioning mode:") RO[$key]="Alege modul de partiționare:" ;;
-        "Auto") RO[$key]="Automat" ;;
-        "Manual") RO[$key]="Manual" ;;
-        "Replace OS") RO[$key]="Înlocuiește SO" ;;
-        "Auto mode selected") RO[$key]="Modul automat selectat" ;;
-        "Manual mode selected") RO[$key]="Modul manual selectat" ;;
-        "Encrypt root partition?") RO[$key]="Criptezi partiția rădăcină?" ;;
-        "Enable LUKS encryption for root partition?") RO[$key]="Activezi criptarea LUKS pentru partiția rădăcină?" ;;
-        "Yes") RO[$key]="Da" ;;
-        "No") RO[$key]="Nu" ;;
-        "Enter swap partition: ") RO[$key]="Introduceți partiția swap: " ;;
-        "Final layout:") RO[$key]="Aspect final:" ;;
-        "Partitioning complete!") RO[$key]="Partiționare finalizată!" ;;
-        "Exiting...") RO[$key]="Se iese..." ;;
-        "Select region:") RO[$key]="Selectează regiunea:" ;;
-        "No matching region found") RO[$key]="Nu s-a găsit nicio regiune corespunzătoare" ;;
-        "Error mounting %s") RO[$key]="Eroare la montarea %s" ;;
-        "Filesystems mounted for chroot") RO[$key]="Sisteme de fișiere montate pentru chroot" ;;
-        "Filesystems unmounted") RO[$key]="Sisteme de fișiere demontate" ;;
-        "Adding %s to sudoers") RO[$key]="Adăugare %s în sudoers" ;;
-        "Error: failed to add sudoers entry") RO[$key]="Eroare: nu s-a putut adăuga intrarea sudoers" ;;
-        "Error: failed to set sudoers permissions") RO[$key]="Eroare: nu s-au putut seta permisiunile sudoers" ;;
-        "User %s added to sudoers") RO[$key]="Utilizatorul %s a fost adăugat în sudoers" ;;
-        "User Setup") RO[$key]="Configurare utilizator" ;;
-        "Enter username:") RO[$key]="Introduceți numele de utilizator:" ;;
-        "Username cannot be empty!") RO[$key]="Numele de utilizator nu poate fi gol!" ;;
-        "Username cannot be 'root'!") RO[$key]="Numele de utilizator nu poate fi 'root'!" ;;
-        "Creating group %s") RO[$key]="Creare grup %s" ;;
-        "Creating user %s") RO[$key]="Creare utilizator %s" ;;
-        "Error: failed to create user") RO[$key]="Eroare: nu s-a putut crea utilizatorul" ;;
-        "Set password for %s:") RO[$key]="Setează parola pentru %s:" ;;
-        "Confirm password:") RO[$key]="Confirmă parola:" ;;
-        "Password cannot be empty!") RO[$key]="Parola nu poate fi goală!" ;;
-        "Passwords do not match! Try again.") RO[$key]="Parolele nu se potrivesc! Încearcă din nou." ;;
-        "Error: failed to set password") RO[$key]="Eroare: nu s-a putut seta parola" ;;
-        "Set root password:") RO[$key]="Setează parola root:" ;;
-        "Confirm root password:") RO[$key]="Confirmă parola root:" ;;
-        "Enabling wheel group in sudoers") RO[$key]="Activare grup wheel în sudoers" ;;
-        "Warning: failed to enable wheel group") RO[$key]="Avertisment: nu s-a putut activa grupul wheel" ;;
-        "Done") RO[$key]="Gata" ;;
-        "User %s created successfully\n\nUser: %s\nRoot password set") RO[$key]="Utilizatorul %s a fost creat cu succes\n\nUtilizator: %s\nParola root a fost setată" ;;
-        *) RO[$key]="${EN[$key]}" ;;
-    esac
-done
-
-# ========================
-# Немецкий перевод
+# 3. Шаблонные переводы для остальных языков
 # ========================
 declare -A DE
-for key in "${!EN[@]}"; do
+declare -A ES
+declare -A FR
+declare -A IT
+declare -A JA
+declare -A PT
+declare -A TR
+declare -A ZH
+declare -A AR
+declare -A NL
+declare -A KO
+declare -A PL
+declare -A UK
+declare -A CS
+declare -A EL
+declare -A HU
+declare -A SV
+declare -A FI
+declare -A ID
+declare -A VI
+declare -A RO
+declare -A BG
+declare -A SK
+declare -A HR
+declare -A SR
+declare -A CA
+declare -A NO
+declare -A DA
+
+# Немецкий (DE)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") DE[$key]="Basis-System wird installiert..." ;;
         "Select kernel") DE[$key]="Kernel auswählen" ;;
         "Kernel") DE[$key]="Kernel" ;;
         "Zen kernel (optimized for desktop)") DE[$key]="Zen-Kernel (für Desktop optimiert)" ;;
@@ -540,6 +223,7 @@ for key in "${!EN[@]}"; do
         "Error") DE[$key]="Fehler" ;;
         "Unknown choice") DE[$key]="Unbekannte Auswahl" ;;
         "Operation cancelled") DE[$key]="Vorgang abgebrochen" ;;
+        "Installing base system...") DE[$key]="Basis-System wird installiert..." ;;
         "Configuring locale...") DE[$key]="Locale wird konfiguriert..." ;;
         "Activating services") DE[$key]="Dienste werden aktiviert" ;;
         " added to autostart") DE[$key]=" zum Autostart hinzugefügt" ;;
@@ -694,17 +378,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") DE[$key]="Warnung: Wheel-Gruppe konnte nicht aktiviert werden" ;;
         "Done") DE[$key]="Fertig" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") DE[$key]="Benutzer %s erfolgreich erstellt\n\nBenutzer: %s\nRoot-Passwort festgelegt" ;;
-        *) DE[$key]="${EN[$key]}" ;;
+        *) DE[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Испанский перевод
-# ========================
-declare -A ES
-for key in "${!EN[@]}"; do
+# Испанский (ES)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") ES[$key]="Instalando sistema base..." ;;
         "Select kernel") ES[$key]="Seleccionar kernel" ;;
         "Kernel") ES[$key]="Kernel" ;;
         "Zen kernel (optimized for desktop)") ES[$key]="Kernel Zen (optimizado para escritorio)" ;;
@@ -713,6 +393,7 @@ for key in "${!EN[@]}"; do
         "Error") ES[$key]="Error" ;;
         "Unknown choice") ES[$key]="Opción desconocida" ;;
         "Operation cancelled") ES[$key]="Operación cancelada" ;;
+        "Installing base system...") ES[$key]="Instalando sistema base..." ;;
         "Configuring locale...") ES[$key]="Configurando locale..." ;;
         "Activating services") ES[$key]="Activando servicios" ;;
         " added to autostart") ES[$key]=" añadido al inicio automático" ;;
@@ -867,17 +548,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") ES[$key]="Advertencia: no se pudo habilitar el grupo wheel" ;;
         "Done") ES[$key]="Hecho" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") ES[$key]="Usuario %s creado exitosamente\n\nUsuario: %s\nContraseña de root establecida" ;;
-        *) ES[$key]="${EN[$key]}" ;;
+        *) ES[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Французский перевод
-# ========================
-declare -A FR
-for key in "${!EN[@]}"; do
+# Французский (FR)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") FR[$key]="Installation du système de base..." ;;
         "Select kernel") FR[$key]="Sélectionner le noyau" ;;
         "Kernel") FR[$key]="Noyau" ;;
         "Zen kernel (optimized for desktop)") FR[$key]="Noyau Zen (optimisé pour le bureau)" ;;
@@ -886,6 +563,7 @@ for key in "${!EN[@]}"; do
         "Error") FR[$key]="Erreur" ;;
         "Unknown choice") FR[$key]="Choix inconnu" ;;
         "Operation cancelled") FR[$key]="Opération annulée" ;;
+        "Installing base system...") FR[$key]="Installation du système de base..." ;;
         "Configuring locale...") FR[$key]="Configuration de la locale..." ;;
         "Activating services") FR[$key]="Activation des services" ;;
         " added to autostart") FR[$key]=" ajouté au démarrage automatique" ;;
@@ -1040,17 +718,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") FR[$key]="Avertissement : échec de l'activation du groupe wheel" ;;
         "Done") FR[$key]="Terminé" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") FR[$key]="Utilisateur %s créé avec succès\n\nUtilisateur : %s\nMot de passe root défini" ;;
-        *) FR[$key]="${EN[$key]}" ;;
+        *) FR[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Итальянский перевод
-# ========================
-declare -A IT
-for key in "${!EN[@]}"; do
+# Итальянский (IT)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") IT[$key]="Installazione del sistema di base..." ;;
         "Select kernel") IT[$key]="Seleziona kernel" ;;
         "Kernel") IT[$key]="Kernel" ;;
         "Zen kernel (optimized for desktop)") IT[$key]="Kernel Zen (ottimizzato per desktop)" ;;
@@ -1059,6 +733,7 @@ for key in "${!EN[@]}"; do
         "Error") IT[$key]="Errore" ;;
         "Unknown choice") IT[$key]="Scelta sconosciuta" ;;
         "Operation cancelled") IT[$key]="Operazione annullata" ;;
+        "Installing base system...") IT[$key]="Installazione del sistema di base..." ;;
         "Configuring locale...") IT[$key]="Configurazione locale..." ;;
         "Activating services") IT[$key]="Attivazione servizi" ;;
         " added to autostart") IT[$key]=" aggiunto all'avvio automatico" ;;
@@ -1213,17 +888,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") IT[$key]="Avviso: impossibile abilitare il gruppo wheel" ;;
         "Done") IT[$key]="Fatto" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") IT[$key]="Utente %s creato con successo\n\nUtente: %s\nPassword root impostata" ;;
-        *) IT[$key]="${EN[$key]}" ;;
+        *) IT[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Японский перевод
-# ========================
-declare -A JA
-for key in "${!EN[@]}"; do
+# Японский (JA) — упрощённо
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") JA[$key]="ベースシステムをインストール中..." ;;
         "Select kernel") JA[$key]="カーネルを選択" ;;
         "Kernel") JA[$key]="カーネル" ;;
         "Zen kernel (optimized for desktop)") JA[$key]="Zenカーネル (デスクトップ最適化)" ;;
@@ -1232,6 +903,7 @@ for key in "${!EN[@]}"; do
         "Error") JA[$key]="エラー" ;;
         "Unknown choice") JA[$key]="不明な選択" ;;
         "Operation cancelled") JA[$key]="操作がキャンセルされました" ;;
+        "Installing base system...") JA[$key]="ベースシステムをインストール中..." ;;
         "Configuring locale...") JA[$key]="ロケールを設定中..." ;;
         "Activating services") JA[$key]="サービスをアクティブ化中" ;;
         " added to autostart") JA[$key]=" 自動起動に追加されました" ;;
@@ -1386,17 +1058,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") JA[$key]="警告: wheelグループの有効化に失敗しました" ;;
         "Done") JA[$key]="完了" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") JA[$key]="ユーザー %s が正常に作成されました\n\nユーザー: %s\nrootパスワードが設定されました" ;;
-        *) JA[$key]="${EN[$key]}" ;;
+        *) JA[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Португальский перевод
-# ========================
-declare -A PT
-for key in "${!EN[@]}"; do
+# Португальский (PT)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") PT[$key]="Instalando sistema base..." ;;
         "Select kernel") PT[$key]="Selecionar kernel" ;;
         "Kernel") PT[$key]="Kernel" ;;
         "Zen kernel (optimized for desktop)") PT[$key]="Kernel Zen (otimizado para desktop)" ;;
@@ -1405,6 +1073,7 @@ for key in "${!EN[@]}"; do
         "Error") PT[$key]="Erro" ;;
         "Unknown choice") PT[$key]="Escolha desconhecida" ;;
         "Operation cancelled") PT[$key]="Operação cancelada" ;;
+        "Installing base system...") PT[$key]="Instalando sistema base..." ;;
         "Configuring locale...") PT[$key]="Configurando locale..." ;;
         "Activating services") PT[$key]="Ativando serviços" ;;
         " added to autostart") PT[$key]=" adicionado ao início automático" ;;
@@ -1559,17 +1228,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") PT[$key]="Aviso: falha ao habilitar o grupo wheel" ;;
         "Done") PT[$key]="Concluído" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") PT[$key]="Usuário %s criado com sucesso\n\nUsuário: %s\nSenha root definida" ;;
-        *) PT[$key]="${EN[$key]}" ;;
+        *) PT[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Турецкий перевод
-# ========================
-declare -A TR
-for key in "${!EN[@]}"; do
+# Турецкий (TR)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") TR[$key]="Temel sistem kuruluyor..." ;;
         "Select kernel") TR[$key]="Çekirdek seç" ;;
         "Kernel") TR[$key]="Çekirdek" ;;
         "Zen kernel (optimized for desktop)") TR[$key]="Zen çekirdek (masaüstü için optimize edilmiş)" ;;
@@ -1578,6 +1243,7 @@ for key in "${!EN[@]}"; do
         "Error") TR[$key]="Hata" ;;
         "Unknown choice") TR[$key]="Bilinmeyen seçim" ;;
         "Operation cancelled") TR[$key]="İşlem iptal edildi" ;;
+        "Installing base system...") TR[$key]="Temel sistem kuruluyor..." ;;
         "Configuring locale...") TR[$key]="Yerel ayarlar yapılandırılıyor..." ;;
         "Activating services") TR[$key]="Hizmetler etkinleştiriliyor" ;;
         " added to autostart") TR[$key]=" otomatik başlatmaya eklendi" ;;
@@ -1732,17 +1398,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") TR[$key]="Uyarı: wheel grubu etkinleştirilemedi" ;;
         "Done") TR[$key]="Tamam" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") TR[$key]="Kullanıcı %s başarıyla oluşturuldu\n\nKullanıcı: %s\nRoot şifresi ayarlandı" ;;
-        *) TR[$key]="${EN[$key]}" ;;
+        *) TR[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Китайский перевод
-# ========================
-declare -A ZH
-for key in "${!EN[@]}"; do
+# Китайский (ZH) — упрощённый
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") ZH[$key]="正在安装基础系统..." ;;
         "Select kernel") ZH[$key]="选择内核" ;;
         "Kernel") ZH[$key]="内核" ;;
         "Zen kernel (optimized for desktop)") ZH[$key]="Zen 内核 (为桌面优化)" ;;
@@ -1751,6 +1413,7 @@ for key in "${!EN[@]}"; do
         "Error") ZH[$key]="错误" ;;
         "Unknown choice") ZH[$key]="未知选择" ;;
         "Operation cancelled") ZH[$key]="操作已取消" ;;
+        "Installing base system...") ZH[$key]="正在安装基础系统..." ;;
         "Configuring locale...") ZH[$key]="正在配置区域设置..." ;;
         "Activating services") ZH[$key]="正在激活服务" ;;
         " added to autostart") ZH[$key]=" 已添加到自动启动" ;;
@@ -1905,17 +1568,13 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") ZH[$key]="警告: 无法启用 wheel 组" ;;
         "Done") ZH[$key]="完成" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") ZH[$key]="用户 %s 已成功创建\n\n用户: %s\nRoot 密码已设置" ;;
-        *) ZH[$key]="${EN[$key]}" ;;
+        *) ZH[$key]="${RU[$key]}" ;;
     esac
 done
 
-# ========================
-# Арабский перевод
-# ========================
-declare -A AR
-for key in "${!EN[@]}"; do
+# Арабский (AR) — транслитерация (для демонстрации)
+for key in "${!RU[@]}"; do
     case "$key" in
-        "Installing base system...") AR[$key]="جاري تثبيت النظام الأساسي..." ;;
         "Select kernel") AR[$key]="تحديد النواة" ;;
         "Kernel") AR[$key]="النواة" ;;
         "Zen kernel (optimized for desktop)") AR[$key]="نواة Zen (محسنة لسطح المكتب)" ;;
@@ -1924,6 +1583,7 @@ for key in "${!EN[@]}"; do
         "Error") AR[$key]="خطأ" ;;
         "Unknown choice") AR[$key]="اختيار غير معروف" ;;
         "Operation cancelled") AR[$key]="تم إلغاء العملية" ;;
+        "Installing base system...") AR[$key]="جاري تثبيت النظام الأساسي..." ;;
         "Configuring locale...") AR[$key]="جاري تكوين الإعدادات المحلية..." ;;
         "Activating services") AR[$key]="جاري تفعيل الخدمات" ;;
         " added to autostart") AR[$key]=" تمت إضافته إلى التشغيل التلقائي" ;;
@@ -2078,37 +1738,53 @@ for key in "${!EN[@]}"; do
         "Warning: failed to enable wheel group") AR[$key]="تحذير: فشل في تمكين مجموعة wheel" ;;
         "Done") AR[$key]="تم" ;;
         "User %s created successfully\n\nUser: %s\nRoot password set") AR[$key]="تم إنشاء المستخدم %s بنجاح\n\nالمستخدم: %s\nتم تعيين كلمة مرور الجذر" ;;
-        *) AR[$key]="${EN[$key]}" ;;
+        *) AR[$key]="${RU[$key]}" ;;
+    esac
+done
+
+# Остальные языки — кратко
+for key in "${!RU[@]}"; do
+    case "$key" in
+        "Select kernel")
+            NL[$key]="Kernel selecteren"; KO[$key]="커널 선택"; PL[$key]="Wybierz jądro"
+            UK[$key]="Виберіть ядро"; CS[$key]="Vybrat jádro"; EL[$key]="Επιλογή πυρήνα"
+            HU[$key]="Kernel kiválasztása"; SV[$key]="Välj kernel"; FI[$key]="Valitse ydin"
+            ID[$key]="Pilih kernel"; VI[$key]="Chọn nhân"; RO[$key]="Selectați nucleul"
+            BG[$key]="Изберете ядро"; SK[$key]="Vybrať jadro"; HR[$key]="Odaberite kernel"
+            SR[$key]="Odaberite kernel"; CA[$key]="Selecciona el nucli"; NO[$key]="Velg kjerne"
+            DA[$key]="Vælg kerne"
+            ;;
+        "Kernel")
+            NL[$key]="Kernel"; KO[$key]="커널"; PL[$key]="Jądro"
+            UK[$key]="Ядро"; CS[$key]="Jádro"; EL[$key]="Πυρήνας"
+            HU[$key]="Kernel"; SV[$key]="Kernel"; FI[$key]="Ydin"
+            ID[$key]="Kernel"; VI[$key]="Nhân"; RO[$key]="Nucleu"
+            BG[$key]="Ядро"; SK[$key]="Jadro"; HR[$key]="Kernel"
+            SR[$key]="Kernel"; CA[$key]="Nucli"; NO[$key]="Kjerne"
+            DA[$key]="Kerne"
+            ;;
+        *) NL[$key]="${RU[$key]}"; KO[$key]="${RU[$key]}"; PL[$key]="${RU[$key]}"
+           UK[$key]="${RU[$key]}"; CS[$key]="${RU[$key]}"; EL[$key]="${RU[$key]}"
+           HU[$key]="${RU[$key]}"; SV[$key]="${RU[$key]}"; FI[$key]="${RU[$key]}"
+           ID[$key]="${RU[$key]}"; VI[$key]="${RU[$key]}"; RO[$key]="${RU[$key]}"
+           BG[$key]="${RU[$key]}"; SK[$key]="${RU[$key]}"; HR[$key]="${RU[$key]}"
+           SR[$key]="${RU[$key]}"; CA[$key]="${RU[$key]}"; NO[$key]="${RU[$key]}"
+           DA[$key]="${RU[$key]}"
+            ;;
     esac
 done
 
 # ========================
-# Вспомогательная функция генерации .po
+# 4. Генерация .po файлов для всех языков
 # ========================
 generate_po() {
     local lang="$1"
     local po_dir="./locale/$lang/LC_MESSAGES"
     local po_file="$po_dir/installer.po"
+
     mkdir -p "$po_dir"
 
-    # Определяем, какой массив использовать
-    case "$lang" in
-        de_DE)  declare -n TR="DE" ;;
-        en_US)  declare -n TR="EN" ;;
-        es_ES)  declare -n TR="ES" ;;
-        fr_FR)  declare -n TR="FR" ;;
-        it_IT)  declare -n TR="IT" ;;
-        ja_JP)  declare -n TR="JA" ;;
-        pt_BR)  declare -n TR="PT" ;;
-        ru_RU)  declare -n TR="RU" ;;
-        tr_TR)  declare -n TR="TR" ;;
-        zh_CN)  declare -n TR="ZH" ;;
-        ar_EG)  declare -n TR="AR" ;;
-        ro_RO)  declare -n TR="RO" ;;
-        # Остальные локали пока берут английский (можно заменить на свои, если есть)
-        *)      declare -n TR="EN" ;;
-    esac
-
+    # Генерируем заголовок
     cat > "$po_file" << EOF
 msgid ""
 msgstr ""
@@ -2125,17 +1801,53 @@ msgstr ""
 
 EOF
 
-    for key in "${!EN[@]}"; do
+    # Выбираем нужный массив переводов
+    case "$lang" in
+        de_DE)  declare -n TR="DE" ;;
+        en_US)  declare -n TR="RU" ;;
+        es_ES)  declare -n TR="ES" ;;
+        fr_FR)  declare -n TR="FR" ;;
+        it_IT)  declare -n TR="IT" ;;
+        ja_JP)  declare -n TR="JA" ;;
+        pt_BR)  declare -n TR="PT" ;;
+        ru_RU)  declare -n TR="RU" ;;
+        tr_TR)  declare -n TR="TR" ;;
+        zh_CN)  declare -n TR="ZH" ;;
+        ar_EG)  declare -n TR="AR" ;;
+        nl_NL)  declare -n TR="NL" ;;
+        ko_KR)  declare -n TR="KO" ;;
+        pl_PL)  declare -n TR="PL" ;;
+        uk_UA)  declare -n TR="UK" ;;
+        cs_CZ)  declare -n TR="CS" ;;
+        el_GR)  declare -n TR="EL" ;;
+        hu_HU)  declare -n TR="HU" ;;
+        sv_SE)  declare -n TR="SV" ;;
+        fi_FI)  declare -n TR="FI" ;;
+        id_ID)  declare -n TR="ID" ;;
+        vi_VN)  declare -n TR="VI" ;;
+        ro_RO)  declare -n TR="RO" ;;
+        bg_BG)  declare -n TR="BG" ;;
+        sk_SK)  declare -n TR="SK" ;;
+        hr_HR)  declare -n TR="HR" ;;
+        sr_RS)  declare -n TR="SR" ;;
+        ca_ES)  declare -n TR="CA" ;;
+        no_NO)  declare -n TR="NO" ;;
+        da_DK)  declare -n TR="DA" ;;
+        *) declare -n TR="RU" ;;
+    esac
+
+    # Записываем переводы
+    for key in "${!RU[@]}"; do
         echo "msgid \"$key\"" >> "$po_file"
         echo "msgstr \"${TR[$key]}\"" >> "$po_file"
         echo "" >> "$po_file"
     done
 
-    echo "✅ Сгенерирован ./locale/$lang/LC_MESSAGES/installer.po"
+    echo "✅ Сгенерирован $po_file"
 }
 
 # ========================
-# Запуск генерации для всех 30 локалей
+# 5. Запуск генерации для всех языков
 # ========================
 for loc in "${LOCALES[@]}"; do
     generate_po "$loc"
@@ -2143,4 +1855,3 @@ done
 
 echo ""
 echo "🎉 Все 30 .po файлов созданы в папке ./locale/"
-echo "   Теперь у каждого языка есть свой перевод (или английская заглушка)."

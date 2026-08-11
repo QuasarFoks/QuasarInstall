@@ -27,11 +27,35 @@ fi
 
 base_system() {
     _ "Installing base system..."
-    basestrap /mnt terminus-font iptables base base-devel \
+    basestrap /mnt terminus-font iptables  \
         mkinitcpio openrc dbus dbus-openrc elogind-openrc linux-firmware dialog \
         acpid flatpak acpid-openrc chrony-openrc dash chrony linux-api-headers \
-        rsync lib32-udev networkmanager networkmanager-openrc pacman-static
+        rsync lib32-udev networkmanager networkmanager-openrc pacman-static \
+        iwd iwd-openrc acl artix-cgroups artix-keyring artix-mirrorlist attr audit autoconf automake \
+        bash binutils bison boost-libs brotli bzip2 ca-certificates ca-certificates-mozilla \
+        ca-certificates-utils coreutils cpio curl db5.3 dbus dbus-openrc debugedit \
+        diffutils e2fsprogs elfutils elogind elogind-openrc esysusers etmpfiles expat \
+        fakeroot file filesystem findutils flex gawk gc gcc gcc-libs \
+        gdb gdb-common gdbm gettext glib2 glibc gmp gnulib-l10n \
+        gnupg gnutls gpgme grep groff guile gzip hwdata \
+        iana-etc icu iproute2 iptables iputils jansson json-c kbd \
+        kexec-tools keyutils kmod krb5 leancrypto libarchive libasan libassuan \
+        libatomic libbpf libcap libcap-ng libelf libelogind libevent libffi \
+        libgcc libgcrypt libgfortran libgomp libgpg-error libhwasan libidn2 libisl \
+        libksba libldap liblsan libmakepkg-dropins libmnl libmpc libnetfilter_conntrack libnfnetlink \
+        libnftnl libnghttp2 libnghttp3 libngtcp2 libnl libnsl libobjc libp11-kit \
+        libpcap libpsl libquadmath libsasl libseccomp libsecret libssh2 libstdc++ \
+        libsysprof-capture libtasn1 libtirpc libtool libtsan libubsan libudev libunistring \
+        libusb libutempter libverto libxcrypt libxml2 licenses linux-api-headers lmdb \
+        lz4 m4 make mpdecimal mpfr ncurses nettle nftables \
+        npth openssl p11-kit pacman pam pambase patch pciutils \
+        pcre2 perl pinentry pkgconf procps-ng psmisc python readline \
+        sed shadow source-highlight sqlite sudo tar texinfo tpm2-tss \
+        tzdata udev util-linux util-linux-libs which xxhash xz zlib \
+        zstd
     fast-chroot /mnt flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    fast-chroot /mnt flatpak install flathub com.github.tchx84.Flatseal
+
 }
 
 linux_zen_base() {
@@ -48,7 +72,7 @@ linux_base() {
 }
 
 
-base_system_kernel=$(dialog --title "$(_ "Select kernel")" --menu "$(_ "Kernel")" 12 50 5  \
+base_system_kernel=$(whiptail --title "$(_ "Select kernel")" --menu "$(_ "Kernel")" 12 50 5  \
     1 "$(_ "Zen kernel (optimized for desktop)")" \
     2 "$(_ "LTS kernel (long-term support)")" \
     3 "$(_ "Vanilla kernel")" \
@@ -86,7 +110,7 @@ HOME_URL="https://quasarfoks.github.io/QuasarLinux"
 DOCUMENTATION_URL="https://github.com/QuasaFoks/QuasarLinux/wiki"
 BUG_REPORT_URL="https://github.com/QuasarFoks/QuasarLinux/issues"
 PRIVACY_POLICY_URL="https://quasarfoks.github.io/policy"
-LOGO=quasarlogo
+LOGO=QuasarLinuxLogo
 OS_EOF
 
     cat > /mnt/etc/lsb-release << 'LSB_EOF'
@@ -97,19 +121,19 @@ DISTRIB_CODENAME=rolling
 LSB_EOF
 
     cat > /mnt/etc/rc.conf << 'EOF'
-# =============================================
-# OpenRC Configuration - Parallel Boot Optimized
-# =============================================
+# =================================================
+# |OpenRC Configuration - Parallel Boot Optimized |
+# =================================================
 
 # ПАРАЛЛЕЛЬНАЯ ЗАГРУЗКА
-rc_parallel="YES"           # Включить параллельный запуск
+rc_parallel="YES"          # Включить параллельный запуск
 rc_parallel_rcwait="NO"    # Не ждать завершения rc-сервисов
 
 
 # ЛОГИРОВАНИЕ И ОТЛАДКА
 rc_logger="YES"            # Логировать в /var/log/rc.log
 rc_log_path="/var/log/rc.log"
-rc_verbose="NO"            # Тихий режим (меньше вывода)
+rc_verbose="NO"
 
 # СИСТЕМНЫЕ НАСТРОЙКИ
 unicode="YES"              # Поддержка Unicode
@@ -123,15 +147,20 @@ rc_timeout_startsec="20"   # Таймаут запуска
 rc_nocolor="NO"            # Цветной вывод
 rc_hotplug="*"             # Обработка hotplug событий
 EOF
-
+#    cat > /mnt/etc/NetworkManager/NetworkManager.conf << 'EOF'
+#[device]
+#wifi.backend=iwd
+#EOF
     # 2. Дополнительные настройки для ускорения
     cat > /mnt/etc/conf.d/rc << 'EOF'
 # Дополнительные настройки для ускорения загрузки
 RC_PARALLEL_STARTUP="yes"        # Параллельный запуск
 RC_PARALLEL_STARTUP_NICE="10"    # Приоритет для параллельных задач
-RC_RETRY_KILL="3"               # Попыток убить процесс
-RC_RETRY_TIMEOUT="5"            # Пауза между попытками
+RC_RETRY_KILL="3"                # Попыток убить процесс
+RC_RETRY_TIMEOUT="5"             # Пауза между попытками
 EOF
+
+
 }
 
 config_system
@@ -281,6 +310,17 @@ else
     chroot /mnt pacman -S chrony-openrc
     chroot /mnt rc-update add chrony default
 fi
+
+#########################################################################################
+# iwd
+## RELEASE 1.4!
+#if chroot /mnt rc-update add iwd default; then
+#    echo "iwd$(_ " added to autostart")"
+#else
+#    echo "$(_ "Reinstalling ")iwd..."
+#    chroot /mnt pacman -S iwd-openrc
+#    chroot /mnt rc-update add iwd default
+#fi
 
 #########################################################################################
 # Копирование конфигурационных файлов

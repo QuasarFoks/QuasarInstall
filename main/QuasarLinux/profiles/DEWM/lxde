@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-main() {
-
-    chroot /mnt pacman -S lxde lxdm dolphin kate  xorg lxdm-openrc --noconfirm
-    chroot /mnt rc-update add lxdm default
-
-}

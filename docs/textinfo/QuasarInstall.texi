@@ -1,459 +1,760 @@
-\input texinfo   @c -*-texinfo-*-
+\input texinfo    @c -*-texinfo-*-
+@c %**start of header
 @setfilename quasar-installer.info
-@settitle QuasarLinux Installer Documentation
-@afourpaper
-@documentencoding UTF-8
-@defcodeindex op
-@syncodeindex vr op
+@settitle Quasar Linux Installer Documentation
+@c %**end of header
+
+@copying
+This manual describes the Quasar Linux Installer, version 1.1.
+Copyright @copyright{} 2026 Quasar Foks.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation.
+@end copying
 
 @titlepage
-@title QuasarLinux Installer
-@subtitle Полное руководство по установке
-@author QuasarLinux Team
+@title Quasar Linux Installer
+@subtitle The installation system for Quasar Linux
+@author Quasar Foks Team
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2026 QuasarLinux Team
-
-Это руководство описывает установку QuasarLinux с помощью интерактивного установщика.
+@insertcopying
 @end titlepage
 
 @contents
 
 @node Top
-@top QuasarLinux Installer
+@top Quasar Linux Installer
 
-Это руководство описывает процесс установки QuasarLinux с использованием установщика на базе Artix Linux (OpenRC).
-
-@menu
-* Введение::               Что такое QuasarLinux Installer
-* Запуск установщика::     Как начать установку
-* Разметка дисков::        Разбивка дисков (parted.sh)
-* Установка базовой системы:: Установка ядра и пакетов (basepack.sh)
-* Настройка зеркал::       Выбор региона для зеркал (mirrorconfig.sh)
-* Установка пакетов::      Выбор профиля (inst_pack.sh)
-* Настройка пользователя:: Создание пользователя и пароли (users.sh)
-* Установка загрузчика::   Настройка загрузчика (bootloader.sh)
-* Часовой пояс::           Выбор региона (region.sh)
-* Экспресс-установка::     Быстрая установка (express)
-* Устранение проблем::     Частые ошибки и решения
-* Лицензия::               Лицензия GNU GPL
-* Указатель::              Алфавитный указатель
-@end menu
-
-@node Введение
-@chapter Введение
-
-QuasarLinux Installer — это интерактивный установщик для операционной системы QuasarLinux, основанной на Artix Linux с OpenRC.
-
-@cartouche
-@b{Важно:} Установщик предназначен для опытных пользователей, но имеет дружественный интерфейс на основе @code{dialog}. Все опасные операции сопровождаются предупреждениями.
-@end cartouche
-
-Основные возможности:
-@itemize
-@item Выбор диска и режима разметки (авто/ручная)
-@item Поддержка UEFI и BIOS
-@item Выбор ядра: Zen, LTS, Vanilla
-@item Шифрование диска (LUKS)
-@item Настройка файловой системы (ext4, btrfs, xfs)
-@item Установка дополнительных профилей (AI, Gaming, Default)
-@item Создание пользователя и настройка sudo
-@item Установка загрузчика (GRUB, EFISTUB, rEFInd, Syslinux)
-@end itemize
-
-@node Запуск установщика
-@chapter Запуск установщика
-
-После загрузки с Live-носителя выполните команду:
-
-@example
-QuasarInstall
-@end example
-
-Появится главное меню:
-
-@example
-╔════════════════════════════════════════════════╗
-║  ###      SDK function              ###        ║
-║ [ 1 ] Chroot                                   ║
-║ [ 2 ] Install QuasarLinux                      ║
-║ [ 3 ] Recovery System (Timeshift)              ║
-║ [ 4 ] Live system                              ║
-║ [ 5 ] Support                                  ║
-║ [ i ] Info                                    ║
-║  ###      Power function            ###        ║
-║ [ 6 ] Shutdown                                 ║
-║ [ 7 ] Restart                                  ║
-╚════════════════════════════════════════════════╝
-@end example
-
-Выберите пункт @code{2} или @code{Install QuasarLinux}, чтобы начать установку.
-
-@node Разметка дисков
-@chapter Разметка дисков (parted.sh)
-
-При выборе установки открывается меню разметки. Вам будет предложено выбрать режим:
+This document describes the components and usage of the Quasar Linux Installer,
+a collection of shell scripts that provides a modular, menu-driven installation
+process for the Quasar Linux distribution.
 
 @menu
-* Выбор диска::             Single или Multiple
-* Автоматическая разметка:: Авто-режим
-* Ручная разметка::         Ручной режим с cfdisk
-* Замена системы::          Сохранение /home и удаление старой системы
-* Шифрование LUKS::         Настройка LUKS
-* Форматирование разделов:: Создание файловых систем
-* Монтирование::            Монтирование разделов в /mnt
+* Introduction::               Overview and core concepts
+* Directory Structure::        Layout of installer files
+* Main Menu Script (main.sh):: Top-level entry point
+* Core Installation Modules::  The main installation stages
+* Additional Modules::         Users, region, network, chroot, recovery
+* Bootloader Setup::           Installing the bootloader
+* Partitioning::               Disk partitioning and formatting
+* Environment Variables::      Global settings used by the scripts
+* Usage Examples::             How to run the installer
+* Troubleshooting::            Common issues and solutions
+* Index::                      Index of topics
 @end menu
 
-@node Выбор диска
-@section Выбор диска
+@node Introduction
+@chapter Introduction
 
-В начале вам предложат:
+The Quasar Linux Installer is a set of Bash scripts that guides the user through
+the installation of Quasar Linux, an Artix Linux-based distribution with a custom
+OpenRC configuration, pre‑installed packages, and a user‑friendly menu interface.
+It supports both UEFI and BIOS systems, and offers automated as well as manual
+partitioning, multiple kernel choices, and a selection of desktop profiles.
 
-@example
-Select disk:
-lsblk -d -o NAME,SIZE,MODEL,TYPE
-Enter disk name (e.g. sda):
-@end example
-
-Или для нескольких дисков:
-
-@example
-Select disks separated by a space:
-lsblk -d -o NAME,SIZE,MODEL,TYPE
-Enter disk name (e.g. sda vda):
-@end example
-
-После выбора диска отображается предупреждение @code{WARNING} о потере данных.
-
-@node Автоматическая разметка
-@section Автоматическая разметка
-
-В автоматическом режиме создаётся следующая структура (для UEFI):
-
-@example
-/dev/sda1 - EFI   (512M, fat32, ESP)
-/dev/sda2 - Swap  (4G, swap)
-/dev/sda3 - Root  (остальное, ext4)
-@end example
-
-Для BIOS:
-
-@example
-/dev/sda1 - Boot  (512M, ext2, boot)
-/dev/sda2 - Swap  (4G, swap)
-/dev/sda3 - Root  (остальное, ext4)
-@end example
-
-@node Ручная разметка
-@section Ручная разметка
-
-В ручном режиме запускается @code{cfdisk} для выбранного диска. После создания разделов вам будет предложено указать:
+Key features:
 
 @itemize
-@item Корневой раздел (root) — обязателен.
-@item (Опционально) раздел /home, если создан отдельно.
-@item Раздел EFI (для UEFI) или /boot (для BIOS).
-@item Раздел swap (если есть).
+@item Modular design – each step is handled by a separate script.
+@item Interactive menus using @command{dialog} and @command{whiptail}.
+@item Internationalisation via @code{gettext} (supports 10+ languages).
+@item Auto‑detection of UEFI/BIOS, network connectivity, and disk layout.
+@item Encryption support through LUKS for the root partition.
+@item Three kernel flavours: Zen, LTS, and vanilla.
+@item Pre‑configured OpenRC services and FastZram for swap compression.
 @end itemize
 
-Затем выбирается файловая система для root (@code{ext4}, @code{btrfs}, @code{xfs}) и применяется LUKS при необходимости.
+@node Directory Structure
+@chapter Directory Structure
 
-@node Замена системы
-@section Замена системы
+The installer is installed under @file{/installer} (unless overridden by
+@env{INSTALL_SCRIPT}) and relies on the SDK platform at @file{/usr/local/sdk}.
+The main scripts are located as follows:
 
-Режим @code{Replace OS} (бета) выполняет:
+@table @file
+@item /installer/run
+The main entry point (symbolic link or actual script) – typically calls @file{main.sh}.
+@item /installer/modules/
+Contains all stage scripts: @file{parted.sh}, @file{basepack.sh}, @file{users.sh},
+@file{inst_pack.sh}, @file{bootloader.sh}, @file{mirrorconfig.sh}, @file{region.sh},
+and the @file{userland/} subdirectory with optional post‑install scripts.
+@item /installer/profiles/
+Defines different desktop/application profiles: @file{default/}, @file{gaming/},
+@file{ai/}, @file{custom/} – each containing its own package lists and configuration.
+@item /usr/local/sdk/
+Common utilities, logo files, locale data, system tools (network, chroot, recovery).
+@item /usr/local/sdk/locale/
+Gettext translation files (`.mo`) for multiple languages.
+@end table
 
-@enumerate
-@item Монтирует старую систему в /mnt.
-@item Создаёт резервную копию домашних каталогов (исключая кэши, историю, ключи) в /mnt/old.os/home_backup.
-@item Архивирует всю систему (исключая /home, /var/cache, /run, /tmp и другие) в архив (tar.xz/tar.zst/tar.gz) в /mnt/old.os.
-@item Удаляет все файлы, кроме old.os и boot.
+@node Main Menu Script (main.sh)
+@chapter Main Menu Script (@file{main.sh})
+
+This script is the top‑level menu of the installer. It is invoked automatically
+when the live system boots or when you run @file{/installer/run}. It performs
+the following actions:
+
+@menu
+* Initialization::             Checking network and auto‑install
+* Main Menu::                  Interactive menu items
+* Menu Functions::             Detailed behaviour of each option
+@end menu
+
+@node Initialization
+@section Initialization
+
+When started, @file{main.sh}:
+
+@itemize
+@item Sets up colour variables for output (@code{RED}, @code{GREEN}, @dots{}).
+@item Loads the saved language preference from @file{~/.quasar-lang}.
+@item Checks network connectivity by pinging @code{quasarfoks.github.io}.
+@item If network is down, runs the network configuration script.
+@item Checks for the presence of @file{/installer/run} – if missing, logs an error.
+@item If @file{/usr/local/sdk/auto/default.yaml} exists, it launches an automatic
+      installation (@code{/installer/run --auto}) and reboots upon success.
+@item Otherwise, displays the main menu.
+@end itemize
+
+@node Main Menu
+@section Main Menu
+
+The menu is displayed with a logo (if @file{mainlogo.txt} exists) and a list of options:
+
+@example
+╔════════════════════════════════════════════════════════════╗
+║################    SDK function    ####################║
+║  [ 1 ]   Chroot                                        ║
+║  [ 2 ]   Install QuasarLinux                           ║
+║  [ 3 ]   Recovery System (Timeshift)                   ║
+║  [ 4 ]   Live system                                   ║
+║  [ 5 ]   Language: <current>                          ║
+║  [ 6 ]   Network                                       ║
+║  [ 7 ]   Support                                       ║
+║################    Power function    ##################║
+║  [ 8 ]   Shutdown                                      ║
+║  [ 9 ]   Restart                                       ║
+╚════════════════════════════════════════════════════════════╝
+@end example
+
+The menu is centered on the screen and accepts a single digit input.
+
+@node Menu Functions
+@section Menu Functions
+
+@table @code
+@item 1 Chroot
+Runs @file{/usr/local/sdk/chroot/chroot.run} – a tool to enter the installed system’s chroot environment.
+
+@item 2 Install QuasarLinux
+Calls @code{start_install}, which executes @file{/installer/run} (the main installation script).
+If @file{/installer/run} is missing, it logs an error and returns to the menu.
+
+@item 3 Recovery System (Timeshift)
+Runs @file{/usr/local/sdk/recovery/recov.run} – a recovery tool based on Timeshift.
+
+@item 4 Live system
+Starts an interactive shell with a custom prompt (live environment).
+
+@item 5 Language
+Loads @file{/usr/local/sdk/locale/main.sh} to change the system language.
+
+@item 6 Network
+Starts @file{/usr/local/sdk/system/network} – a network configuration utility.
+
+@item 7 Support
+Opens @file{/usr/local/sdk/HelpCenter/main.sh} – the help centre.
+
+@item 8 Shutdown
+Shuts down the system after a 3‑second delay.
+
+@item 9 Restart
+Reboots the system after a 3‑second delay.
+@end table
+
+@node Core Installation Modules
+@chapter Core Installation Modules
+
+The actual installation is driven by @file{install.sh} (located in @file{/installer/modules/}).
+This script presents a menu of installation stages:
+
+@example
+Quasar-install
+1 Express setup
+2 Partitioning
+3 Install base system
+4 Install packages
+5 User setup
+6 Install bootloader
+7 Audio
+8 Wine
+9 Web browser
+10 Region
+11 Office
+12 Exit
+@end example
+
+Each option calls the corresponding module script.
+
+@node install.sh
+@section @file{install.sh} – Main Installer Menu
+
+@itemize
+@item @code{express} – runs all essential steps in sequence: partitioning, base system,
+      users, packages, and bootloader.
+@item @code{parted_menu} – calls @file{parted.sh} (disk partitioning).
+@item @code{basepack} – calls @file{basepack.sh} (base system + kernel + services).
+@item @code{inst_pack} – calls @file{inst_pack.sh} (profile selection).
+@item @code{user} – calls @file{users.sh} (user creation).
+@item @code{bootloader} – calls @file{bootloader.sh} (bootloader installation).
+@item @code{audio_config} – runs @file{userland/audio_config.sh}.
+@item @code{wine_install} – runs @file{userland/wine_config.sh}.
+@item @code{browser_install} – runs @file{userland/browser_config.sh}.
+@item @code{region} – calls @file{region.sh} to set the time zone.
+@item @code{office_install} – runs @file{userland/office_config.sh}.
+@end itemize
+
+@node basepack.sh
+@section @file{basepack.sh} – Base System Installation
+
+This script is responsible for installing the minimal system into @file{/mnt}.
+
+@enumerate 1
+@item
+Asks the user to choose a kernel (Zen, LTS, or vanilla).
+@item
+Installs the base packages via @command{basestrap} (terminus‑font, iptables, base, base‑devel,
+mkinitcpio, openrc, dbus, elogind, linux‑firmware, dialog, acpid, flatpak, chrony, etc.).
+@item
+Generates @file{/mnt/usr/lib/os-release} and @file{/mnt/etc/lsb-release}.
+@item
+Configures OpenRC by writing @file{/mnt/etc/rc.conf} and @file{/mnt/etc/conf.d/rc}
+with parallel boot optimisation.
+@item
+Creates @file{/mnt/etc/fstab} using @command{fstabgen -U}.
+@item
+Clones and installs @strong{FastZram} – a service that creates a compressed swap
+device sized at 50% of RAM (capped between 1 GiB and 16 GiB).
+@item
+Enables the following OpenRC services:
+@itemize
+@item @code{udev} (sysinit)
+@item @code{FastZram} (sysinit)
+@item @code{dbus} (boot)
+@item @code{elogind} (boot)
+@item @code{acpid} (default)
+@item @code{NetworkManager} (default)
+@item @code{chrony} (default)
+@end itemize
+@item
+Copies a custom @file{pacman.conf} and Pixmaps.
+@item
+Downloads and extracts a branding tarball (including systemd‑rc compatibility wrapper).
+@item
+Performs a SHA256 integrity check on the downloaded archive.
 @end enumerate
 
-Это позволяет сохранить пользовательские данные и установить новую систему поверх.
+The script uses @file{/installer/profiles/base/pacman.conf} for the repository configuration.
 
-@node Шифрование LUKS
-@section Шифрование LUKS
+@node inst_pack.sh
+@section @file{inst_pack.sh} – Package Profile Selection
 
-При ручной разметке можно включить шифрование корневого раздела:
-
-@example
-Encrypt root partition?
-1) Yes
-2) No
-@end example
-
-После выбора @code{Yes} выполняется @code{cryptsetup luksFormat} и открывается как @code{/dev/mapper/QuasarRoot}. Все последующие операции с root проводятся через этот маппер.
-
-@node Форматирование разделов
-@section Форматирование разделов
-
-После выбора файловой системы выполняется форматирование:
+This script lets the user choose a predefined package set:
 
 @itemize
-@item FAT32 для EFI
-@item ext2 для /boot (BIOS)
-@item ext4/btrfs/xfs для root (и home, если отделён)
-@item mkswap и swapon для swap
+@item @code{Custom} – runs @file{profiles/custom/custom.sh}.
+@item @code{AI prefix} – runs @file{profiles/ai/ai.sh}.
+@item @code{Gaming prefix} – runs @file{profiles/gaming/gaming.sh}.
+@item @code{Default prefix} – runs @file{profiles/default/default.sh}.
 @end itemize
 
-@node Монтирование
-@section Монтирование
+Each profile script installs the respective applications (e.g. AI tools, gaming
+libraries, office suite) after the base system is chrooted.
 
-Корневой раздел монтируется в @code{/mnt}, затем:
+@node mirrorconfig.sh
+@section @file{mirrorconfig.sh} – Mirror Configuration
 
-@itemize
-@item EFI → /mnt/boot/efi (UEFI) или /boot → /mnt/boot (BIOS)
-@item /home (если есть) → /mnt/home
-@end itemize
+This script configures the @file{/mnt/etc/pacman.d/mirrorlist} based on the selected
+geographical region (Europe, Asia, North America, South America, Oceania, or Global).
+It writes a list of servers appropriate for that region and includes a fallback.
+After generation, it suggests running @code{pacman -Syy} to refresh the database.
 
-После монтирования выводится итоговая схема через @code{lsblk}.
+@node Additional Modules
+@chapter Additional Modules
 
-@node Установка базовой системы
-@chapter Установка базовой системы (basepack.sh)
-
-После разметки устанавливается базовая система.
+The installer includes several supporting scripts.
 
 @menu
-* Выбор ядра::          Zen, LTS, Vanilla
-* Установка пакетов::   basestrap
-* Настройка OpenRC::    Конфигурация rc.conf
-* Сервисы OpenRC::      Добавление сервисов в runlevels
-* Брендинг::            OS-release, issue, motd
-* Recovery::            Установка recovery-образа
+* users.sh::                   User and root password setup
+* region.sh::                  Time zone selection
+* Network Configuration::      Network setup (Wi‑Fi, DNS, proxy)
+* Chroot Tool::                chroot.sh – enter the installed system
+* Recovery Tool::              recov.sh – Timeshift recovery
 @end menu
 
-@node Выбор ядра
-@section Выбор ядра
+@node users.sh
+@section @file{users.sh} – User and Root Password Setup
 
-Диалог:
-
-@example
-Select kernel:
-1) Zen kernel (optimized for desktop)
-2) LTS kernel (long-term support)
-3) Vanilla kernel
-@end example
-
-После выбора вызывается соответствующая функция (@code{linux_zen_base}, @code{linux_lts_base}, @code{linux_base}), которая устанавливает базовую систему (@code{base_system}) и добавляет ядро.
-
-@node Установка пакетов
-@section Установка пакетов
-
-Функция @code{base_system} выполняет:
-
-@example
-basestrap /mnt terminus-font iptables base base-devel mkinitcpio openrc \
-  dbus dbus-openrc elogind-openrc linux-firmware dialog acpid flatpak \
-  acpid-openrc chrony-openrc dash chrony linux-api-headers rsync \
-  lib32-udev networkmanager networkmanager-openrc pacman-static
-@end example
-
-@node Настройка OpenRC
-@section Настройка OpenRC
-
-Создаются файлы @code{/mnt/etc/rc.conf} и @code{/mnt/etc/conf.d/rc} с оптимизированными параметрами:
-
-@example
-rc_parallel="YES"
-rc_logger="YES"
-unicode="YES"
-RC_PARALLEL_STARTUP="yes"
-@end example
-
-@node Сервисы OpenRC
-@section Сервисы OpenRC
-
-Все сервисы добавляются в соответствующие runlevels:
-
-@multitable @columnfractions .3 .3 .4
-@headitem Сервис @tab Runlevel @tab Действие
-@item udev @tab sysinit @tab Обработка устройств
-@item FastZram @tab sysinit @tab Быстрый zram (размер = 50% RAM, но не менее 1ГБ и не более 16ГБ)
-@item dbus @tab boot @tab Системная шина
-@item elogind @tab boot @tab Управление сессиями
-@item acpid @tab default @tab Управление питанием
-@item NetworkManager @tab default @tab Сеть
-@item chrony @tab default @tab Синхронизация времени
-@end multitable
-
-Если сервис не найден, он переустанавливается через pacman.
-
-@node Брендинг
-@section Брендинг
-
-Создаются файлы:
+This script handles user creation inside the chroot.
 
 @itemize
-@item @code{/mnt/usr/lib/os-release} — с информацией о дистрибутиве.
-@item @code{/mnt/etc/lsb-release} — для совместимости.
-@item @code{/mnt/etc/issue} и @code{/mnt/etc/issue.net} — приветствие.
-@item @code{/mnt/etc/motd} — сообщение дня.
-@item Копируется @code{pacman.conf} из профиля.
-@item Устанавливаются пиктограммы (@code{pixmaps}) из профиля.
+@item Mounts the necessary pseudo‑filesystems (@file{/dev}, @file{/proc}, @file{/sys}, @file{/run}) inside @file{/mnt}.
+@item Asks for a username (must not be @code{root}).
+@item Creates a group and user with the same name, adds the user to the @code{wheel} group.
+@item Prompts for a password (twice for confirmation) and sets it via @code{chpasswd}.
+@item Adds the user to @file{/etc/sudoers.d/} with full privileges.
+@item Asks for the @code{root} password and sets it.
 @end itemize
 
-@node Recovery
-@section Recovery
+After completion, a success message is displayed.
 
-Если смонтирован раздел @code{/mnt/recovery}, то извлекается архив @code{/installer/image/recovery.tar.xz} или ищется в альтернативных местах. После распаковки добавляется запись в @code{fstab} для автоматического монтирования.
+@node region.sh
+@section @file{region.sh} – Time Zone Selection
 
-@node Настройка зеркал
-@chapter Настройка зеркал (mirrorconfig.sh)
+This script is called by the main installer menu to set the system’s time zone.
+It reads the available zoneinfo directories (@file{Europe}, @file{Asia}, @file{America},
+@file{Africa}, @file{Antarctica}, @file{Arctic}, @file{Atlantic}, @file{Australia},
+@file{Brazil}, @file{Canada}, @file{Etc}) and presents a radiolist of sub‑regions.
+The selected region is linked as @file{/mnt/etc/localtime}.
 
-Диалог выбора региона:
+@node Network Configuration
+@section Network Configuration (@file{network.sh})
 
-@example
-Select Region:
-1) Europe
-2) Asia
-3) North America
-4) South America
-5) Oceania
-6) Global (recommended)
-@end example
-
-Выбранный регион создаёт файл @code{/mnt/etc/pacman.d/mirrorlist} с соответствующими зеркалами Artix Linux.
-
-@node Установка пакетов
-@chapter Установка пакетов (inst_pack.sh)
-
-После установки базы запускается установка дополнительных пакетов.
-
-@example
-Select option:
-1) Custom
-2) AI prefix
-3) Gaming prefix
-4) Default prefix
-@end example
+The script @file{/usr/local/sdk/system/network} provides network setup functions,
+including Wi‑Fi connection, DNS configuration, and proxy settings. It is used in
+two contexts:
 
 @itemize
-@item @code{Custom} — запускает @code{profiles/custom/custom.sh}
-@item @code{AI prefix} — @code{profiles/ai/ai.sh}
-@item @code{Gaming prefix} — @code{profiles/gaming/gaming.sh}
-@item @code{Default prefix} — @code{profiles/default/default.sh}
+@item During the main installer flow, it is invoked automatically when the system
+      fails to reach @code{quasarfoks.github.io} (via the @code{check_network}
+      function in @file{main.sh}). In this case, it is called with the argument
+      @code{installation}.
+@item From the main menu (option 6), where it runs interactively without the
+      @code{installation} argument.
 @end itemize
 
-Эти скрипты устанавливают соответствующие наборы программ.
+@menu
+* Installation Mode::          Auto‑configuration during install
+* Interactive Mode::           Manual configuration from menu
+* Wi‑Fi Connection::           Using @command{iwctl}
+* DNS Configuration::          Setting up DNS over TLS with Knot Resolver
+* Proxy Configuration::        HTTP/HTTPS proxy environment variables
+@end menu
 
-@node Настройка пользователя
-@chapter Настройка пользователя (users.sh)
+@node Installation Mode
+@subsection Installation Mode
 
-Диалоги:
+When invoked with @code{installation} as the first argument, the script:
 
 @enumerate
-@item Ввод имени пользователя.
-@item Ввод пароля (дважды).
-@item Установка пароля root (дважды).
+@item Detects if a Wi‑Fi adapter is present and prompts the user to connect.
+@item If the user chooses to connect, it calls @code{connect_to_wifi}.
+@item After the Wi‑Fi connection (or if skipped), it checks internet connectivity
+      by pinging @code{quasarfoks.github.io}.
+@item If the ping fails, a warning is displayed and the user is asked whether to
+      continue anyway.
 @end enumerate
 
-Пользователь добавляется в группу @code{wheel} и в @code{sudoers} с правами ALL. Группа @code{wheel} активируется в @code{/etc/sudoers}.
+If the user cancels, the installation process is aborted.
 
-После успешного создания выводится подтверждение.
+@node Interactive Mode
+@subsection Interactive Mode
 
-@node Установка загрузчика
-@chapter Установка загрузчика (bootloader.sh)
+When run without arguments (e.g., from the main menu), the script displays a
+whiptail menu with three options:
 
-Скрипт определяет режим загрузки (UEFI/BIOS) и предлагает соответствующие загрузчики.
+@table @code
+@item 1 WiFi configuration
+Calls @code{connect_to_wifi} (see below).
+@item 2 DNS configuration
+Calls @code{configure_dns} (see below).
+@item 3 PROXY configuration
+Calls @code{configure_proxy} (see below).
+@end table
 
-@menu
-* UEFI режим::              GRUB, EFISTUB, rEFInd
-* BIOS режим::              GRUB, Syslinux
-@end menu
+@node Wi‑Fi Connection
+@subsection Wi‑Fi Connection
 
-@node UEFI режим
-@section UEFI режим
-
-Диалог:
-
-@example
-UEFI Bootloader Selection:
-1) GRUB
-2) EFISTUB
-3) rEFInd
-@end example
+The Wi‑Fi functionality relies on @command{iwctl}, the Intel Wireless daemon.
+The steps are:
 
 @itemize
-@item @b{GRUB}: устанавливается пакет @code{grub}, @code{efibootmgr}, выполняется @code{grub-install --target=x86_64-efi}, генерируется конфиг.
-@item @b{EFISTUB}: создаются копии ядра и initramfs в @code{/boot/efi}, добавляется запись в @code{efibootmgr} с параметрами root=UUID и initrd.
-@item @b{rEFInd}: устанавливается @code{refind} и запускается @code{refind-install}.
+@item Scan for available networks: @code{iwctl station wlan0 scan}.
+@item Display the list of networks: @code{iwctl station wlan0 get-networks}.
+@item Prompt the user for the SSID and connect using
+      @code{iwctl station wlan0 connect <ssid>}.
+@item After successful connection, the user is asked whether to configure DNS.
 @end itemize
 
-@node BIOS режим
-@section BIOS режим
+@node DNS Configuration
+@subsection DNS Configuration
 
-Диалог:
+The DNS configuration uses @command{knot-resolver}. The user selects a DNS
+provider from a whiptail list:
 
-@example
-BIOS Bootloader Selection:
-1) GRUB
-2) Syslinux
-@end example
+@table @asis
+@item Cloudflare (1.1.1.1)
+@item Google (8.8.8.8)
+@item Quad9 (9.9.9.9)
+@item OpenDNS (208.67.222.222)
+@item AdguardDNS (94.140.14.14)
+@item YandexDNS (77.88.8.8)
+@end table
+
+The corresponding @code{policy.TLS_FORWARD} rules are appended to a temporary file
+@file{/etc/knot-resolver/kresd.conf.dev}, which is then renamed to
+@file{/etc/knot-resolver/kresd.conf}. This configures DNS over TLS for the system.
+
+@node Proxy Configuration
+@subsection Proxy Configuration
+
+The proxy settings are interactive. The user is asked for the proxy address
+in the format @code{IP:port}. Then they are asked if the proxy is open (no
+authentication) or requires a login/password. Based on the answer, the appropriate
+environment variables are set:
 
 @itemize
-@item @b{GRUB}: устанавливается @code{grub}, выполняется @code{grub-install --target=i386-pc} на диск, генерируется конфиг.
-@item @b{Syslinux}: устанавливается @code{syslinux}, устанавливается загрузчик в MBR (@code{dd if=... of=...}), создаётся конфиг @code{syslinux.cfg} с указанием ядра и UUID root.
+@item @code{http_proxy}
+@item @code{https_proxy}
+@item @code{ftp_proxy}
+@item @code{all_proxy}
 @end itemize
 
-@node Часовой пояс
-@chapter Часовой пояс (region.sh)
+These variables are exported in the current shell, affecting subsequent commands
+run in the same session.
 
-Скрипт @code{region.sh} позволяет выбрать часовой пояс из списка регионов (Europe, Asia, US, Africa, Antarctica, Arctic, Atlantic, Australia, Brazil, Canada, Etc). Выбранный регион создаёт симлинк @code{/mnt/etc/localtime} на соответствующий файл в @code{/usr/share/zoneinfo}.
+@noindent
+The script also sets @code{no_proxy} to exclude local addresses from proxying.
 
-@node Экспресс-установка
-@chapter Экспресс-установка (express)
+@node Chroot Tool
+@section Chroot Tool (@file{chroot.sh})
 
-В главном меню установщика есть пункт @code{Express setup}, который последовательно выполняет все шаги:
-
-@enumerate
-@item Разметка дисков (parted.sh)
-@item Установка базы (basepack.sh)
-@item Настройка зеркал (mirrorconfig.sh) — закомментирована, можно включить
-@item Создание пользователя (users.sh)
-@item Установка пакетов (inst_pack.sh)
-@item Установка загрузчика (bootloader.sh)
-@end enumerate
-
-Этот режим удобен для опытных пользователей, желающих автоматизировать установку.
-
-@node Устранение проблем
-@chapter Устранение проблем
+The script @file{/usr/local/sdk/chroot/chroot.run} (which calls @file{chroot.sh})
+allows the user to enter the installed system (or any mounted Linux system) in a
+chroot environment. It is invoked from the main menu (option 1).
 
 @menu
-* Не монтируется root::     Проверка разделов
-* Ошибка загрузчика::       Проверка UEFI/BIOS
-* Сбой сети::               Настройка NetworkManager
-* Проблемы с графикой::     Драйверы
+* Chroot Mounting Partitions:: Selecting and mounting root, boot, and extra partitions
+* Mounting Virtual Filesystems:: /proc, /dev, /sys, /run, and resolv.conf
+* Extra Partitions::           /home, /var, /usr
+* Entering the Chroot::        Running @command{chroot}
 @end menu
 
-@node Не монтируется root
-@section Не монтируется root
+@node Chroot Mounting Partitions
+@subsection Chroot Mounting Partitions
 
-Проверьте правильность указания раздела. Используйте @code{lsblk} и @code{fdisk -l}. Убедитесь, что раздел отформатирован.
+The script first lists available disks (@code{lsblk -d}) and asks the user to
+enter the disk name (e.g., @code{sda} or @code{nvme0n1}). Then it displays the
+partition table and prompts for:
 
-@node Ошибка загрузчика
-@section Ошибка загрузчика
+@itemize
+@item The root partition (mandatory) – mounted at @file{/usr/local/sdk/rootdir}.
+@item If UEFI mode is detected, the EFI partition is requested and mounted at
+      @file{rootdir/boot/efi}.
+@item In BIOS mode, a boot partition can be optionally specified (mounted at
+      @file{rootdir/boot}); if left empty, it is skipped.
+@end itemize
 
-Убедитесь, что для UEFI установлен пакет @code{efibootmgr} и система загружена в UEFI-режиме. Для BIOS проверьте установку MBR.
+All paths are relative to the @code{rootdir} variable (@code{/usr/local/sdk/rootdir}).
 
-@node Сбой сети
-@section Сбой сети
+@node Mounting Virtual Filesystems
+@subsection Mounting Virtual Filesystems
 
-Проверьте статус NetworkManager: @code{rc-service NetworkManager status}. При необходимости перезапустите: @code{rc-service NetworkManager restart}.
+Before entering the chroot, the script mounts the essential virtual filesystems
+inside the @code{rootdir}:
 
-@node Проблемы с графикой
-@section Проблемы с графикой
+@itemize
+@item @command{mount --bind /proc rootdir/proc}
+@item @command{mount --bind /dev rootdir/dev}
+@item @command{mount --bind /run rootdir/run}
+@item @command{mount --bind /sys rootdir/sys}
+@end itemize
 
-Установите необходимые драйверы (например, @code{xf86-video-*}) через @code{pacman -S} в chroot.
+It also appends @code{nameserver 9.9.9.9} to @file{rootdir/etc/resolv.conf}
+to provide DNS inside the chroot.
 
-@node Лицензия
-@chapter Лицензия
+@node Extra Partitions
+@subsection Extra Partitions
 
-QuasarLinux Installer распространяется под лицензией GNU GPL v3+. Полный текст лицензии доступен на сайте Free Software Foundation.
+The user is asked whether they have separate partitions for @file{/home},
+@file{/var}, or @file{/usr}. If yes, they are prompted for the partition name
+and mounted under the respective directory inside the chroot.
 
-@node Указатель
-@chapter Указатель
+@node Entering the Chroot
+@subsection Entering the Chroot
+
+Finally, @command{chroot rootdir} is executed, dropping the user into a shell
+inside the mounted system.
+
+@node Recovery Tool
+@section Recovery Tool (@file{recov.sh})
+
+The script @file{/usr/local/sdk/recovery/recov.run} (which calls @file{recov.sh})
+provides a recovery interface using @command{timeshift}. It is invoked from the
+main menu (option 3).
+
+@menu
+* Mounting the System::        Selecting the disk and partitions
+* Listing Snapshots::          Displaying available Timeshift snapshots
+* Restoring a Snapshot::       Performing the restore
+@end menu
+
+@node Mounting the System
+@subsection Mounting the System
+
+The script operates similarly to @file{chroot.sh} but mounts the target system
+at @file{/mnt} (not @file{/usr/local/sdk/rootdir}). It:
+
+@itemize
+@item Asks for the disk and root partition, and mounts it at @file{/mnt}.
+@item Mounts the EFI or BIOS boot partition if specified.
+@item Optionally mounts separate @file{/home}, @file{/var}, or @file{/usr}
+      partitions.
+@item Mounts the virtual filesystems (@file{/proc}, @file{/dev}, @file{/run},
+      @file{/sys}) and adds a DNS entry.
+@end itemize
+
+@node Listing Snapshots
+@subsection Listing Snapshots
+
+After mounting, the script runs @command{chroot /mnt timeshift --list} to display
+all available snapshots. The user is then prompted to continue or cancel.
+
+@node Restoring a Snapshot
+@subsection Restoring a Snapshot
+
+If the user chooses to continue, @command{chroot /mnt timeshift --restore} is
+executed, which starts the interactive Timeshift restore process. After the
+restore completes, the system can be rebooted.
+
+@node Bootloader Setup
+@chapter Bootloader Setup (@file{bootloader.sh})
+
+This script detects whether the system is booted in UEFI or BIOS mode and offers
+appropriate bootloader options.
+
+@menu
+* UEFI Bootloaders::           GRUB, EFISTUB, rEFInd
+* BIOS Bootloaders::           GRUB, Syslinux
+@end menu
+
+@node UEFI Bootloaders
+@section UEFI Bootloaders
+
+If UEFI is detected, the user can choose:
+
+@table @code
+@item GRUB
+Installs @code{grub}, @code{efibootmgr}, and @code{os-prober}. GRUB is installed
+to the EFI system partition (@file{/boot/efi}) with the bootloader ID @samp{GRUB}.
+The configuration is generated using @command{grub-mkconfig}.
+
+@item EFISTUB
+Uses the EFI stub loader. The script copies the kernel and initramfs into the EFI
+partition and creates a boot entry with @command{efibootmgr}. It automatically
+detects the installed kernel (linux, linux-zen, or linux-lts).
+
+@item rEFInd
+Installs @code{refind} and runs @command{refind-install}. rEFInd is a graphical
+boot manager that also supports auto‑detection of operating systems.
+@end table
+
+@node BIOS Bootloaders
+@section BIOS Bootloaders
+
+For legacy BIOS, the options are:
+
+@table @code
+@item GRUB
+Installs @code{grub} and @code{os-prober}, then runs @command{grub-install}
+with the @option{--target=i386-pc} flag to write the bootloader to the Master
+Boot Record.
+
+@item Syslinux
+Installs @code{syslinux}, configures the boot partition as active using
+@command{parted}, and writes the MBR code. A minimal @file{syslinux.cfg}
+is created that points to the detected kernel and initramfs with the correct
+root UUID.
+@end table
+
+In both cases, the script mounts the necessary pseudo‑filesystems before
+executing the bootloader commands.
+
+@node Partitioning
+@chapter Partitioning (@file{parted.sh})
+
+This script handles disk partitioning, formatting, and mounting. It supports both
+UEFI and BIOS systems, and can operate on a single disk or multiple disks.
+
+@menu
+* Partitioning Modes::         Auto, Manual, Replace OS
+* Filesystem and Encryption::  ext4, btrfs, xfs, LUKS
+* Mounting Partitions::        Root, boot, swap, home
+@end menu
+
+@node Partitioning Modes
+@section Partitioning Modes
+
+The user selects one of three modes:
+
+@table @code
+@item Auto
+The script automatically creates a GPT or MBR table, then partitions the disk:
+@itemize
+@item UEFI: ESP (512 MiB), swap (4 GiB), root (rest).
+@item BIOS: boot (512 MiB), swap (4 GiB), root (rest).
+@end itemize
+After partitioning, it formats the partitions, creates swap, and mounts them.
+
+@item Manual
+The user invokes @command{cfdisk} to manually partition the selected disk.
+They then specify the root partition, choose a filesystem, optionally enable
+LUKS encryption, and specify boot and swap partitions. Additional partitions
+can be mounted as home, var, etc.
+
+@item Replace OS (beta)
+This mode attempts to back up the existing operating system. It mounts the
+existing root and boot partitions, copies user home directories to
+@file{/mnt/old.os/home_backup/}, and archives the entire old system (excluding
+caches, swap, tmp, etc.) into a compressed tarball (tar.xz, tar.zst, or tar.gz).
+The old system is then removed, leaving only the backup and the boot directory.
+@end table
+
+@node Filesystem and Encryption
+@section Filesystem and Encryption
+
+The script supports three filesystems: @code{ext4}, @code{btrfs}, and @code{xfs}.
+If LUKS is chosen (in manual mode), the root partition is encrypted with
+@command{cryptsetup luksFormat} and opened as @file{/dev/mapper/QuasarRoot}.
+The filesystem is then created on the mapped device.
+
+@node Mounting Partitions
+@section Mounting Partitions
+
+After formatting, the partitions are mounted:
+
+@itemize
+@item Root: @file{/mnt}
+@item Boot/EFI: @file{/mnt/boot} or @file{/mnt/boot/efi}
+@item Swap: activated with @command{swapon}
+@item Additional partitions (e.g., home) are mounted under @file{/mnt/home} or other user‑defined mount points.
+@end itemize
+
+@node Environment Variables
+@chapter Environment Variables
+
+The following environment variables are used throughout the installer:
+
+@table @env
+@item LANG
+Controls the language (e.g., @code{en_US.UTF-8}). Saved in @file{~/.quasar-lang}.
+@item INSTALL_SCRIPT
+Path to the installer root directory (default @file{/installer}).
+@item SDK_PLATFORM
+Path to the SDK utilities (default @file{/usr/local/sdk}).
+@item TEXTDOMAIN
+Gettext domain, usually @code{installer}.
+@item TEXTDOMAINDIR
+Directory containing the translation files (default @file{/usr/local/sdk/locale}).
+@item UEFI_MODE
+Set to @code{1} if the system is booted in UEFI mode, else @code{0}.
+@item LUKS_MODE
+Set to @code{1} if LUKS encryption is enabled for the root partition.
+@item ROOT_UUID
+UUID of the root filesystem (used in bootloader configuration).
+@end table
+
+Colour variables (@code{RED}, @code{GREEN}, @dots{}) are used for console output.
+
+@node Usage Examples
+@chapter Usage Examples
+
+@itemize
+@item
+To start the installer in a live environment:
+@example
+/installer/run
+@end example
+
+@item
+To run the auto‑install (if @file{default.yaml} exists):
+@example
+/installer/run --auto
+@end example
+
+@item
+To manually launch the main menu without network checks:
+@example
+/usr/local/sdk/main.sh
+@end example
+
+@item
+To install only the base system and then exit:
+@example
+/installer/modules/basepack.sh
+@end example
+
+@item
+To set the time zone from the command line:
+@example
+/installer/modules/region.sh Europe
+@end example
+
+@item
+To enter the chroot of a mounted system (e.g., for manual fixes):
+@example
+/usr/local/sdk/chroot/chroot.run
+@end example
+
+@item
+To start the recovery interface:
+@example
+/usr/local/sdk/recovery/recov.run
+@end example
+@end itemize
+
+@node Troubleshooting
+@chapter Troubleshooting
+
+@table @strong
+@item “RUN file is not found”
+Ensure that @file{/installer/run} exists and is executable. If not, re‑copy the
+installer files or run @file{/usr/local/sdk/main.sh} directly.
+
+@item “Network is not working”
+The installer tries to ping @code{quasarfoks.github.io}. If this fails, it runs
+@file{/usr/local/sdk/system/network}. You can also configure the network manually.
+
+@item “Hash check failed”
+The branding archive’s SHA256 does not match the expected value. This could be
+due to a corrupted download or a version mismatch. Verify the URL and try again.
+
+@item LUKS password not accepted
+Ensure you type the password correctly during @command{cryptsetup luksFormat}.
+If you forget it, the data is unrecoverable.
+
+@item Bootloader not showing after reboot
+Check that the EFI partition is mounted correctly during installation and that
+the bootloader entry was created. For UEFI, you may need to use the firmware
+boot menu to select the boot device.
+
+@item Services not starting
+Verify that the appropriate OpenRC services are enabled: @code{rc-update show}.
+Also check @file{/mnt/etc/rc.conf} for parallel boot settings.
+
+@item Chroot fails with “cannot execute”
+Make sure the virtual filesystems are mounted and the root directory contains a
+working system. Also check that @command{chroot} is available.
+
+@item Timeshift restore fails
+Ensure the target system is mounted correctly and that Timeshift is installed.
+You may need to run @code{timeshift --list} manually to verify snapshots.
+@end table
+
+@node Index
+@unnumbered Index
 
 @printindex cp
 

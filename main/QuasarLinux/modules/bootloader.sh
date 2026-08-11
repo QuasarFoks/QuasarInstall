@@ -44,6 +44,7 @@ if [ "$UEFI_MODE" -eq 1 ]; then
         fast-chroot /mnt pacman -S grub os-prober efibootmgr --noconfirm
         fast-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable --recheck
         fast-chroot /mnt bash -c 'sed -i "s/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR=\"$GRUB_DISTRIBUTOR_NAME\"/" /etc/default/grub || echo "GRUB_DISTRIBUTOR=\"$GRUB_DISTRIBUTOR_NAME\"" >> /etc/default/grub'
+        sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT="\1 binder.devices=anbox-binder,anbox-hwbinder,anbox-vndbinder"/' /mnt/etc/default/grub
         fast-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
         _ "GRUB installed for UEFI"
     }
@@ -71,7 +72,7 @@ if [ "$UEFI_MODE" -eq 1 ]; then
         cp "/mnt/boot/vmlinuz-$KERNEL" "/mnt/boot/efi/vmlinuz-$KERNEL.efi"
         cp "/mnt/boot/initramfs-$KERNEL.img" "/mnt/boot/efi/initramfs-$KERNEL.img"
 
-        efibootmgr -c -d "$DISK" -p 1 -L "QuasarLinux" -l "\\vmlinuz-$KERNEL.efi"  -u "root=UUID=$ROOT_UUID rw initrd=\\initramfs-$KERNEL.img"
+        efibootmgr -c -d "$DISK" -p 1 -L "QuasarLinux" -l "\\vmlinuz-$KERNEL.efi" -u "root=UUID=$ROOT_UUID rw binder.devices=anbox-binder,anbox-hwbinder,anbox-vndbinder initrd=\\initramfs-$KERNEL.img"
         _ "EFISTUB configured"
     }
 
@@ -105,6 +106,7 @@ else
         fast-chroot /mnt pacman -S grub os-prober --noconfirm
         fast-chroot /mnt grub-install --target=i386-pc --boot-directory=/boot --recheck "${DISK}"
         fast-chroot /mnt bash -c 'sed -i "s/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR=\"$GRUB_DISTRIBUTOR_NAME_BIOS\"/" /etc/default/grub || echo "GRUB_DISTRIBUTOR=\"$GRUB_DISTRIBUTOR_NAME_BIOS\"" >> /etc/default/grub'
+        sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT="\1 binder.devices=anbox-binder,anbox-hwbinder,anbox-vndbinder"/' /mnt/etc/default/grub
         fast-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
         _ "GRUB installed for BIOS"
     }
@@ -139,7 +141,7 @@ PROMPT 0
 TIMEOUT 50
 
 LABEL Quasarlinux
-    KERNEL /vmlinuz-$KERNEL
+    KERNEL /vmlinuz-$KERNEL  binder.devices=anbox-binder,anbox-hwbinder,anbox-vndbinder
     APPEND root=UUID=$ROOT_UUID rw
     INITRD /initramfs-$KERNEL.img
 EOFD

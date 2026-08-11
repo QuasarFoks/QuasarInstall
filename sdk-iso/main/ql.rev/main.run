@@ -15,8 +15,9 @@ export BLUE='\033[0;34m'
 export PURPLE='\033[0;35m'
 export CYAN='\033[0;36m'
 export NC='\033[0m'
-export BRIGHT_WHITE='\033[1;97m$*\033[0m'
-
+#export BRIGHT_WHITE='\033[1;97m$*\033[0m'
+WHITE='\033[1;97m'
+RESET='\033[0m'
 
 # Начальное значение по умолчанию
 LANG="en_US.UTF-8"
@@ -36,19 +37,29 @@ info() { echo -e "${BLUE}[info]${NC} $1"; }
 error() { echo -e "${RED}[error]${NC} ${1}                                           :("; }
 success() { echo -e "${GREEN}[success]${NC} $1"; }
 
-echo_m() { echo -e "\033[1;97m${1}\033[0m"; }
+#echo_m() { echo -e "\033[1;97m${1}\033[0m"; }
+read_file_lines() {
+    local file="$1"
+    if [[ ! -f "$file" ]]; then
+        echo "Ошибка: файл $file не найден!" >&2
+        return 1
+    fi
+    mapfile -t lines < "$file"
+    echo "${lines[@]}"
+}
 
 logo() {
     cat  "$SDK_PLATFORM/mainlogo.txt"
 }
 
 check_network() {
-    if ping -c 3 -W 5 archlinux.org &>/dev/null; then
+    sleep 2
+    if ping -c 3 -W 5 quasarfoks.github.io &>/dev/null; then
         info "network is working"
         return 0
     else
         info "network is not working, connecting to network"
-        "$SDK_PLATFORM"/system/network || true
+        "$SDK_PLATFORM"/system/network installation || true
         return 1
     fi
 }
@@ -62,14 +73,14 @@ start_install() {
 		error "RUN file is not found"
 		echo "/installer/run is not found, please check install QuasarInstall" >> /usr/local/sdm/log/log_1.txt
 		sleep 3
-		logo && main_menu
+		main_menu
 	fi		
 }
 
 repart() {
 	if [ -f /usr/local/sdk/auto/default.yaml ]; then
 		    echo "Starting autoinstall..."
-		if "$INSTALL_SCRIPT"/run --auto; then
+		if "$INTSALL_SCRIPT"/run --auto; then
 			echo "Autoinstall succeeded. Rebooting in 5 seconds..."
 			sleep 5
 			reboot
@@ -101,32 +112,107 @@ live_os() {
 
 
 main_menu() {
-	echo_m "╔════════════════════════════════════════════════╗"
-	echo_m "║  ###      SDK function              ###        ║"
-	echo_m "║ [ 1 ] Chroot                                   ║"
-	echo_m "║ [ 2 ] Install QuasarLinux                      ║"
-	echo_m "║ [ 3 ] Recovery System (Timeshift)              ║"
-	echo_m "║ [ 4 ] Live system                              ║"
-	echo_m "║ [ 5 ] Language: ${LANG}                    ║"
-	echo_m "║ [ 6 ] Support                                  ║"
-	echo_m "║  ###      Power function            ###        ║"
-	echo_m "║ [ 7 ] Shutdown                                 ║"
-	echo_m "║ [ 8 ] Restart                                  ║"
-	echo_m "╚════════════════════════════════════════════════╝"
-	read -p "[1-8] >>> " choice
+	logo_file="$SDK_PLATFORM/mainlogo.txt"
+	if [[ -f "$logo_file" ]]; then
+		mapfile -t logo_lines < "$logo_file"
+	else
+		logo_lines=()
+		echo "Файл $logo_file не найден, логотип пропущен."
+	fi
+
+	# --- МЕНЮ (твои строки) ---
+	menu_lines=(
+		"╔════════════════════════════════════════════════════════╗"
+		"║################    SDK function    ####################║"
+		"║  [ 1 ]   Chroot                                        ║"
+		"║  [ 2 ]   Install QuasarLinux                           ║"
+		"║  [ 3 ]   Recovery System (Timeshift)                   ║"
+		"║  [ 4 ]   Live system                                   ║"
+		"║  [ 5 ]   Language: ${LANG}                         ║"
+		"║  [ 6 ]   Network                                       ║"
+		"║  [ 7 ]   Support                                       ║"
+		"║################    Power function    ##################║"
+		"║  [ 8 ]   Shutdown                                      ║"
+		"║  [ 9 ]   Restart                                       ║"
+		"╚════════════════════════════════════════════════════════╝"
+	)
+
+	# --- НАХОДИМ САМУЮ ДЛИННУЮ СТРОКУ (в логотипе и меню) ---
+	max_len=0
+	all_lines=("${logo_lines[@]}" "${menu_lines[@]}")
+
+	for line in "${all_lines[@]}"; do
+		clean=$(echo -e "$line" | sed 's/\x1b\[[0-9;]*m//g')
+		len=${#clean}
+		(( len > max_len )) && max_len=$len
+	done
+
+	# Если логотип пустой, добавляем одну пустую строку для отступа
+	if [[ ${#logo_lines[@]} -eq 0 ]]; then
+		logo_lines=("")
+	fi
+
+	# --- ВЫЧИСЛЯЕМ КООРДИНАТЫ ЦЕНТРА ---
+	cols=$(tput cols)
+	rows=$(tput lines)
+
+	# Общее количество строк (логотип + меню + 1 пустая строка между ними)
+	total_lines=$(( ${#logo_lines[@]} + ${#menu_lines[@]} + 1 ))
+
+	# X-координата (горизонталь) — рамка по центру
+	x_offset=$(( (cols - max_len) / 2 ))
+
+	# Y-координата (вертикаль) — весь блок по центру экрана
+	y_start=$(( (rows - total_lines) / 2 ))
+
+	# --- ОЧИЩАЕМ ЭКРАН И ВЫВОДИМ ---
+	clear
+	y=$y_start
+
+	# 1. Выводим логотип (с отступом по центру)
+	for line in "${logo_lines[@]}"; do
+		tput cup $y $x_offset
+		tput el  # очищаем строку от мусора
+		echo -e "${WHITE}${line}${RESET}"
+		((y++))
+	done
+
+	# 2. Пустая строка между логотипом и меню
+	((y++))  # просто пропускаем строку
+
+	# 3. Выводим меню
+	for line in "${menu_lines[@]}"; do
+		tput cup $y $x_offset
+		tput el
+		echo -e "${WHITE}${line}${RESET}"
+		((y++))
+	done
+
+	# --- ПРОМПТ ВНИЗУ ---
+	prompt="${WHITE}[1-9] >>> ${RESET}"
+	clean_prompt=$(echo -e "$prompt" | sed 's/\x1b\[[0-9;]*m//g')
+	prompt_len=${#clean_prompt}
+	tput cup $((rows - 2)) $(( (cols - prompt_len) / 2 ))
+	echo -n -e "$prompt"
+
+	# Читаем ввод
+	read choice
+
 	case "$choice" in
 		1) "$SDK_PLATFORM"/chroot/chroot.run ;;
 		2) start_install ;;
 		3) "$SDK_PLATFORM"/recovery/recov.run ;;
 		4) live_os  ;;
 		5) source "$SDK_PLATFORM/locale/main.sh" ;;
-		6) "$SDK_PLATFORM/HelpCenter/main.sh" ;;
-		7)
+		6) "$SDK_PLATFORM/system/network" ;;
+		7) "$SDK_PLATFORM/HelpCenter/main.sh" ;;
+
+		8)
 			echo "System will shutdown in 3 seconds..."
 			sleep 3
 			poweroff
 			;;
-		8)
+		9)
 			echo "System will restart in 3 seconds..."
 			sleep 3
 			reboot
@@ -135,7 +221,7 @@ main_menu() {
 		    error "choice in not found"
 		    sleep 2
 		    clear
-		    logo && main_menu
+		    main_menu
 		    ;;
 	esac 
 }		
@@ -145,7 +231,7 @@ main() {
 	repart
 	while true; do
         clear
-        logo && main_menu
+        main_menu
 
         # Если была ошибка - ждем, потом продолжаем
         if [ $? -eq 0 ]; then

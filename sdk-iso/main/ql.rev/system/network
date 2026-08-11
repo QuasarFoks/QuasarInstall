@@ -17,72 +17,84 @@ configure_proxy() {
 			export https_proxy="$all_proxy"
 			export http_proxy="$all_proxy"
 			export ftp_proxy="$all_proxy"
+			;;
 		*) exit 0 ;;
 	esac
 }
 
 configure_dns() {
-    echo "Select a DNS server:"
-    echo "1) Cloudflare (1.1.1.1, 1.0.0.1)   -- FAST"
-    echo "2) Google (8.8.8.8, 8.8.4.4)       -- fast and stable"
-    echo "3) Quad9 (9.9.9.9, 149.112.112.112) -- stable"
-    echo "4) OpenDNS (208.67.222.222, 208.67.220.220)"
-    echo "5) Skip DNS configuration"
-    read -p "Your choice [1-5]: " dns_choice
-
-    case $dns_choice in
-        1)
-            dns_servers="1.1.1.1 1.0.0.1"
-            ;;
-        2)
-            dns_servers="8.8.8.8 8.8.4.4"
-            ;;
-        3)
-            dns_servers="9.9.9.9 149.112.112.112"
-            ;;
-        4)
-            dns_servers="208.67.222.222 208.67.220.220"
-            ;;
-        5)
-            echo "DNS configuration skipped."
-            return 0
-            ;;
-        *)
-            echo "ERROR: Invalid choice"
-            return 1
-            ;;
-    esac
-
-    echo "Setting DNS servers: $dns_servers"
-    sudo mkdir -p /etc/NetworkManager/conf.d/
-    echo -e "[global]\ndns=none" | sudo tee /etc/NetworkManager/conf.d/dns.conf >/dev/null
-    sudo rc-service NetworkManager restart
-
-    # Back up existing resolv.conf if it exists
-    if [ -f /etc/resolv.conf ]; then
-        sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+    dns_choice=$(whiptail --title "Select a DNS server" \
+    --menu "Choose your preferred DNS provider:" 15 60 5 \
+    "1" "Cloudflare (1.1.1.1)" \
+    "2" "Google     (8.8.8.8)" \
+    "3" "Quad9      (9.9.9.9)" \
+    "4" "OpenDNS    (208.67.222.222)" \
+    "5" "AdguardDNS (94.140.14.14)"  \
+    "6" "YandexDNS  (77.88.8.8)" 3>&1 1>&2 2>&3 )
+    if [ $? -eq 0 ]; then
+        case $dns_choice in
+            1)
+                tee -a /etc/knot-resolver/kresd.conf.dev << 'EOF'
+policy.add(policy.all(policy.TLS_FORWARD({
+    { '1.1.1.1', hostname = 'one.one.one.one' },
+    { '1.0.0.1', hostname = 'one.one.one.one' }
+})))
+EOF
+                ;;
+            2)
+                tee -a /etc/knot-resolver/kresd.conf.dev << 'EOF'
+policy.add(policy.all(policy.TLS_FORWARD({
+    { '8.8.8.8', hostname = 'dns.google' },
+    { '8.8.4.4', hostname = 'dns.google' }
+})))
+EOF
+                ;;
+            3)
+                tee -a /etc/knot-resolver/kresd.conf.dev << 'EOF'
+policy.add(policy.all(policy.TLS_FORWARD({
+    { '9.9.9.9', hostname = 'dns.quad9.net' },
+    { '149.112.112.112', hostname = 'dns.quad9.net' }
+})))
+EOF
+                ;;
+            4)
+                tee -a /etc/knot-resoler/kresd.conf.dev << 'EOF'
+policy.add(policy.all(policy.TLS_FORWARD({
+    { '208.67.222.222', hostname = 'resolver1.opendns.com' },
+    { '208.67.220.220', hostname = 'resolver2.opendns.com' }
+})))
+EOF
+                ;;
+            5)
+                tee -a /etc/knot-resolver/kresd.conf.dev << 'EOF'
+policy.add(policy.all(policy.TLS_FORWARD({
+    { '94.140.14.14', hostname = 'dns.adguard-dns.com' },
+    { '94.140.15.15', hostname = 'dns.adguard-dns.com' }
+})))
+EOF
+                ;;
+            6)
+                tee -a /etc/knot-resolver/kresd.conf.dev << 'EOF'
+policy.add(policy.all(policy.TLS_FORWARD({
+    { '77.88.8.8', hostname = 'common.dot.dns.yandex.net' },
+    { '77.88.8.1', hostname = 'common.dot.dns.yandex.net' }
+})))
+EOF
+        esac
+        mv /etc/knot-resolver/kresd.conf.dev /etc/knot-resolver/kresd.conf
+    else
+        echo "Отмена выбора"
     fi
 
-    for server in $dns_servers; do
-        echo "nameserver $server" | sudo tee -a /etc/resolv.conf >/dev/null
-    done
-
-    echo "DNS configured successfully!"
 }
 
 # Check if a Wi-Fi adapter is available
-check_wifi_available() {
-    if nmcli device | grep -q wifi; then
-        return 0
-    else
-        return 1
-    fi
-}
 
 # Main Wi-Fi connection function
 connect_to_wifi() {
     echo "Available Wi-Fi networks:"
-    nmcli device wifi list
+    iwctl station wlan0 scan
+    iwctl station wlan0 get-networks
 
     read -p "Enter the network SSID: " ssid
     if [ -z "$ssid" ]; then
@@ -90,22 +102,7 @@ connect_to_wifi() {
         return 1
     fi
 
-    read -sp "Enter the password (leave blank for open networks): " password
-    echo
-
-    if [ -z "$password" ]; then
-        echo "Connecting to open network: $ssid..."
-        if ! nmcli device wifi connect "$ssid"; then
-            echo "Failed to connect to network: $ssid"
-            return 1
-        fi
-    else
-        echo "Connecting to secured network: $ssid..."
-        if ! nmcli device wifi connect "$ssid" password "$password"; then
-            echo "Failed to connect to network: $ssid (wrong password?)"
-            return 1
-        fi
-    fi
+    iwctl station wlan0 connect "$ssid"
 
     echo "Successfully connected to: $ssid!"
 
@@ -121,7 +118,7 @@ connect_to_wifi() {
 # Check internet connectivity
 check_internet() {
     echo "Checking internet connection..."
-    if ping -c 3 archlinux.org &> /dev/null; then
+    if ping -c 3 quasarfoks.github.io &> /dev/null; then
         echo "Internet connection is active!"
         return 0
     else
@@ -129,31 +126,46 @@ check_internet() {
         return 1
     fi
 }
-
+main() {
 # Main network setup flow
-echo "=== Network Configuration ==="
+    if [ "$1" = "installation" ]; then
 
-# Check for Wi-Fi hardware
-if check_wifi_available; then
-    read -p "A Wi-Fi adapter was detected. Would you like to connect? [Y/n]: " wifi_choice
-    if [[ "$wifi_choice" =~ ^[Nn]$ ]]; then
-        echo "Skipping Wi-Fi setup..."
+        read -p "A Wi-Fi adapter was detected. Would you like to connect? [Y/n]: " wifi_choice
+        if [[ "$wifi_choice" =~ ^[Nn]$ ]]; then
+            echo "Skipping Wi-Fi setup..."
+        else
+            connect_to_wifi
+        fi
+
+        # Always verify internet access
+        if ! check_internet; then
+            echo "Warning: No internet connection detected!"
+            echo "Some installation features may not work without internet access."
+            read -p "Continue anyway? [y/N]: " no_internet_choice
+            if [[ ! "$no_internet_choice" =~ ^[Yy]$ ]]; then
+                echo "Installation aborted."
+                exit 1
+            fi
+        fi
     else
-        connect_to_wifi
-    fi
-else
-    echo "No Wi-Fi adapter found. Skipping Wi-Fi setup..."
-fi
+        CHOICE=$(whiptail --title "Network Configuration" \
+                        --menu "Select an item:" 15 60 5 \
+            "1" "WiFi configuration" \
+            "2" "DNS configuration" \
+            "3" "PROXY configuration" \
+            3>&1 1>&2 2>&3)
 
-# Always verify internet access
-if ! check_internet; then
-    echo "Warning: No internet connection detected!"
-    echo "Some installation features may not work without internet access."
-    read -p "Continue anyway? [y/N]: " no_internet_choice
-    if [[ ! "$no_internet_choice" =~ ^[Yy]$ ]]; then
-        echo "Installation aborted."
-        exit 1
+        if [ $? -eq 0 ]; then
+            case "$CHOICE" in
+                1) check_internet && connect_to_wifi ;;
+                2) configure_dns ;;
+                3) configure_proxy ;;
+                *) echo "Неизвестный выбор: $CHOICE" >&2 ;;
+            esac
+        else
+            echo "Отмена выбора"
+        fi
     fi
-fi
-
+}
+main "$@"
 echo "Proceeding to main installation..."

@@ -1,6 +1,6 @@
 #include "usercfg.hpp"
 using namespace std;
-
+void create_user(std::string username);
 void log(string level, string message) {
     if (level == "debug") {
         cerr << BOLD_BRIGHT_WHITE << "DEBUG: " << RESET << _(message.c_str()) << endl;
